@@ -1,5 +1,23 @@
-import java.util.Date;;
+import java.util.Date;
 
+import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.Raw;
+
+class UnauthorizedException extends RuntimeException
+{
+	public UnauthorizedException() {
+		
+	}
+      // Constructor that accepts a message
+      public UnauthorizedException(String message)
+      {
+         super(message);
+      }
+}
+
+/*
+ * 
+ */
 public class File {
 	private String name;
 	private int size;
@@ -10,14 +28,15 @@ public class File {
 	private final Date creationTime;
 	private Date modificationTime;
 	
-	/*
+	/**
 	 * @return	Returns current date
 	 */
+	@Raw@Basic
 	private static Date getCurrentTime () {
 		return new Date();
 	}
 	
-	/*
+	/**
 	 * @param	name
 	 * 			The name of the new file
 	 * @param	size
@@ -44,7 +63,7 @@ public class File {
 		this.creationTime = getCurrentTime();
 	}
 	
-	/*
+	/**
 	 * @param	name
 	 * 			The name of the new file
 	 * 
@@ -59,70 +78,91 @@ public class File {
 		this(name, 0, true);
 	}
 	
-	/*
+	/**
 	 * @param	name
 	 * 			The name to be checked
 	 * @return	Returns true if name is valid, false if not
 	 */
+	@Raw
 	public static boolean isValidName(String name) {
 		return name.matches("[a-zA-Z0-9._-]*");
 	}
 	
-	/*
+	/**
 	 * @return	Returns the name of the file
 	 */
+	@Basic
 	public String getName() {
 		return this.name;
 	}
 	
-	/* Changes the file name
+	/** Changes the file name
 	 * @param	name
 	 * @post	changes the name to the new defined name when the file is writable
 	 * 			| isWritable()
+	 * @throws	UnauthorizedException
+	 * 			You are not authorized to change the name of this file
+	 * 			| isWritable() == false
 	 */
-	public void setName(String name) {
+	public void setName(String name) throws UnauthorizedException {
 		if (isWritable()) {
 			this.name = name;
 			this.modificationTime = getCurrentTime();
+		} else {
+			throw new UnauthorizedException("You are not authorized to change the name of this file!");
 		}
 	}
 	
-	/*
+	/**
 	 * @return	Returns the size of the file
 	 */
+	@Basic@Raw
 	public int getSize() {
 		return this.size;
 	}
 	
-	/*
+	/**
 	 * @return	Returns true if the file is writable and false when read-only
 	 */
+	@Basic
 	public boolean isWritable() {
 		return this.writable;
 	}
 	
-	/*
+	/**
+	 * @param	writable
+	 * 			the new writable value
+	 * @post	the rights are updated to the new writable state
+	 */
+	public void setWritable(boolean writable) {
+		this.writable = writable;
+	}
+	
+	/**
 	 * @return	Returns the last modification time of this file
 	 */
+	@Basic
 	public Date getModificationTime() {
 		return this.modificationTime;
 	}
 	
-	/*
+	/**
 	 * @return	Returns the creation time of this file
 	 */
+	@Basic
 	public Date getCreationTime() {
 		return this.creationTime;
 	}
 	
-	/*
-	 * return	Returns the maximum size limit
+	/**
+	 * @return	Returns the maximum size limit
 	 */
+	@Basic
 	public static int getMaxSizeLimit() {
 		return sizeMaxLimit;
 	}
 	
-	/*
+	/**
 	 * @param	limit
 	 * 			The new size limit
 	 * @post	The maximum size limit changes for all files to the new limit
@@ -131,14 +171,15 @@ public class File {
 		sizeMaxLimit = limit;
 	}
 	
-	/*
-	 * return	Returns the minimum size limit
+	/**
+	 * @return	Returns the minimum size limit
 	 */
+	@Basic
 	public static int getMinSizeLimit() {
 		return sizeMinLimit;
 	}
 	
-	/*
+	/**
 	 * @param	limit
 	 * 			The new size limit
 	 * @post	The minimum size limit changes for all files to the new limit
@@ -147,33 +188,49 @@ public class File {
 		sizeMinLimit = limit;
 	}
 	
-	/*
+	/**
 	 * @param	size
 	 * 			The size to increase (in bytes)
 	 * @pre		The size must be a valid size
 	 * 			| size >= 0 && getSize() < getMaxSizeLimit() - size
+	 * @throws	UnauthorizedException
+	 * 			You are not authorized to change the size of this file
+	 * 			| isWritable() == false
 	 */
 	public void enlarge(int size) {
-		this.size += size;
-		this.modificationTime = getCurrentTime();
+		if (isWritable()) {
+			this.size += size;
+			this.modificationTime = getCurrentTime();
+		} else {
+			throw new UnauthorizedException("You are not authorized to change the size of this file!");
+		}
+		
 	}
 	
-	/*
+	/**
 	 * @param	size
 	 * 			The size to increase (in bytes)
 	 * @pre		The size must be a valid size
 	 * 			| getSize() >= getMinSizeLimit() + size && size >= 0
+	 * @throws	UnauthorizedException
+	 * 			You are not authorized to change the size of this file
+	 * 			| isWritable() == false
 	 */
 	
 	public void shorten(int size) {
-		this.size -= size;
-		this.modificationTime = getCurrentTime();
+		if (isWritable()) {
+			this.size -= size;
+			this.modificationTime = getCurrentTime();
+		} else {
+			throw new UnauthorizedException("You are not authorized to change the size of this file!");
+		}
 	}
 	
-	/*
+	/**
 	 * @return	Returns difference in seconds between last modification time and creation time
 	 * 			Returns 0 when file hasn't been modified
 	 */
+	@Basic
 	public double getUsePeriod () {
 		double usePeriod = 0;
 		if (modificationTime != null) {
@@ -182,7 +239,7 @@ public class File {
 		return usePeriod/1000;
 	}
 	
-	/*
+	/**
 	 * @return	Returns true when use periods overlap
 	 * 			When this File is null, other file is null or modification times 
 	 * 			don't exist the standard value false is returned
@@ -199,6 +256,4 @@ public class File {
 			return true;
 		}
 	}
-	
-	//
 }

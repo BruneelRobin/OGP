@@ -2,15 +2,15 @@ import java.util.Date;
 
 public class Test {
 	public static void main (String[] args) {
-		File f = new File("Test•");
-		f.setName("test");
-		
-		for (int x = 0; x < 1000000; x++)
-		{
-			System.out.println(f.getUsePeriod());
-			f.setName("test");
+		File f = new File("Test•", 0, false);
+		try {
+			f.shorten(10);
+		} catch (UnauthorizedException er) {
+			System.out.println(er);
+			f.setWritable(true);
+			f.enlarge(10);
+			f.setWritable(false);
 		}
 		
-		System.out.println(f.getUsePeriod());
 	}
 }
