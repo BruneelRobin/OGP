@@ -1,6 +1,7 @@
 import java.util.Date;
 
 import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
 
 class UnauthorizedException extends RuntimeException
@@ -8,15 +9,44 @@ class UnauthorizedException extends RuntimeException
 	public UnauthorizedException() {
 		
 	}
-      // Constructor that accepts a message
-      public UnauthorizedException(String message)
-      {
-         super(message);
-      }
+	
+	public File file;
+	public int size;
+	
+    
+    public UnauthorizedException(File file, int size, String message)
+    {
+    	super(message);
+    	this.file = file;
+    	this.size = size;
+    }
+    
+    /**
+     * 
+     * @return	Returns the file where the error occurred
+     */
+    public File getFile() {
+    	return file;
+    }
+    
+    /**
+     * 
+     * @return	Returns the size that caused the error to happen
+     */
+    public int getSize() {
+    	return size;
+    }
 }
 
-/*
+/**
+ * A class of files involving a name, size, writable state, maximum size limit, minimum size limit, 
+ * creation time and modification time.
  * 
+ * @invar 	the size of a file must always be a valid size
+ * 			| isValidSize(size)
+ * 
+ * @author robin, jean-louis, edward
+ * @version 1.0
  */
 public class File {
 	private String name;
@@ -31,7 +61,7 @@ public class File {
 	/**
 	 * @return	Returns current date
 	 */
-	@Raw@Basic
+	@Raw
 	private static Date getCurrentTime () {
 		return new Date();
 	}
@@ -44,10 +74,13 @@ public class File {
 	 * @param	writable
 	 * 			The rights on the new file; writable or not.
 	 * 
-	 * @effect	Creates a file with the given name, size and writable. 
-	 * 			If the name is not valid the default name "File_x" is used, 
+	 * @pre		The given size must be a valid size
+	 * 			| isValidSize(size)
+	 * 
+	 * @post	Creates a file with the given name, size and writable state. 
+	 * @post	If the name is not valid the default name "File_x" is used, 
 	 * 			where x is a unique integer starting from 1.
-	 * 			Creationtime is instantiated as the local time.
+	 * 			Creation time is instantiated as the local time.
 	 * 
 	 */
 	public File (String name, int size, boolean writable) {
@@ -68,9 +101,8 @@ public class File {
 	 * 			The name of the new file
 	 * 
 	 * @effect	Creates a file with the given name.
-	 * 			Default value 0 for size is used.
-	 * 			
-	 * 			If the name is not valid the default name "File_x" is used, 
+	 * 			Default value 0 for size is used.	
+	 * @effect	If the name is not valid the default name "File_x" is used, 
 	 * 			where x is a unique integer starting from 1.
 	 * 
 	 */
@@ -91,7 +123,7 @@ public class File {
 	/**
 	 * @return	Returns the name of the file
 	 */
-	@Basic
+	@Basic@Raw
 	public String getName() {
 		return this.name;
 	}
@@ -104,6 +136,7 @@ public class File {
 	 * 			You are not authorized to change the name of this file
 	 * 			| isWritable() == false
 	 */
+	@Raw
 	public void setName(String name) throws UnauthorizedException {
 		if (isWritable()) {
 			this.name = name;
@@ -124,7 +157,7 @@ public class File {
 	/**
 	 * @return	Returns true if the file is writable and false when read-only
 	 */
-	@Basic
+	@Basic@Raw
 	public boolean isWritable() {
 		return this.writable;
 	}
@@ -134,14 +167,24 @@ public class File {
 	 * 			the new writable value
 	 * @post	the rights are updated to the new writable state
 	 */
+	@Raw
 	public void setWritable(boolean writable) {
 		this.writable = writable;
+	}
+	
+	@Raw
+	public boolean isValidSize (int size) {
+		if (size >= getMinSizeLimit() && size <= getMaxSizeLimit()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**
 	 * @return	Returns the last modification time of this file
 	 */
-	@Basic
+	@Basic@Raw
 	public Date getModificationTime() {
 		return this.modificationTime;
 	}
@@ -149,7 +192,7 @@ public class File {
 	/**
 	 * @return	Returns the creation time of this file
 	 */
-	@Basic
+	@Basic@Immutable@Raw
 	public Date getCreationTime() {
 		return this.creationTime;
 	}
@@ -157,7 +200,7 @@ public class File {
 	/**
 	 * @return	Returns the maximum size limit
 	 */
-	@Basic
+	@Basic@Raw
 	public static int getMaxSizeLimit() {
 		return sizeMaxLimit;
 	}
@@ -167,6 +210,7 @@ public class File {
 	 * 			The new size limit
 	 * @post	The maximum size limit changes for all files to the new limit
 	 */
+	@Raw
 	public static void setMaxSizeLimit(int limit) {
 		sizeMaxLimit = limit;
 	}
@@ -174,7 +218,7 @@ public class File {
 	/**
 	 * @return	Returns the minimum size limit
 	 */
-	@Basic
+	@Basic@Raw
 	public static int getMinSizeLimit() {
 		return sizeMinLimit;
 	}
@@ -184,6 +228,7 @@ public class File {
 	 * 			The new size limit
 	 * @post	The minimum size limit changes for all files to the new limit
 	 */
+	@Raw
 	public static void setMinSizeLimit(int limit) {
 		sizeMinLimit = limit;
 	}
@@ -193,7 +238,9 @@ public class File {
 	 * 			The size to increase (in bytes)
 	 * @pre		The size must be a valid size
 	 * 			| size >= 0 && getSize() < getMaxSizeLimit() - size
-	 * @throws	UnauthorizedException
+	 * @post	The new size of this file is enlarged with the parameter size
+	 * 			| this.size = getSize() + size
+	 * @throws	UnauthorizedException(this,size,message)
 	 * 			You are not authorized to change the size of this file
 	 * 			| isWritable() == false
 	 */
@@ -202,7 +249,7 @@ public class File {
 			this.size += size;
 			this.modificationTime = getCurrentTime();
 		} else {
-			throw new UnauthorizedException("You are not authorized to change the size of this file!");
+			throw new UnauthorizedException(this, size,"You are not authorized to change the size of this file!");
 		}
 		
 	}
@@ -212,7 +259,9 @@ public class File {
 	 * 			The size to increase (in bytes)
 	 * @pre		The size must be a valid size
 	 * 			| getSize() >= getMinSizeLimit() + size && size >= 0
-	 * @throws	UnauthorizedException
+	 * @post	The new size of this file is shortened with the parameter size
+	 * 			| this.size = getSize() - size
+	 * @throws	UnauthorizedException(this,size,message)
 	 * 			You are not authorized to change the size of this file
 	 * 			| isWritable() == false
 	 */
@@ -222,7 +271,7 @@ public class File {
 			this.size -= size;
 			this.modificationTime = getCurrentTime();
 		} else {
-			throw new UnauthorizedException("You are not authorized to change the size of this file!");
+			throw new UnauthorizedException(this, size,"You are not authorized to change the size of this file!");
 		}
 	}
 	
@@ -230,7 +279,7 @@ public class File {
 	 * @return	Returns difference in seconds between last modification time and creation time
 	 * 			Returns 0 when file hasn't been modified
 	 */
-	@Basic
+	@Raw
 	public double getUsePeriod () {
 		double usePeriod = 0;
 		if (modificationTime != null) {
@@ -241,10 +290,11 @@ public class File {
 	
 	/**
 	 * @return	Returns true when use periods overlap
-	 * 			When this File is null, other file is null or modification times 
+	 * @return	When this File is null, other file is null or modification times 
 	 * 			don't exist the standard value false is returned
 	 */
-	public boolean hasOverlappingUsePeriod (File other) {
+	@Raw
+	public boolean hasOverlappingUsePeriod (@Raw File other) {
 		if (this == null || this.modificationTime == null || other == null || other.modificationTime == null) {
 			return false;
 		}
