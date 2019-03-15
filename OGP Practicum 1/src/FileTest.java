@@ -3,6 +3,7 @@ import org.junit.Test;
 import org.junit.Before;
 
 /**
+ * A class collecting tests for the class of files.
  * 
  * @author Robin Bruneel, Jean-Louis Carron en Edward Wiels
  * @version 1.0
@@ -17,7 +18,13 @@ public class FileTest {
 	private static File unwritableFile;
 	
 	
-	
+	/**
+	 * Sets up a mutable test fixture.
+	 * 
+	 * @post The variable writableFile references a new writable file of size 10.
+	 *
+	 * @post The variable unwritableFile references a new unwritable file of size 10.
+	 */
 	
 	@Before 
 	public void setUpMutableFixture() {
@@ -25,9 +32,12 @@ public class FileTest {
 		writableFile = new File("writableFile", 10, true);
 		unwritableFile = new File("unwritableFile", 10, false);
 		
-		
 
 	}
+	
+	/**
+	 * Tests the effect of setting a legal name of a writable file.
+	 */
 	
 	@Test
 	public void setName_LegalName_WritableFile() {
@@ -36,6 +46,9 @@ public class FileTest {
 		
 	}
 	
+	/**
+	 * Tests the effect of setting an illegal name of a writable file.
+	 */
 	
 	@Test
 	public void setName_IllegalName_WritableFile() {
@@ -44,6 +57,9 @@ public class FileTest {
 	
 	}
 	
+	/**
+	 * Tests the effect of setting a legal name of an unwritable file.
+	 */
 	
 	@Test (expected = UnauthorizedException.class)
 	public void setName_LegalName_UnWritableFile() {
@@ -51,7 +67,9 @@ public class FileTest {
 	
 	}
 
-	
+	/**
+	 * Tests the effect of setting an illegal name of an unwritable file.
+	 */
 
 	@Test (expected = UnauthorizedException.class)
 	public void setName_IllegalName_UnWritableFile() {
@@ -59,8 +77,9 @@ public class FileTest {
 	
 	}
 
-	
-
+	/**
+	 * Tests the effect of enlarging the size of a writable file.
+	 */
 
 	@Test
 	public void enlarge_LegalSize_WritableFile() {
@@ -70,47 +89,60 @@ public class FileTest {
 		
 	}
 	
+	/**
+	 * Tests the effect of enlarging the size of an unwritable file.
+	 */
 	
-@Test (expected = UnauthorizedException.class)
+	@Test (expected = UnauthorizedException.class)
 	public void enlarge_LegalSize_UnWritableFile() {
 		unwritableFile.enlarge(10);
 	
 	}
 
-	
+	/**
+	 * Tests the effect of shortening the size of a writable file.
+	 */
 
-@Test
-public void shorten_LegalSize_WritableFile() {
+	@Test
+	public void shorten_LegalSize_WritableFile() {
 	int size = writableFile.getSize();
 	writableFile.shorten(5);
 	assertEquals(size - 5, writableFile.getSize());
 	
-}
+	}
 
-
-@Test (expected = UnauthorizedException.class)
-public void shorten_LegalSize_UnWritableFile() {
+	/**
+	 * Tests the effect of shortening the size of an unwritable file.
+	 */
+	
+	@Test (expected = UnauthorizedException.class)
+	public void shorten_LegalSize_UnWritableFile() {
 	unwritableFile.shorten(5);
 
-}
+	}
 
-
-@Test
-public void isWritable_SetFalse() {
+	/**
+	 * Tests the effect of setting a file to unwritable.
+	 */
+	
+	@Test
+	public void isWritable_SetFalse() {
 	writableFile.setWritable(false);
 	assertEquals(false,writableFile.isWritable());
 	
+	}
 	
-}
+	/**
+	 * Tests the effect of setting a file to writable.
+	 */
 
-
-@Test
-public void isWritable_SetTrue() {
+	@Test
+	public void isWritable_SetTrue() {
 	unwritableFile.setWritable(true);
 	assertEquals(true,unwritableFile.isWritable());
 	
 	
-}
+	}
 
 	
 	
