@@ -45,25 +45,72 @@ public class FileTest {
 	}
 	
 	
-	@Test
+	@Test (expected = UnauthorizedException.class)
 	public void setName_LegalName_UnWritableFile() {
 		unwritableFile.setName("validName");
-		assertEquals("validName", unwritableFile.getName());
 	
 	}
 
 	
+
+	@Test (expected = UnauthorizedException.class)
+	public void setName_IllegalName_UnWritableFile() {
+		unwritableFile.setName("invalidName@");
+	
+	}
+
+	
+
 
 	@Test
-	public void setName_IllegalName_UnWritableFile() {
-		String name = unwritableFile.getName();
-		unwritableFile.setName("invalidName@");
-		assertEquals(name, unwritableFile.getName());
+	public void enlarge_LegalSize_WritableFile() {
+		int size = writableFile.getSize();
+		writableFile.enlarge(10);
+		assertEquals(size + 10, writableFile.getSize());
+		
+	}
+	
+	
+@Test (expected = UnauthorizedException.class)
+	public void enlarge_LegalSize_UnWritableFile() {
+		unwritableFile.enlarge(10);
 	
 	}
 
 	
+
+@Test
+public void shorten_LegalSize_WritableFile() {
+	int size = writableFile.getSize();
+	writableFile.shorten(5);
+	assertEquals(size - 5, writableFile.getSize());
 	
+}
+
+
+@Test (expected = UnauthorizedException.class)
+public void shorten_LegalSize_UnWritableFile() {
+	unwritableFile.shorten(5);
+
+}
+
+
+@Test
+public void isWritable_SetFalse() {
+	writableFile.setWritable(false);
+	assertEquals(false,writableFile.isWritable());
+	
+	
+}
+
+
+@Test
+public void isWritable_SetTrue() {
+	unwritableFile.setWritable(true);
+	assertEquals(true,unwritableFile.isWritable());
+	
+	
+}
 
 	
 	

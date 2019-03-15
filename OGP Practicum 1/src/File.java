@@ -64,7 +64,7 @@ class UnauthorizedException extends RuntimeException
  * @invar 	the size of a file must always be a valid size
  * 			| isValidSize(size)
  * 
- * @author robin, jean-louis, edward
+ * @author Robin Bruneel, Jean-Louis Carron en Edward Wiels
  * @version 1.0
  */
 public class File {
