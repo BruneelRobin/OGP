@@ -136,7 +136,7 @@ public class File {
 	 */
 	@Raw
 	public static boolean isValidName(String name) {
-		return name.matches("[a-zA-Z0-9._-]*");
+		return name != "" && name.matches("[a-zA-Z0-9._-]*");
 	}
 	
 	/**
@@ -158,7 +158,13 @@ public class File {
 	@Raw
 	public void setName(String name) throws UnauthorizedException {
 		if (isWritable()) {
-			this.name = name;
+			if (isValidName(name)) {
+				this.name = name;
+			} else {
+				this.name = "File_" + String.valueOf(numOfDefaultFiles);
+				numOfDefaultFiles ++;
+			}
+			
 			this.modificationTime = getCurrentTime();
 		} else {
 			throw new UnauthorizedException(this, name, "You are not authorized to change the name of this file!");
