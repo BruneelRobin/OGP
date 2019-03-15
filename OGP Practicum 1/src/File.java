@@ -78,7 +78,9 @@ public class File {
 	private Date modificationTime;
 	
 	/**
-	 * @return	Returns current date
+	 * Returns current date.
+	 * 
+	 * @return	Returns current date.
 	 * 
 	 */
 	@Raw
@@ -87,6 +89,8 @@ public class File {
 	}
 	
 	/**
+	 * Creates a new file with a given name, size and writable state.
+	 * 
 	 * @param	name
 	 * 			The name of the new file
 	 * @param	size
@@ -117,6 +121,8 @@ public class File {
 	}
 	
 	/**
+	 * Creates a new writable file with a given name and size 0.
+	 * 
 	 * @param	name
 	 * 			The name of the new file
 	 * 
@@ -131,9 +137,11 @@ public class File {
 	}
 	
 	/**
+	 * Checks whether or not a name is valid.
+	 * 
 	 * @param	name
 	 * 			The name to be checked
-	 * @return	Returns true if name is valid, false if not
+	 * @return	Returns true if name is valid, false if not.
 	 */
 	@Raw
 	public static boolean isValidName(String name) {
@@ -141,19 +149,23 @@ public class File {
 	}
 	
 	/**
-	 * @return	Returns the name of the file
+	 * Returns the name of the file.
+	 * 
+	 * @return	Returns the name of the file.
 	 */
 	@Basic@Raw
 	public String getName() {
 		return this.name;
 	}
 	
-	/** Changes the file name
+	/**
+	 *  Changes the file name.
+	 *  
 	 * @param	name
-	 * @post	changes the name to the new defined name when the file is writable
+	 * @post	Changes the name to the new defined name when the file is writable.
 	 * 			| isWritable()
 	 * @throws	UnauthorizedException
-	 * 			You are not authorized to change the name of this file
+	 * 			You are not authorized to change the name of this file.
 	 * 			| isWritable() == false
 	 */
 	@Raw
@@ -173,7 +185,9 @@ public class File {
 	}
 	
 	/**
-	 * @return	Returns the size of the file
+	 * Returns the size of the file.
+	 * 
+	 * @return	Returns the size of the file.
 	 */
 	@Basic@Raw
 	public int getSize() {
@@ -181,7 +195,9 @@ public class File {
 	}
 	
 	/**
-	 * @return	Returns true if the file is writable and false when read-only
+	 * Checks whether or not the file is writable.
+	 * 
+	 * @return	Returns true if the file is writable and false when read-only.
 	 */
 	@Basic@Raw
 	public boolean isWritable() {
@@ -189,15 +205,25 @@ public class File {
 	}
 	
 	/**
+	 * Changes the writable state of the file.
+	 * 
 	 * @param	writable
 	 * 			the new writable value
-	 * @post	the rights are updated to the new writable state
+	 * @post	The rights are updated to the new writable state.
 	 */
 	@Raw
 	public void setWritable(boolean writable) {
 		this.writable = writable;
 	}
 	
+	
+	/**
+	 * Checks whether or not the size of the file is valid.
+	 * 
+	 * @param 	size
+	 * 			the size to be checked
+	 * @return	Returns true if the size is valid, false if not.
+	 */
 	@Raw
 	public boolean isValidSize (int size) {
 		if (size >= getMinSizeLimit() && size <= getMaxSizeLimit()) {
@@ -208,7 +234,9 @@ public class File {
 	}
 	
 	/**
-	 * @return	Returns the last modification time of this file
+	 * Returns the last modification time of the file.
+	 * 
+	 * @return	Returns the last modification time of this file.
 	 */
 	@Basic@Raw
 	public Date getModificationTime() {
@@ -216,7 +244,9 @@ public class File {
 	}
 	
 	/**
-	 * @return	Returns the creation time of this file
+	 * Returns the creation time of the file.
+	 * 
+	 * @return	Returns the creation time of this file.
 	 */
 	@Basic@Immutable@Raw
 	public Date getCreationTime() {
@@ -224,7 +254,9 @@ public class File {
 	}
 	
 	/**
-	 * @return	Returns the maximum size limit
+	 * Returns the maximum size limit.
+	 * 
+	 * @return	Returns the maximum size limit.
 	 */
 	@Basic@Raw
 	public static int getMaxSizeLimit() {
@@ -232,9 +264,11 @@ public class File {
 	}
 	
 	/**
+	 * Sets a new maximum size limit.
+	 * 
 	 * @param	limit
 	 * 			The new size limit
-	 * @post	The maximum size limit changes for all files to the new limit
+	 * @post	The maximum size limit changes for all files to the new limit.
 	 */
 	@Raw
 	public static void setMaxSizeLimit(int limit) {
@@ -242,7 +276,9 @@ public class File {
 	}
 	
 	/**
-	 * @return	Returns the minimum size limit
+	 * Returns the minimum size limit.
+	 * 
+	 * @return	Returns the minimum size limit.
 	 */
 	@Basic@Raw
 	public static int getMinSizeLimit() {
@@ -250,9 +286,11 @@ public class File {
 	}
 	
 	/**
+	 * Sets new minimum size limit.
+	 * 
 	 * @param	limit
 	 * 			The new size limit
-	 * @post	The minimum size limit changes for all files to the new limit
+	 * @post	The minimum size limit changes for all files to the new limit.
 	 */
 	@Raw
 	public static void setMinSizeLimit(int limit) {
@@ -260,6 +298,8 @@ public class File {
 	}
 	
 	/**
+	 * Enlarges the size of the file.
+	 * 
 	 * @param	size
 	 * 			The size to increase (in bytes)
 	 * @pre		The size must be a valid size
@@ -281,6 +321,8 @@ public class File {
 	}
 	
 	/**
+	 * Shortens the size of the file.
+	 * 
 	 * @param	size
 	 * 			The size to increase (in bytes)
 	 * @pre		The size must be a valid size
@@ -302,6 +344,8 @@ public class File {
 	}
 	
 	/**
+	 * Returns the use period of the file.
+	 * 
 	 * @return	Returns difference in seconds between last modification time and creation time
 	 * 			Returns 0 when file hasn't been modified
 	 */
@@ -315,6 +359,8 @@ public class File {
 	}
 	
 	/**
+	 * Checks whether or not the file has an overlapping use period with a given file.
+	 * 
 	 * @return	Returns true when use periods overlap
 	 * @return	When this File is null, other file is null or modification times 
 	 * 			don't exist the standard value false is returned
