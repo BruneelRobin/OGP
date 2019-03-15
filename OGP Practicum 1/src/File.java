@@ -12,6 +12,7 @@ class UnauthorizedException extends RuntimeException
 	
 	public File file;
 	public int size;
+	public String name;
 	
     
     public UnauthorizedException(File file, int size, String message)
@@ -20,6 +21,15 @@ class UnauthorizedException extends RuntimeException
     	this.file = file;
     	this.size = size;
     }
+    
+    public UnauthorizedException(File file, String name, String message)
+    {
+    	super(message);
+    	this.file = file;
+    	this.name = name;
+    }
+    
+    
     
     /**
      * 
@@ -36,6 +46,15 @@ class UnauthorizedException extends RuntimeException
     public int getSize() {
     	return size;
     }
+    
+    /**
+     * 
+     * @return	Returns the name that caused the error to happen
+     */
+    public String getName() {
+    	return name;
+    }
+    
 }
 
 /**
@@ -142,7 +161,7 @@ public class File {
 			this.name = name;
 			this.modificationTime = getCurrentTime();
 		} else {
-			throw new UnauthorizedException("You are not authorized to change the name of this file!");
+			throw new UnauthorizedException(this, name, "You are not authorized to change the name of this file!");
 		}
 	}
 	
