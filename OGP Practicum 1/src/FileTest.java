@@ -1,6 +1,7 @@
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.Before;
+import org.junit.BeforeClass;
 
 /**
  * A class collecting tests for the class of files.
@@ -32,8 +33,37 @@ public class FileTest {
 		writableFile = new File("writableFile", 10, true);
 		unwritableFile = new File("unwritableFile", 10, false);
 		
-
+		}
+	
+	
+	private static File firstFile;
+	private static File secondFile;
+	private static File thirdFile;
+	
+	private void sleep() {
+		for (int x = 0; x<1000;x++) {
+			
+		}
+				
 	}
+	
+	@BeforeClass
+	public void setUpImmutableFixture() {
+		firstFile = new File("firstFile");
+		sleep();
+		secondFile = new File("secondFile");
+		sleep();
+		thirdFile = new File("thirdFile");
+		sleep();
+		secondFile.enlarge(10);
+		sleep();
+		thirdFile.enlarge(10);
+		sleep();
+		firstFile.enlarge(10);
+
+		
+			}
+	
 	
 	/**
 	 * Tests the effect of setting a legal name of a writable file.
@@ -53,7 +83,7 @@ public class FileTest {
 	@Test
 	public void setName_IllegalName_WritableFile() {
 		writableFile.setName("invalidName@");
-		assertEquals("File_1", writableFile.getName());
+		assertEquals(true, writableFile.getName().matches("File_\\d+"));
 	
 	}
 	
@@ -144,7 +174,32 @@ public class FileTest {
 	
 	}
 
+@Test
+public void File_ValidName() {
+	File testFile = new File("validName",10,true);
+	assertEquals(testFile.getName(),"validName");
+	assertEquals(10,testFile.getSize());
+	assertEquals(true,testFile.isWritable());
+			
+		
+}
+
+@Test
+public void File_InvalidName() {
+	File testFile = new File("invalidName@",10,true);
+	assertEquals(testFile.getName(),"File_1");
+	assertEquals(10,testFile.getSize());
+	assertEquals(true,testFile.isWritable());
+			
+		
+}
 	
+@Test
+public void hasOverlappingUsePeriod_x1_y1_x2_y2() {
+	assertEquals(true,secondFile.hasOverlappingUsePeriod(thirdFile));
+}
+
+
 	
 	
 	
