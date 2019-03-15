@@ -1,5 +1,6 @@
 import static org.junit.Assert.*;
-import org.junit.*;
+import org.junit.Test;
+import org.junit.Before;
 
 /**
  * 
@@ -17,11 +18,13 @@ public class FileTest {
 	
 	
 	
+	
 	@Before 
 	public void setUpMutableFixture() {
 		
 		writableFile = new File("writableFile", 10, true);
 		unwritableFile = new File("unwritableFile", 10, false);
+		
 		
 
 	}
@@ -34,10 +37,38 @@ public class FileTest {
 	}
 	
 	
+	@Test
+	public void setName_IllegalName_WritableFile() {
+		writableFile.setName("invalidName@");
+		assertEquals("File_1", writableFile.getName());
 	
+	}
+	
+	
+	@Test
+	public void setName_LegalName_UnWritableFile() {
+		unwritableFile.setName("validName");
+		assertEquals("validName", unwritableFile.getName());
+	
+	}
+
+	
+
+	@Test
+	public void setName_IllegalName_UnWritableFile() {
+		String name = unwritableFile.getName();
+		unwritableFile.setName("invalidName@");
+		assertEquals(name, unwritableFile.getName());
+	
+	}
+
 	
 	
 
+	
+	
+	
+	
 }
 
 

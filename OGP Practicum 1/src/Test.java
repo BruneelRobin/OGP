@@ -8,10 +8,8 @@ public class Test {
 	public static void main (String[] args) {
 		
 		Result result = JUnitCore.runClasses(FileTest.class);
-		
-		
-		
-		
+				
+				
 		
 	}
 }
