@@ -27,9 +27,9 @@ public class FileTest {
 	/**
 	 * Sets up a mutable test fixture.
 	 * 
-	 * @post The variable writableFile references a new writable file of size 10.
+	 * @post	The variable writableFile references a new writable file of size 10.
 	 *
-	 * @post The variable unwritableFile references a new unwritable file of size 10.
+	 * @post	The variable unwritableFile references a new unwritable file of size 10.
 	 */
 	
 	@Before 
@@ -37,10 +37,16 @@ public class FileTest {
 		
 		writableFile = new File("writableFile", 10, true);
 		unwritableFile = new File("unwritableFile", 10, false);
-		
-		
 
 	}
+	
+	/**
+	 * Sets up an immutable test fixture. Containing several files instantiated on different times.
+	 * 
+	 * @post	The variables firstFile, secondFile, thirdFile and fourthFile are created.
+	 * 			All these files have different creation and modification times.
+	 * 
+	 */
 	
 	@BeforeClass
 	public static void setUpImmutableFixture() throws InterruptedException {
@@ -172,6 +178,10 @@ public class FileTest {
 	
 	
 	}
+	
+	/**
+	 * Tests the effect of creating a file with a valid name
+	 */
 
 	@Test
 	public void File_ValidName() {
@@ -183,6 +193,10 @@ public class FileTest {
 			
 	}
 	
+	/**
+	 * Tests the effect of creating a file with an invalid name
+	 */
+	
 	@Test
 	public void File_InvalidName() {
 		File testFile = new File("invalidName@",10,true);
@@ -193,17 +207,35 @@ public class FileTest {
 			
 	}
 	
+	/**
+	 * Tests the effect of the method hasOverlappingUsePeriod with two overlapping use periods.
+	 * where x1 is the creation time of the first file, y1 the creation time of the second file,
+	 * x2 the modification time of the first file, y2 the modification time of the second file.
+	 */
+	
 	@Test
 	public void hasOverlappingUsePeriod_x1_y1_x2_y2() {
 		assertEquals(true,secondFile.hasOverlappingUsePeriod(thirdFile));
 		assertEquals(true,thirdFile.hasOverlappingUsePeriod(secondFile));
 	}
 	
+	/**
+	 * Tests the effect of the method hasOverlappingUsePeriod with inner use periods.
+	 * where x1 is the creation time of the first file, y1 the creation time of the second file,
+	 * x2 the modification time of the first file, y2 the modification time of the second file.
+	 */
+	
 	@Test
 	public void hasOverlappingUsePeriod_x1_y1_y2_x2() {
 		assertEquals(true,secondFile.hasOverlappingUsePeriod(firstFile));
 		assertEquals(true,firstFile.hasOverlappingUsePeriod(secondFile));
 	}
+	
+	/**
+	 * Tests the effect of the method hasOverlappingUsePeriod with non overlapping use periods.
+	 * where x1 is the creation time of the first file, y1 the creation time of the second file,
+	 * x2 the modification time of the first file, y2 the modification time of the second file.
+	 */
 	
 	@Test
 	public void hasOverlappingUsePeriod_x1_x2_y1_y2() {

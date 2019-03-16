@@ -4,6 +4,15 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
 
+/**
+ * 
+ * A throwable error when one tries to write to a file that is not writable.
+ * 
+ * @author Robin Bruneel, Jean-Louis Carron en Edward Wiels
+ * @version 1.0
+ *
+ */
+
 class UnauthorizedException extends RuntimeException
 {
 	public UnauthorizedException() {
