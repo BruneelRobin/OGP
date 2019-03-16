@@ -2,6 +2,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import java.lang.Thread;
 
 /**
  * A class collecting tests for the class of files.
@@ -18,6 +19,10 @@ public class FileTest {
 	
 	private static File unwritableFile;
 	
+	private static File firstFile;
+	private static File secondFile;
+	private static File thirdFile;
+	private static File fourthFile;
 	
 	/**
 	 * Sets up a mutable test fixture.
@@ -33,36 +38,30 @@ public class FileTest {
 		writableFile = new File("writableFile", 10, true);
 		unwritableFile = new File("unwritableFile", 10, false);
 		
-		}
-	
-	
-	private static File firstFile;
-	private static File secondFile;
-	private static File thirdFile;
-	
-	private void sleep() {
-		for (int x = 0; x<1000;x++) {
-			
-		}
-				
+		
+
 	}
 	
 	@BeforeClass
-	public void setUpImmutableFixture() {
-		firstFile = new File("firstFile");
-		sleep();
+	public static void setUpImmutableFixture() throws InterruptedException {
+		firstFile = new File ("firstFile");
+		Thread.sleep(50);
 		secondFile = new File("secondFile");
-		sleep();
+		Thread.sleep(50);
 		thirdFile = new File("thirdFile");
-		sleep();
+		Thread.sleep(50);
 		secondFile.enlarge(10);
-		sleep();
+		Thread.sleep(50);
 		thirdFile.enlarge(10);
-		sleep();
+		Thread.sleep(50);
 		firstFile.enlarge(10);
-
-		
-			}
+		Thread.sleep(50);
+		fourthFile = new File("fourthFile");
+		Thread.sleep(50);
+		fourthFile.enlarge(10);
+	}
+	
+	
 	
 	
 	/**
@@ -174,30 +173,43 @@ public class FileTest {
 	
 	}
 
-@Test
-public void File_ValidName() {
-	File testFile = new File("validName",10,true);
-	assertEquals(testFile.getName(),"validName");
-	assertEquals(10,testFile.getSize());
-	assertEquals(true,testFile.isWritable());
+	@Test
+	public void File_ValidName() {
+		File testFile = new File("validName",10,true);
+		assertEquals(testFile.getName(),"validName");
+		assertEquals(10,testFile.getSize());
+		assertEquals(true,testFile.isWritable());
+				
 			
-		
-}
-
-@Test
-public void File_InvalidName() {
-	File testFile = new File("invalidName@",10,true);
-	assertEquals(testFile.getName(),"File_1");
-	assertEquals(10,testFile.getSize());
-	assertEquals(true,testFile.isWritable());
-			
-		
-}
+	}
 	
-@Test
-public void hasOverlappingUsePeriod_x1_y1_x2_y2() {
-	assertEquals(true,secondFile.hasOverlappingUsePeriod(thirdFile));
-}
+	@Test
+	public void File_InvalidName() {
+		File testFile = new File("invalidName@",10,true);
+		assertEquals(testFile.getName(),"File_1");
+		assertEquals(10,testFile.getSize());
+		assertEquals(true,testFile.isWritable());
+				
+			
+	}
+	
+	@Test
+	public void hasOverlappingUsePeriod_x1_y1_x2_y2() {
+		assertEquals(true,secondFile.hasOverlappingUsePeriod(thirdFile));
+		assertEquals(true,thirdFile.hasOverlappingUsePeriod(secondFile));
+	}
+	
+	@Test
+	public void hasOverlappingUsePeriod_x1_y1_y2_x2() {
+		assertEquals(true,secondFile.hasOverlappingUsePeriod(firstFile));
+		assertEquals(true,firstFile.hasOverlappingUsePeriod(secondFile));
+	}
+	
+	@Test
+	public void hasOverlappingUsePeriod_x1_x2_y1_y2() {
+		assertEquals(false,firstFile.hasOverlappingUsePeriod(fourthFile));
+		assertEquals(false,fourthFile.hasOverlappingUsePeriod(firstFile));
+	}
 
 
 	
