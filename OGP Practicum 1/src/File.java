@@ -1,5 +1,5 @@
 import be.kuleuven.cs.som.annotate.*;
-import filesystem.FileNotWritableException;
+import filesystem.NotWritableException;
 
 import java.util.Date;
 
