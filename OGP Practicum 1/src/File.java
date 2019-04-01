@@ -1,390 +1,443 @@
+import be.kuleuven.cs.som.annotate.*;
+import filesystem.FileNotWritableException;
+
 import java.util.Date;
 
-import be.kuleuven.cs.som.annotate.Basic;
-import be.kuleuven.cs.som.annotate.Immutable;
-import be.kuleuven.cs.som.annotate.Raw;
-
 /**
- * 
- * A throwable error when one tries to write to a file that is not writable.
- * 
- * @author Robin Bruneel, Jean-Louis Carron en Edward Wiels
- * @version 1.0
+ * A class of files.
  *
- */
-
-class UnauthorizedException extends RuntimeException
-{
-	public UnauthorizedException() {
-		
-	}
-	
-	public File file;
-	public int size;
-	public String name;
-	
-    
-    public UnauthorizedException(File file, int size, String message)
-    {
-    	super(message);
-    	this.file = file;
-    	this.size = size;
-    }
-    
-    public UnauthorizedException(File file, String name, String message)
-    {
-    	super(message);
-    	this.file = file;
-    	this.name = name;
-    }
-    
-    
-    
-    /**
-     * 
-     * @return	Returns the file where the error occurred
-     */
-    public File getFile() {
-    	return file;
-    }
-    
-    /**
-     * 
-     * @return	Returns the size that caused the error to happen
-     */
-    public int getSize() {
-    	return size;
-    }
-    
-    /**
-     * 
-     * @return	Returns the name that caused the error to happen
-     */
-    public String getName() {
-    	return name;
-    }
-    
-}
-
-/**
- * A class of files involving a name, size, writable state, maximum size limit, minimum size limit, 
- * creation time and modification time.
+ * @invar	Each file must have a properly spelled name.
+ * 			| isValidName(getName())
+ * @invar	Each file must have a valid size.
+ * 			| isValidSize(getSize())
+ * @invar   Each file must have a valid creation time.
+ *          | isValidCreationTime(getCreationTime())
+ * @invar   Each file must have a valid modification time.
+ *          | canHaveAsModificationTime(getModificationTime())
+ * @author  Mark Dreesen
+ * @author  Tommy Messelis
+ * @version 3.1
  * 
- * @invar 	the size of a file must always be a valid size
- * 			| isValidSize(size)
- * 
- * @author Robin Bruneel, Jean-Louis Carron en Edward Wiels
- * @version 1.0
+ * @note		See Coding Rule 48 for more info on the encapsulation of class invariants.
  */
 public class File {
-	private String name;
-	private int size;
-	private boolean writable;
-	private static int numOfDefaultFiles = 1;
-	private static int sizeMaxLimit = Integer.MAX_VALUE;
-	private static int sizeMinLimit = 0;
-	private final Date creationTime;
-	private Date modificationTime;
-	
-	/**
-	 * Returns current date.
-	 * 
-	 * @return	Returns current date.
-	 * 
-	 */
-	@Raw
-	private static Date getCurrentTime () {
-		return new Date();
-	}
-	
-	/**
-	 * Creates a new file with a given name, size and writable state.
-	 * 
-	 * @param	name
-	 * 			The name of the new file
-	 * @param	size
-	 * 			The size of the new file
-	 * @param	writable
-	 * 			The rights on the new file; writable or not.
-	 * 
-	 * @pre		The given size must be a valid size
-	 * 			| isValidSize(size)
-	 * 
-	 * @post	Creates a file with the given name, size and writable state. 
-	 * @post	If the name is not valid the default name "File_x" is used, 
-	 * 			where x is a unique integer starting from 1.
-	 * 			Creation time is instantiated as the local time.
-	 * 
-	 */
-	public File (String name, int size, boolean writable) {
-		if (isValidName(name)) {
-			this.name = name;
-		} else {
-			this.name = "File_" + String.valueOf(numOfDefaultFiles);
-			numOfDefaultFiles ++;
-		}
-		
-		this.size = size;
-		this.writable = writable;
-		this.creationTime = getCurrentTime();
-	}
-	
-	/**
-	 * Creates a new writable file with a given name and size 0.
-	 * 
-	 * @param	name
-	 * 			The name of the new file
-	 * 
-	 * @effect	Creates a file with the given name.
-	 * 			Default value 0 for size is used.	
-	 * @effect	If the name is not valid the default name "File_x" is used, 
-	 * 			where x is a unique integer starting from 1.
-	 * 
-	 */
-	public File (String name) {
-		this(name, 0, true);
-	}
-	
-	/**
-	 * Checks whether or not a name is valid.
-	 * 
-	 * @param	name
-	 * 			The name to be checked
-	 * @return	Returns true if name is valid, false if not.
-	 */
-	@Raw
-	public static boolean isValidName(String name) {
-		return name != "" && name.matches("[a-zA-Z0-9._-]*");
-	}
-	
-	/**
-	 * Returns the name of the file.
-	 * 
-	 * @return	Returns the name of the file.
-	 */
-	@Basic@Raw
-	public String getName() {
-		return this.name;
-	}
-	
-	/**
-	 *  Changes the file name.
-	 *  
-	 * @param	name
-	 * @post	Changes the name to the new defined name when the file is writable.
-	 * 			| isWritable()
-	 * @throws	UnauthorizedException
-	 * 			You are not authorized to change the name of this file.
-	 * 			| isWritable() == false
-	 */
-	@Raw
-	public void setName(String name) throws UnauthorizedException {
-		if (isWritable()) {
-			if (isValidName(name)) {
-				this.name = name;
-			} else {
-				this.name = "File_" + String.valueOf(numOfDefaultFiles);
-				numOfDefaultFiles ++;
-			}
-			
-			this.modificationTime = getCurrentTime();
-		} else {
-			throw new UnauthorizedException(this, name, "You are not authorized to change the name of this file!");
-		}
-	}
-	
-	/**
-	 * Returns the size of the file.
-	 * 
-	 * @return	Returns the size of the file.
-	 */
-	@Basic@Raw
-	public int getSize() {
-		return this.size;
-	}
-	
-	/**
-	 * Checks whether or not the file is writable.
-	 * 
-	 * @return	Returns true if the file is writable and false when read-only.
-	 */
-	@Basic@Raw
-	public boolean isWritable() {
-		return this.writable;
-	}
-	
-	/**
-	 * Changes the writable state of the file.
-	 * 
-	 * @param	writable
-	 * 			the new writable value
-	 * @post	The rights are updated to the new writable state.
-	 */
-	@Raw
-	public void setWritable(boolean writable) {
-		this.writable = writable;
-	}
-	
-	
-	/**
-	 * Checks whether or not the size of the file is valid.
-	 * 
-	 * @param 	size
-	 * 			the size to be checked
-	 * @return	Returns true if the size is valid, false if not.
-	 */
-	@Raw
-	public boolean isValidSize (int size) {
-		if (size >= getMinSizeLimit() && size <= getMaxSizeLimit()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * Returns the last modification time of the file.
-	 * 
-	 * @return	Returns the last modification time of this file.
-	 */
-	@Basic@Raw
-	public Date getModificationTime() {
-		return this.modificationTime;
-	}
-	
-	/**
-	 * Returns the creation time of the file.
-	 * 
-	 * @return	Returns the creation time of this file.
-	 */
-	@Basic@Immutable@Raw
-	public Date getCreationTime() {
-		return this.creationTime;
-	}
-	
-	/**
-	 * Returns the maximum size limit.
-	 * 
-	 * @return	Returns the maximum size limit.
-	 */
-	@Basic@Raw
-	public static int getMaxSizeLimit() {
-		return sizeMaxLimit;
-	}
-	
-	/**
-	 * Sets a new maximum size limit.
-	 * 
-	 * @param	limit
-	 * 			The new size limit
-	 * @post	The maximum size limit changes for all files to the new limit.
-	 */
-	@Raw
-	public static void setMaxSizeLimit(int limit) {
-		sizeMaxLimit = limit;
-	}
-	
-	/**
-	 * Returns the minimum size limit.
-	 * 
-	 * @return	Returns the minimum size limit.
-	 */
-	@Basic@Raw
-	public static int getMinSizeLimit() {
-		return sizeMinLimit;
-	}
-	
-	/**
-	 * Sets new minimum size limit.
-	 * 
-	 * @param	limit
-	 * 			The new size limit
-	 * @post	The minimum size limit changes for all files to the new limit.
-	 */
-	@Raw
-	public static void setMinSizeLimit(int limit) {
-		sizeMinLimit = limit;
-	}
-	
-	/**
-	 * Enlarges the size of the file.
-	 * 
-	 * @param	size
-	 * 			The size to increase (in bytes)
-	 * @pre		The size must be a valid size
-	 * 			| size >= 0 && getSize() < getMaxSizeLimit() - size
-	 * @post	The new size of this file is enlarged with the parameter size
-	 * 			| this.size = getSize() + size
-	 * @throws	UnauthorizedException(this,size,message)
-	 * 			You are not authorized to change the size of this file
-	 * 			| isWritable() == false
-	 */
-	public void enlarge(int size) {
-		if (isWritable()) {
-			this.size += size;
-			this.modificationTime = getCurrentTime();
-		} else {
-			throw new UnauthorizedException(this, size,"You are not authorized to change the size of this file!");
-		}
-		
-	}
-	
-	/**
-	 * Shortens the size of the file.
-	 * 
-	 * @param	size
-	 * 			The size to increase (in bytes)
-	 * @pre		The size must be a valid size
-	 * 			| getSize() >= getMinSizeLimit() + size && size >= 0
-	 * @post	The new size of this file is shortened with the parameter size
-	 * 			| this.size = getSize() - size
-	 * @throws	UnauthorizedException(this,size,message)
-	 * 			You are not authorized to change the size of this file
-	 * 			| isWritable() == false
-	 */
-	
-	public void shorten(int size) {
-		if (isWritable()) {
-			this.size -= size;
-			this.modificationTime = getCurrentTime();
-		} else {
-			throw new UnauthorizedException(this, size,"You are not authorized to change the size of this file!");
-		}
-	}
-	
-	/**
-	 * Returns the use period of the file.
-	 * 
-	 * @return	Returns difference in seconds between last modification time and creation time
-	 * 			Returns 0 when file hasn't been modified
-	 */
-	@Raw
-	public double getUsePeriod () {
-		double usePeriod = 0;
-		if (modificationTime != null) {
-			usePeriod = modificationTime.getTime() - creationTime.getTime();
-		}
-		return usePeriod/1000;
-	}
-	
-	/**
-	 * Checks whether or not the file has an overlapping use period with a given file.
-	 * 
-	 * @return	Returns true when use periods overlap
-	 * @return	When this File is null, other file is null or modification times 
-	 * 			don't exist the standard value false is returned
-	 */
-	@Raw
-	public boolean hasOverlappingUsePeriod (@Raw File other) {
-		if (this == null || this.modificationTime == null || other == null || other.modificationTime == null) {
-			return false;
-		}
-		
-		if (this.getCreationTime().getTime() > other.getModificationTime().getTime() 
-				|| this.getModificationTime().getTime() < other.getCreationTime().getTime()) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+
+    /**********************************************************
+     * Constructors
+     **********************************************************/
+
+    /**
+     * Initialize a new file with given name, size and writability.
+     *
+     * @param  	name
+     *         	The name of the new file.
+     * @param  	size
+     *         	The size of the new file.
+     * @param  	writable
+     *         	The writability of the new file.
+     * @effect  The name of the file is set to the given name.
+     * 			If the given name is not valid, a default name is set.
+     *          | setName(name)
+     * @effect	The size is set to the given size (must be valid)
+     * 			| setSize(size)
+     * @effect	The writability is set to the given flag
+     * 			| setWritable(writable)
+     * @post    The new creation time of this file is initialized to some time during
+     *          constructor execution.
+     *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
+     *          | (new.getCreationTime().getTime() <= (new System).currentTimeMillis())
+     * @post    The new file has no time of last modification.
+     *          | new.getModificationTime() == null
+     */
+	public File(String name, int size, boolean writable) {
+        setName(name);
+        setSize(size);
+        setWritable(writable);
+    }
+
+    /**
+     * Initialize a new file with given name.
+     *
+     * @param   name
+     *          The name of the new file.
+     * @effect  This new file is initialized with the given name, a zero size
+     * 			and true writability
+     *         | this(name,0,true)
+     */
+    public File(String name) {
+        this(name,0,true);
+    }
+    
+    
+    
+    /**********************************************************
+     * name - total programming
+     **********************************************************/
+
+    /**
+     * Variable referencing the name of this file.
+     * @note		See Coding Rule 32, for information on the initialization of fields.
+     */
+    private String name = null;
+
+    /**
+     * Return the name of this file.
+     * @note		See Coding Rule 19 for the Basic annotation.
+     */
+    @Raw @Basic 
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Check whether the given name is a legal name for a file.
+     * 
+     * @param  	name
+     *			The name to be checked
+     * @return	True if the given string is effective, not
+     * 			empty and consisting only of letters, digits, dots,
+     * 			hyphens and underscores; false otherwise.
+     * 			| result ==
+     * 			|	(name != null) && name.matches("[a-zA-Z_0-9.-]+")
+     */
+    public static boolean isValidName(String name) {
+        return (name != null && name.matches("[a-zA-Z_0-9.-]+"));
+    }
+    
+    /**
+     * Set the name of this file to the given name.
+     *
+     * @param   name
+     * 			The new name for this file.
+     * @post    If the given name is valid, the name of
+     *          this file is set to the given name,
+     *          otherwise the name of the file is set to a valid name (the default).
+     *          | if (isValidName(name))
+     *          |      then new.getName().equals(name)
+     *          |      else new.getName().equals(getDefaultName())
+     */
+    @Raw @Model 
+    private void setName(String name) {
+        if (isValidName(name)) {
+        		this.name = name;
+        } else {
+        		this.name = getDefaultName();
+        }
+    }
+    
+    /**
+     * Return the name for a new file which is to be used when the
+     * given name is not valid.
+     *
+     * @return   A valid file name.
+     *         | isValidName(result)
+     */
+    @Model
+    private static String getDefaultName() {
+        return "new_file";
+    }
+
+    /**
+     * Change the name of this file to the given name.
+     *
+     * @param	name
+     * 			The new name for this file.
+     * @effect  The name of this file is set to the given name, 
+     * 			if this is a valid name and the file is writable, 
+     * 			otherwise there is no change.
+     * 			| if (isValidName(name) && isWritable())
+     *          | then setName(name)
+     * @effect  If the name is valid and the file is writable, the modification time 
+     * 			of this file is updated.
+     *          | if (isValidName(name) && isWritable())
+     *          | then setModificationTime()
+     * @throws  FileNotWritableException(this)
+     *          This file is not writable
+     *          | ! isWritable() 
+     */
+    public void changeName(String name) throws NotWritableException {
+        if (isWritable()) {
+            if (isValidName(name)){
+            	setName(name);
+                setModificationTime();
+            }
+        } else {
+            throw new NotWritableException(this);
+        }
+    }
+
+    
+    
+    /**********************************************************
+     * size - nominal programming
+     **********************************************************/
+    
+    /**
+     * Variable registering the size of this file (in bytes).
+     */
+    private int size = 0;
+    
+    /**
+     * Variable registering the maximum size of any file (in bytes).
+     */
+    private static final int maximumSize = Integer.MAX_VALUE;
+
+
+    /**
+     * Return the size of this file (in bytes).
+     */
+    @Raw @Basic 
+    public int getSize() {
+        return size;
+    }
+    
+    /**
+     * Set the size of this file to the given size.
+     *
+     * @param  size
+     *         The new size for this file.
+     * @pre    The given size must be legal.
+     *         | isValidSize(size)
+     * @post   The given size is registered as the size of this file.
+     *         | new.getSize() == size
+     */
+    @Raw @Model 
+    private void setSize(int size) {
+        this.size = size;
+    }
+   
+    /**
+     * Return the maximum file size.
+     */
+    @Basic @Immutable
+    public static int getMaximumSize() {
+        return maximumSize;
+    }
+
+    /**
+     * Check whether the given size is a valid size for a file.
+     *
+     * @param  size
+     *         The size to check.
+     * @return True if and only if the given size is positive and does not
+     *         exceed the maximum size.
+     *         | result == ((size >= 0) && (size <= getMaximumSize()))
+     */
+    public static boolean isValidSize(int size) {
+        return ((size >= 0) && (size <= getMaximumSize()));
+    }
+
+    /**
+     * Increases the size of this file with the given delta.
+     *
+     * @param   delta
+     *          The amount of bytes by which the size of this file
+     *          must be increased.
+     * @pre     The given delta must be strictly positive.
+     *          | delta > 0
+     * @effect  The size of this file is increased with the given delta.
+     *          | changeSize(delta)
+     */
+    public void enlarge(int delta) throws FileNotWritableException {
+        changeSize(delta);
+    }
+
+    /**
+     * Decreases the size of this file with the given delta.
+     *
+     * @param   delta
+     *          The amount of bytes by which the size of this file
+     *          must be decreased.
+     * @pre     The given delta must be strictly positive.
+     *          | delta > 0
+     * @effect  The size of this file is decreased with the given delta.
+     *          | changeSize(-delta)
+     */
+    public void shorten(int delta) throws FileNotWritableException {
+        changeSize(-delta);
+    }
+
+    /**
+     * Change the size of this file with the given delta.
+     *
+     * @param  delta
+     *         The amount of bytes by which the size of this file
+     *         must be increased or decreased.
+     * @pre    The given delta must not be 0
+     *         | delta != 0
+     * @effect The size of this file is adapted with the given delta.
+     *         | setSize(getSize()+delta)
+     * @effect The modification time is updated.
+     *         | setModificationTime()
+     * @throws FileNotWritableException(this)
+     *         This file is not writable.
+     *         | ! isWritable()
+     */
+    @Model 
+    private void changeSize(int delta) throws NotWritableException{
+        if (isWritable()) {
+            setSize(getSize()+delta);
+            setModificationTime();            
+        }else{
+        	throw new NotWritableException(this);
+        }
+    }
+
+    
+
+    /**********************************************************
+     * creationTime
+     **********************************************************/
+
+    /**
+     * Variable referencing the time of creation.
+     */
+    private final Date creationTime = new Date();
+   
+    /**
+     * Return the time at which this file was created.
+     */
+    @Raw @Basic @Immutable
+    public Date getCreationTime() {
+        return creationTime;
+    }
+
+    /**
+     * Check whether the given date is a valid creation time.
+     *
+     * @param  	date
+     *         	The date to check.
+     * @return 	True if and only if the given date is effective and not
+     * 			in the future.
+     *         	| result == 
+     *         	| 	(date != null) &&
+     *         	| 	(date.getTime() <= System.currentTimeMillis())
+     */
+    public static boolean isValidCreationTime(Date date) {
+    	return 	(date!=null) &&
+    			(date.getTime()<=System.currentTimeMillis());
+    }
+
+    
+
+    /**********************************************************
+     * modificationTime
+     **********************************************************/
+
+    /**
+     * Variable referencing the time of the last modification,
+     * possibly null.
+     */
+    private Date modificationTime = null;
+   
+    /**
+     * Return the time at which this file was last modified, that is
+     * at which the name or size was last changed. If this file has
+     * not yet been modified after construction, null is returned.
+     */
+    @Raw @Basic
+    public Date getModificationTime() {
+        return modificationTime;
+    }
+
+    /**
+     * Check whether this file can have the given date as modification time.
+     *
+     * @param	date
+     * 			The date to check.
+     * @return 	True if and only if the given date is either not effective
+     * 			or if the given date lies between the creation time and the
+     * 			current time.
+     *         | result == (date == null) ||
+     *         | ( (date.getTime() >= getCreationTime().getTime()) &&
+     *         |   (date.getTime() <= System.currentTimeMillis())     )
+     */
+    public boolean canHaveAsModificationTime(Date date) {
+        return (date == null) ||
+               ( (date.getTime() >= getCreationTime().getTime()) &&
+                 (date.getTime() <= System.currentTimeMillis()) );
+    }
+
+    /**
+     * Set the modification time of this file to the current time.
+     *
+     * @post   The new modification time is effective.
+     *         | new.getModificationTime() != null
+     * @post   The new modification time lies between the system
+     *         time at the beginning of this method execution and
+     *         the system time at the end of method execution.
+     *         | (new.getModificationTime().getTime() >=
+     *         |                    System.currentTimeMillis()) &&
+     *         | (new.getModificationTime().getTime() <=
+     *         |                    (new System).currentTimeMillis())
+     */
+    @Model 
+    private void setModificationTime() {
+        modificationTime = new Date();
+    }
+
+    /**
+     * Return whether this file and the given other file have an
+     * overlapping use period.
+     *
+     * @param 	other
+     *        	The other file to compare with.
+     * @return 	False if the other file is not effective
+     * 			False if the prime object does not have a modification time
+     * 			False if the other file is effective, but does not have a modification time
+     * 			otherwise, true if and only if the open time intervals of this file and
+     * 			the other file overlap
+     *        	| if (other == null) then result == false else
+     *        	| if ((getModificationTime() == null)||
+     *        	|       other.getModificationTime() == null)
+     *        	|    then result == false
+     *        	|    else 
+     *        	| result ==
+     *        	| ! (getCreationTime().before(other.getCreationTime()) && 
+     *        	|	 getModificationTime().before(other.getCreationTime()) ) &&
+     *        	| ! (other.getCreationTime().before(getCreationTime()) && 
+     *        	|	 other.getModificationTime().before(getCreationTime()) )
+     */
+    public boolean hasOverlappingUsePeriod(File other) {
+        if (other == null) return false;
+        if(getModificationTime() == null || other.getModificationTime() == null) return false;
+        return ! (getCreationTime().before(other.getCreationTime()) && 
+        	      getModificationTime().before(other.getCreationTime()) ) &&
+        	   ! (other.getCreationTime().before(getCreationTime()) && 
+        	      other.getModificationTime().before(getCreationTime()) );
+    }
+
+    
+    
+    /**********************************************************
+     * writable
+     **********************************************************/
+   
+    /**
+     * Variable registering whether or not this file is writable.
+     */
+    private boolean isWritable = true;
+    
+    /**
+     * Check whether this file is writable.
+     */
+    @Raw @Basic
+    public boolean isWritable() {
+        return isWritable;
+    }
+
+    /**
+     * Set the writability of this file to the given writability.
+     *
+     * @param isWritable
+     *        The new writability
+     * @post  The given writability is registered as the new writability
+     *        for this file.
+     *        | new.isWritable() == isWritable
+     */
+    @Raw 
+    public void setWritable(boolean isWritable) {
+        this.isWritable = isWritable;
+    }
+    
 }

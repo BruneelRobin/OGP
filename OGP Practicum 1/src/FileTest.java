@@ -1,256 +1,312 @@
 import static org.junit.Assert.*;
-import org.junit.Test;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import java.lang.Thread;
+import java.util.Date;
+
+import org.junit.*;
+
+import filesystem.FileNotWritableException;
 
 /**
- * A class collecting tests for the class of files.
- * 
- * @author Robin Bruneel, Jean-Louis Carron en Edward Wiels
- * @version 1.0
+ * A JUnit test class for testing the public methods of the File Class  
+ * @author Tommy Messelis
  *
  */
-
-
 public class FileTest {
-	
-	private static File writableFile;
-	
-	private static File unwritableFile;
-	
-	private static File firstFile;
-	private static File secondFile;
-	private static File thirdFile;
-	private static File fourthFile;
-	
-	/**
-	 * Sets up a mutable test fixture.
-	 * 
-	 * @post	The variable writableFile references a new writable file of size 10.
-	 *
-	 * @post	The variable unwritableFile references a new unwritable file of size 10.
-	 */
-	
-	@Before 
-	public void setUpMutableFixture() {
-		
-		writableFile = new File("writableFile", 10, true);
-		unwritableFile = new File("unwritableFile", 10, false);
 
-	}
+	File fileStringIntBoolean;
+	File fileString;
+	Date timeBeforeConstruction, timeAfterConstruction;
 	
-	/**
-	 * Sets up an immutable test fixture. Containing several files instantiated on different times.
-	 * 
-	 * @post	The variables firstFile, secondFile, thirdFile and fourthFile are created.
-	 * 			All these files have different creation and modification times.
-	 * 
-	 */
+	File fileNotWritable;
+	Date timeBeforeConstructionNotWritable, timeAfterConstructionNotWritable;
 	
-	@BeforeClass
-	public static void setUpImmutableFixture() throws InterruptedException {
-		firstFile = new File ("firstFile");
-		Thread.sleep(50);
-		secondFile = new File("secondFile");
-		Thread.sleep(50);
-		thirdFile = new File("thirdFile");
-		Thread.sleep(50);
-		secondFile.enlarge(10);
-		Thread.sleep(50);
-		thirdFile.enlarge(10);
-		Thread.sleep(50);
-		firstFile.enlarge(10);
-		Thread.sleep(50);
-		fourthFile = new File("fourthFile");
-		Thread.sleep(50);
-		fourthFile.enlarge(10);
-	}
-	
-	
-	
-	
-	/**
-	 * Tests the effect of setting a legal name of a writable file.
-	 */
-	
-	@Test
-	public void setName_LegalName_WritableFile() {
-		writableFile.setName("validName");
-		assertEquals("validName", writableFile.getName());
-		
-	}
-	
-	/**
-	 * Tests the effect of setting an illegal name of a writable file.
-	 */
-	
-	@Test
-	public void setName_IllegalName_WritableFile() {
-		writableFile.setName("invalidName@");
-		assertEquals(true, writableFile.getName().matches("File_\\d+"));
-	
-	}
-	
-	/**
-	 * Tests the effect of setting a legal name of an unwritable file.
-	 */
-	
-	@Test (expected = UnauthorizedException.class)
-	public void setName_LegalName_UnWritableFile() {
-		unwritableFile.setName("validName");
-	
-	}
+	@Before
+	public void setUpFixture(){
+		timeBeforeConstruction = new Date();
+		fileStringIntBoolean = new File("bestand.txt",100, true);
+		fileString = new File("bestand.txt");
+		timeAfterConstruction = new Date();
 
-	/**
-	 * Tests the effect of setting an illegal name of an unwritable file.
-	 */
-
-	@Test (expected = UnauthorizedException.class)
-	public void setName_IllegalName_UnWritableFile() {
-		unwritableFile.setName("invalidName@");
-	
+		timeBeforeConstructionNotWritable = new Date();
+		fileNotWritable = new File("bestand.txt",100,false);
+		timeAfterConstructionNotWritable = new Date();
 	}
-
-	/**
-	 * Tests the effect of enlarging the size of a writable file.
-	 */
 
 	@Test
-	public void enlarge_LegalSize_WritableFile() {
-		int size = writableFile.getSize();
-		writableFile.enlarge(10);
-		assertEquals(size + 10, writableFile.getSize());
+	public void testFileStringIntBoolean_LegalCase() {
+		assertEquals("bestand.txt",fileStringIntBoolean.getName());
+		assertEquals(fileStringIntBoolean.getSize(),100);
+		assertTrue(fileStringIntBoolean.isWritable());
+		assertNull(fileStringIntBoolean.getModificationTime());
+		assertFalse(timeBeforeConstruction.after(fileStringIntBoolean.getCreationTime()));
+		assertFalse(fileStringIntBoolean.getCreationTime().after(timeAfterConstruction));
+	}
+	
+	@Test
+	public void testFileStringIntBoolean_IllegalCase() {
+		timeBeforeConstruction = new Date();
+		fileStringIntBoolean = new File("$IllegalName$",File.getMaximumSize(),false);
+		timeAfterConstruction = new Date();
+		assertTrue(File.isValidName(fileStringIntBoolean.getName()));
+		assertEquals(File.getMaximumSize(),fileStringIntBoolean.getSize());
+		assertFalse(fileStringIntBoolean.isWritable());
+		assertNull(fileStringIntBoolean.getModificationTime());
+		assertFalse(timeBeforeConstruction.after(fileStringIntBoolean.getCreationTime()));
+		assertFalse(fileStringIntBoolean.getCreationTime().after(timeAfterConstruction));
+	}
+
+	@Test
+	public void testFileString_LegalCase() {
+		assertEquals("bestand.txt",fileString.getName());
+		assertEquals(0,fileString.getSize());
+		assertTrue(fileString.isWritable());
+		assertNull(fileString.getModificationTime());
+		assertFalse(timeBeforeConstruction.after(fileString.getCreationTime()));
+		assertFalse(fileString.getCreationTime().after(timeAfterConstruction));
+	}
+	
+	@Test
+	public void testFileString_IllegalCase() {
+		timeBeforeConstruction = new Date();
+		fileString = new File("$IllegalName$");
+		timeAfterConstruction = new Date();
+		assertTrue(File.isValidName(fileString.getName()));
+		assertEquals(0,fileString.getSize());
+		assertTrue(fileString.isWritable());
+		assertNull(fileString.getModificationTime());
+		assertFalse(timeBeforeConstruction.after(fileString.getCreationTime()));
+		assertFalse(fileString.getCreationTime().after(timeAfterConstruction));
+	}
+
+	@Test
+	public void testIsValidName_LegalCase() {
+		assertTrue(File.isValidName("abcDEF123-_."));
+	}
+
+	@Test
+	public void testIsValidName_IllegalCase() {
+		assertFalse(File.isValidName(null));
+		assertFalse(File.isValidName(""));
+		assertFalse(File.isValidName("%illegalSymbol"));
 		
 	}
-	
-	/**
-	 * Tests the effect of enlarging the size of an unwritable file.
-	 */
-	
-	@Test (expected = UnauthorizedException.class)
-	public void enlarge_LegalSize_UnWritableFile() {
-		unwritableFile.enlarge(10);
-	
-	}
-
-	/**
-	 * Tests the effect of shortening the size of a writable file.
-	 */
 
 	@Test
-	public void shorten_LegalSize_WritableFile() {
-	int size = writableFile.getSize();
-	writableFile.shorten(5);
-	assertEquals(size - 5, writableFile.getSize());
-	
+	public void testChangeName_LegalCase() {
+		Date timeBeforeSetName = new Date();
+		fileString.changeName("NewLegalName");
+		Date timeAfterSetName = new Date();
+		
+		assertEquals("NewLegalName",fileString.getName());
+		assertNotNull(fileString.getModificationTime());
+		assertFalse(fileString.getModificationTime().before(timeBeforeSetName));
+		assertFalse(timeAfterSetName.before(fileString.getModificationTime()));
 	}
-
-	/**
-	 * Tests the effect of shortening the size of an unwritable file.
-	 */
 	
-	@Test (expected = UnauthorizedException.class)
-	public void shorten_LegalSize_UnWritableFile() {
-	unwritableFile.shorten(5);
-
+	@Test (expected = FileNotWritableException.class)
+	public void testChangeName_FileNotWritable() {
+		fileNotWritable.changeName("NewLegalName");
 	}
-
-	/**
-	 * Tests the effect of setting a file to unwritable.
-	 */
 	
 	@Test
-	public void isWritable_SetFalse() {
-	writableFile.setWritable(false);
-	assertEquals(false,writableFile.isWritable());
-	
-	}
-	
-	/**
-	 * Tests the effect of setting a file to writable.
-	 */
-
-	@Test
-	public void isWritable_SetTrue() {
-	unwritableFile.setWritable(true);
-	assertEquals(true,unwritableFile.isWritable());
-	
-	
-	}
-	
-	/**
-	 * Tests the effect of creating a file with a valid name
-	 */
-
-	@Test
-	public void File_ValidName() {
-		File testFile = new File("validName",10,true);
-		assertEquals(testFile.getName(),"validName");
-		assertEquals(10,testFile.getSize());
-		assertEquals(true,testFile.isWritable());
-				
-			
-	}
-	
-	/**
-	 * Tests the effect of creating a file with an invalid name
-	 */
-	
-	@Test
-	public void File_InvalidName() {
-		File testFile = new File("invalidName@",10,true);
-		assertEquals(testFile.getName(),"File_1");
-		assertEquals(10,testFile.getSize());
-		assertEquals(true,testFile.isWritable());
-				
-			
-	}
-	
-	/**
-	 * Tests the effect of the method hasOverlappingUsePeriod with two overlapping use periods.
-	 * where x1 is the creation time of the first file, y1 the creation time of the second file,
-	 * x2 the modification time of the first file, y2 the modification time of the second file.
-	 */
-	
-	@Test
-	public void hasOverlappingUsePeriod_x1_y1_x2_y2() {
-		assertEquals(true,secondFile.hasOverlappingUsePeriod(thirdFile));
-		assertEquals(true,thirdFile.hasOverlappingUsePeriod(secondFile));
-	}
-	
-	/**
-	 * Tests the effect of the method hasOverlappingUsePeriod with inner use periods.
-	 * where x1 is the creation time of the first file, y1 the creation time of the second file,
-	 * x2 the modification time of the first file, y2 the modification time of the second file.
-	 */
-	
-	@Test
-	public void hasOverlappingUsePeriod_x1_y1_y2_x2() {
-		assertEquals(true,secondFile.hasOverlappingUsePeriod(firstFile));
-		assertEquals(true,firstFile.hasOverlappingUsePeriod(secondFile));
-	}
-	
-	/**
-	 * Tests the effect of the method hasOverlappingUsePeriod with non overlapping use periods.
-	 * where x1 is the creation time of the first file, y1 the creation time of the second file,
-	 * x2 the modification time of the first file, y2 the modification time of the second file.
-	 */
-	
-	@Test
-	public void hasOverlappingUsePeriod_x1_x2_y1_y2() {
-		assertEquals(false,firstFile.hasOverlappingUsePeriod(fourthFile));
-		assertEquals(false,fourthFile.hasOverlappingUsePeriod(firstFile));
+	public void testChangeName_IllegalName() {
+		fileString.changeName("$IllegalName$");
+		assertEquals("bestand.txt",fileString.getName());
+		assertNull(fileString.getModificationTime());
 	}
 
+	@Test
+	public void testIsValidSize_LegalCase() {
+		assertTrue(File.isValidSize(0));
+		assertTrue(File.isValidSize(File.getMaximumSize()/2));
+		assertTrue(File.isValidSize(File.getMaximumSize()));
+	}
+	
+	@Test
+	public void testIsValidSize_IllegalCase() {
+		assertFalse(File.isValidSize(-1));
+		if (File.getMaximumSize() < Integer.MAX_VALUE) {
+			assertFalse(File.isValidSize(File.getMaximumSize()+1));
+		}
+	}
 
+	@Test
+	public void testEnlarge_LegalCase() {
+		File file = new File("bestand.txt",File.getMaximumSize()-1,true);
+		Date timeBeforeEnlarge = new Date();
+		file.enlarge(1);
+		Date timeAfterEnlarge = new Date();		
+		assertEquals(file.getSize(),File.getMaximumSize());
+		assertNotNull(file.getModificationTime());
+		assertFalse(file.getModificationTime().before(timeBeforeEnlarge));
+		assertFalse(timeAfterEnlarge.before(file.getModificationTime()));  
+	}
 	
+	@Test (expected = FileNotWritableException.class)
+	public void testEnlarge_FileNotWritable() {
+		fileNotWritable.enlarge(1);
+	}
 	
+	@Test
+	public void testShorten_LegalCase() {
+		fileStringIntBoolean.shorten(1);
+		Date timeAfterShorten = new Date();		
+		assertEquals(fileStringIntBoolean.getSize(),99);
+		assertNotNull(fileStringIntBoolean.getModificationTime());
+		assertFalse(fileStringIntBoolean.getModificationTime().before(timeAfterConstruction));
+		assertFalse(timeAfterShorten.before(fileStringIntBoolean.getModificationTime()));
+	}
 	
+	@Test (expected = FileNotWritableException.class)
+	public void testShorten_FileNotWritable() {
+		fileNotWritable.shorten(1);
+	}
+
+	@Test
+	public void testIsValidCreationTime_LegalCase() {
+		Date now = new Date();
+		assertTrue(File.isValidCreationTime(now));
+	}
+	
+	@Test
+	public void testIsValidCreationTime_IllegalCase() {
+		assertFalse(File.isValidCreationTime(null));
+		Date inFuture = new Date(System.currentTimeMillis() + 1000*60*60);
+		assertFalse(File.isValidCreationTime(inFuture));		
+	}
+	
+	@Test
+	public void testcanHaveAsModificationTime_LegalCase() {
+		assertTrue(fileString.canHaveAsModificationTime(null));
+		assertTrue(fileString.canHaveAsModificationTime(new Date()));
+	}
+	
+	@Test
+	public void testcanHaveAsModificationTime_IllegalCase() {
+		assertFalse(fileString.canHaveAsModificationTime(new Date(timeAfterConstruction.getTime() - 1000*60*60)));
+		assertFalse(fileString.canHaveAsModificationTime(new Date(System.currentTimeMillis() + 1000*60*60)));
+	}
+
+	@Test
+	public void testHasOverlappingUsePeriod_UnmodifiedFiles() {
+		// one = implicit argument ; other = explicit argument
+		File one = new File("one");
+		sleep(); // sleep() to be sure that one.getCreationTime() != other.getCreationTime()
+		File other = new File("other");
+		
+		//1 Test unmodified case
+		assertFalse(one.hasOverlappingUsePeriod(other));
+		
+		//2 Test one unmodified case
+		other.enlarge(File.getMaximumSize());
+		assertFalse(one.hasOverlappingUsePeriod(other));
+		
+		//3 Test other unmodified case
+		//so re-initialise the other file
+		other = new File("other");
+		one.enlarge(File.getMaximumSize());
+		assertFalse(one.hasOverlappingUsePeriod(other));
+		
+	}
+	
+	@Test
+	public void testHasOverlappingUsePeriod_ModifiedNoOverlap() {
+		// one = implicit argument ; other = explicit argument
+		File one, other;
+		one = new File("one");
+		sleep(); // sleep() to be sure that one.getCreationTime() != other.getCreationTime()
+		other = new File("other");
+		
+		//1 Test one created and modified before other created and modified case
+		one.enlarge(File.getMaximumSize());
+        sleep();
+        //re-initialise the other
+        other = new File("other");
+        other.enlarge(File.getMaximumSize());
+	    assertFalse(one.hasOverlappingUsePeriod(other));
+	    
+	    //2 Test other created and modified before one created and modified
+		other.enlarge(File.getMaximumSize());
+        sleep();
+        one = new File("one");
+        one.enlarge(File.getMaximumSize());
+        assertFalse(one.hasOverlappingUsePeriod(other));
+	
+	}
+	
+	@Test
+	public void testHasOverlappingUsePeriod_ModifiedOverlap_A() {
+		// one = implicit argument ; other = explicit argument
+		//A Test one created before other created before one modified before other modified
+	    File one, other;
+		one = new File("one");
+		sleep(); // sleep() to be sure that one.getCreationTime() != other.getCreationTime()
+		other = new File("other");
+	
+		one.enlarge(File.getMaximumSize());
+        sleep();
+        other.enlarge(File.getMaximumSize());
+        assertTrue(one.hasOverlappingUsePeriod(other));
+	}
+	
+	@Test
+	public void testHasOverlappingUsePeriod_ModifiedOverlap_B() {
+		// one = implicit argument ; other = explicit argument
+		//B Test one created before other created before other modified before one modified
+       	File one, other;
+		one = new File("one");
+		sleep(); // sleep() to be sure that one.getCreationTime() != other.getCreationTime()
+		other = new File("other");
+	
+		other.enlarge(File.getMaximumSize());
+        sleep();
+        one.enlarge(File.getMaximumSize());
+        assertTrue(one.hasOverlappingUsePeriod(other));
+	}
+	
+	@Test
+	public void testHasOverlappingUsePeriod_ModifiedOverlap_C() {
+		// one = implicit argument ; other = explicit argument
+		//C Test other created before one created before other modified before one modified
+        File one, other;
+		other = new File("other");
+		sleep(); // sleep() to be sure that one.getCreationTime() != other.getCreationTime()
+		one = new File("one");
+		
+		other.enlarge(File.getMaximumSize());
+        sleep();
+        one.enlarge(File.getMaximumSize());
+        assertTrue(one.hasOverlappingUsePeriod(other));
+	}
+	
+	@Test
+	public void testHasOverlappingUsePeriod_ModifiedOverlap_D() {
+		// one = implicit argument ; other = explicit argument
+		//D Test other created before one created before one modified before other modified
+		File one, other;
+		other = new File("one");
+		sleep(); // sleep() to be sure that one.getCreationTime() != other.getCreationTime()
+		one = new File("other");
+	
+		one.enlarge(File.getMaximumSize());
+        sleep();
+        other.enlarge(File.getMaximumSize());
+        assertTrue(one.hasOverlappingUsePeriod(other));
+	}
+
+	@Test
+	public void testSetWritable() {
+		fileString.setWritable(false);
+		fileNotWritable.setWritable(true);
+		assertFalse(fileString.isWritable());
+		assertTrue(fileNotWritable.isWritable());
+	}
+	
+	private void sleep() {
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
-
-
-
-
-
-
