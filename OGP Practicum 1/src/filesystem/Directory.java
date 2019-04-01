@@ -88,10 +88,12 @@ public class Directory extends Item {
 	}
 	
 
-	/**********************************************************
-     * Items
+    /**********************************************************
+     * Children
      **********************************************************/
-
+	ArrayList<Item> children = new ArrayList<Item>();
 	
-	
+	public void addChild(Item child) throws  {
+		
+	}
 }
