@@ -37,6 +37,7 @@ public class Item {
      * @param  	writable
      *         	The writability of the new item.
      * @effect  The directory of the item is set to the given directory.
+     * 			
      *          | setDirectory(name)
      * @effect  The name of the item is set to the given name.
      * 			If the given name is not valid, a default name is set.
@@ -49,6 +50,14 @@ public class Item {
      *          | (new.getCreationTime().getTime() <= (new System).currentTimeMillis())
      * @post    The new item has no time of last modification.
      *          | new.getModificationTime() == null
+     * @throws  AlreadyExistsException(this)
+     * 			There is already a file with this name in the given directory.
+     * 			| getItem(name) == null
+     * @throws  IsOwnParentException(this)
+     * 			An item can't be its own parent, this would create an invalid loop.
+     * 			|  isDirectOrIndirectSubdirectoryOf()
+     * 			
+     * 			
      */
 	public Item(Directory dir, String name, boolean writable) {
         setName(name);
