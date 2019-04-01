@@ -58,9 +58,27 @@ public class File extends Item {
      *          | new.getModificationTime() == null
      */
 	public File(Directory dir, String name, int size, boolean writable, String type) {
-		super(name, writable); //maakt item aan
+		super(dir, name, writable); //maakt item aan
+		setSize(size);
+		setType(type);
 	}
-
+	
+	/**
+     * Initialize a new file with given name.
+     * @param	dir
+     * 			The directory of the current file.
+     * @param   name
+     *          The name of the new file.
+     * @param	type
+     * 			The type of the new file.
+     * @effect  This new file is initialized with the given directory,
+     * 			given name, a zero size, true writability and given type.
+     *         | this(dir, name, 0, true, type)
+     */
+	public File(Directory dir, String name, String type) {
+		this(dir, name, 0, true, type);
+	}
+	
     /**
      * Initialize a new file with given name, size and writability.
      *
@@ -84,23 +102,25 @@ public class File extends Item {
      * @post    The new file has no time of last modification.
      *          | new.getModificationTime() == null
      */
-	public File(String name, int size, boolean writable) {
+	public File(String name, int size, boolean writable, String type) {
 		super(name, writable); //maakt item aan
         setSize(size);
+        setType(type);
     }
 
-    /**
+	/**
      * Initialize a new file with given name.
-     *
      * @param   name
      *          The name of the new file.
-     * @effect  This new file is initialized with the given name, a zero size
-     * 			and true writability
-     *         | this(name,0,true)
+     * @param	type
+     * 			The type of the new file.
+     * @effect  This new file is initialized with the given name, 
+     * 			a zero size, true writability and given type.
+     *         	| this(dir, name, 0, true, type)
      */
-    public File(String name) {
-        this(name,0,true);
-    }
+	public File(String name, String type) {
+		this(name, 0, true, type);
+	}
     
     /**
      * Return the name for a new item which is to be used when the
