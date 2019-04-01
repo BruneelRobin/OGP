@@ -2,6 +2,7 @@ package filesystem;
 
 import be.kuleuven.cs.som.annotate.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -400,4 +401,13 @@ public class Item {
     	
     	return parent;
     }
+    
+    /**********************************************************
+     * Children
+     **********************************************************/
+	ArrayList<Item> children = new ArrayList<Item>();
+	
+	public void addChild(Item child) throws  {
+		
+	}
 }
