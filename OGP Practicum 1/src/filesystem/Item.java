@@ -61,32 +61,9 @@ public class Item {
      * 			
      */
 	public Item(Directory dir, String name, boolean writable) {
-        this(name, writable);
-        setDirectory(dir);
-    }
-	
-	/**
-     * Initialize a new item with given name and writability.
-     *
-     * @param  	name
-     *         	The name of the new item.
-     * @param  	writable
-     *         	The writability of the new item.
-     * @effect  The name of the item is set to the given name.
-     * 			If the given name is not valid, a default name is set.
-     *          | setName(name)
-     * @effect	The writability is set to the given flag
-     * 			| setWritable(writable)
-     * @post    The new creation time of this item is initialized to some time during
-     *          constructor execution.
-     *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
-     *          | (new.getCreationTime().getTime() <= (new System).currentTimeMillis())
-     * @post    The new item has no time of last modification.
-     *          | new.getModificationTime() == null
-     */
-	public Item(String name, boolean writable) {
-        setName(name);
         setWritable(writable);
+        setName(name);
+        setDirectory(dir);
     }
     
     
