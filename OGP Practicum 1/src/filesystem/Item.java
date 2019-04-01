@@ -60,8 +60,7 @@ public class Item {
      * 			
      */
 	public Item(Directory dir, String name, boolean writable) {
-        setName(name);
-        setWritable(writable);
+        this(name, writable);
         setDirectory(dir);
     }
 	

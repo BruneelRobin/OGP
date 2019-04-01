@@ -88,24 +88,15 @@ public class File extends Item {
      *         	The size of the new file.
      * @param  	writable
      *         	The writability of the new file.
-     * @effect  The name of the file is set to the given name.
-     * 			If the given name is not valid, a default name is set.
-     *          | setName(name)
-     * @effect	The size is set to the given size (must be valid)
-     * 			| setSize(size)
-     * @effect	The writability is set to the given flag
-     * 			| setWritable(writable)
-     * @post    The new creation time of this file is initialized to some time during
-     *          constructor execution.
-     *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
-     *          | (new.getCreationTime().getTime() <= (new System).currentTimeMillis())
-     * @post    The new file has no time of last modification.
-     *          | new.getModificationTime() == null
+     * @effect  This new file is initialized with the given name, size, writability and type.
+     * 			The parent directory is set to null. This file is a root file.
+     * 			| this(null,name,type)
      */
 	public File(String name, int size, boolean writable, String type) {
-		super(name, writable); //maakt item aan
-        setSize(size);
-        setType(type);
+		//super(name, writable); //maakt item aan
+        //setSize(size);
+        //setType(type);
+		this(null, name, type);
     }
 
 	/**
@@ -116,7 +107,7 @@ public class File extends Item {
      * 			The type of the new file.
      * @effect  This new file is initialized with the given name, 
      * 			a zero size, true writability and given type.
-     *         	| this(dir, name, 0, true, type)
+     *         	| this(name, 0, true, type)
      */
 	public File(String name, String type) {
 		this(name, 0, true, type);
