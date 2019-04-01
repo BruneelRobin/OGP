@@ -22,7 +22,7 @@ import java.util.Date;
  * 
  */
 
-public abstract class Item {
+public class Item {
 	/**********************************************************
      * Constructors
      **********************************************************/
@@ -129,7 +129,9 @@ public abstract class Item {
      *         | isValidName(result)
      */
     @Model
-    abstract String getDefaultName();
+    private static String getDefaultName() {
+    	return "new_item";
+    }
 
     /**
      * Change the name of this item to the given name.
@@ -247,7 +249,7 @@ public abstract class Item {
      *         |                    (new System).currentTimeMillis())
      */
     @Model 
-    private void setModificationTime() {
+    protected void setModificationTime() {
         modificationTime = new Date();
     }
 

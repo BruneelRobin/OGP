@@ -68,6 +68,18 @@ public class File extends Item {
         this(name,0,true);
     }
     
+    /**
+     * Return the name for a new item which is to be used when the
+     * given name is not valid.
+     *
+     * @return   A valid item name.
+     *         | isValidName(result)
+     */
+    @Model
+    private static String getDefaultName() {
+    	return "new_file";
+    }
+    
     
     /**********************************************************
      * size - nominal programming
