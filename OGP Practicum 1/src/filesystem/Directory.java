@@ -53,7 +53,7 @@ public class Directory extends Item {
 	 * 			the name of the new directory.
 	 * @effect  This new directory is initialized with the given name 
      * 			and writability.
-     *         	| this(name, writable)
+     *         	| this(dir,name,writable)
 	 */
 	public Directory(Directory dir, String name) {
 		this(dir,name,true);
