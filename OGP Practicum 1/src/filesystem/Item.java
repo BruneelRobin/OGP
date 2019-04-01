@@ -378,13 +378,4 @@ public class Item {
     	
     	return parent;
     }
-    
-    /**********************************************************
-     * Children
-     **********************************************************/
-	ArrayList<Item> children = new ArrayList<Item>();
-	
-	public void addChild(Item child) throws  {
-		
-	}
 }
