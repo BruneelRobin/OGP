@@ -238,7 +238,7 @@ public class File {
      * @effect  The size of this file is increased with the given delta.
      *          | changeSize(delta)
      */
-    public void enlarge(int delta) throws FileNotWritableException {
+    public void enlarge(int delta) throws NotWritableException {
         changeSize(delta);
     }
 
@@ -253,7 +253,7 @@ public class File {
      * @effect  The size of this file is decreased with the given delta.
      *          | changeSize(-delta)
      */
-    public void shorten(int delta) throws FileNotWritableException {
+    public void shorten(int delta) throws NotWritableException {
         changeSize(-delta);
     }
 
