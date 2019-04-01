@@ -360,6 +360,14 @@ public class Item {
     	
     }
     
+    /**
+     * Sets the directory of this item to the root directory
+     * @post	The new directory is the root directory.
+     * 			| new.dir == null
+     */
+    public void makeRoot () {
+    	this.dir = null;
+    }
     
     /**
      * Moves an item to the new directory
@@ -370,5 +378,18 @@ public class Item {
      */
     public void move(Directory dir) {
     	setDirectory(dir);
+    }
+    
+    /**
+     * Returns the root item from the item's tree
+     * @return	Returns the root of the current item tree.
+     */
+    public Item getRoot() {
+    	Item parent = this.dir;
+    	while (parent != null) {
+    		parent = parent.dir;
+    	}
+    	
+    	return parent;
     }
 }
