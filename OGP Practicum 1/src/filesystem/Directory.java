@@ -87,13 +87,11 @@ public class Directory extends Item {
 		this(null,name, true);
 	}
 	
-<<<<<<< Updated upstream
+
 	/**********************************************************
      * Items
      **********************************************************/
-=======
 
->>>>>>> Stashed changes
 	
 	
 }
