@@ -26,6 +26,40 @@ public class File extends Item {
     /**********************************************************
      * Constructors
      **********************************************************/
+	
+	/**
+     * Initialize a new file with given name, size and writability.
+     * @param	dir
+     * 			The directory of the current file.
+     * @param  	name
+     *         	The name of the new file.
+     * @param  	size
+     *         	The size of the new file.
+     * @param  	writable
+     *         	The writability of the new file.
+     * @param	type
+     * 			The type of the new file.
+     * @effect  The directory of the file is set to the given directory.
+     * 			If the given directory is not valid, an error is thrown.
+     * @effect  The name of the file is set to the given name.
+     * 			If the given name is not valid, a default name is set.
+     *          | setName(name)
+     * @effect	The size is set to the given size (must be valid)
+     * 			| setSize(size)
+     * @effect	The writability is set to the given flag
+     * 			| setWritable(writable)
+     * @effect	The type of the current file is set to the given string
+     * 			| setType(type)
+     * @post    The new creation time of this file is initialized to some time during
+     *          constructor execution.
+     *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
+     *          | (new.getCreationTime().getTime() <= (new System).currentTimeMillis())
+     * @post    The new file has no time of last modification.
+     *          | new.getModificationTime() == null
+     */
+	public File(Directory dir, String name, int size, boolean writable, String type) {
+		super(name, writable); //maakt item aan
+	}
 
     /**
      * Initialize a new file with given name, size and writability.
@@ -78,6 +112,14 @@ public class File extends Item {
     @Model
     private static String getDefaultName() {
     	return "new_file";
+    }
+    
+    /**********************************************************
+     * type - total programming
+     **********************************************************/
+    String type;
+    private void setType (String type) {
+    	this.type = type;
     }
     
     
@@ -190,8 +232,8 @@ public class File extends Item {
     private void changeSize(int delta) throws NotWritableException{
         if (isWritable()) {
             setSize(getSize()+delta);
-            setModificationTime();            
-        }else{
+            setModificationTime();   
+        } else {
         	throw new NotWritableException(this);
         }
     }

@@ -26,8 +26,37 @@ public class Item {
 	/**********************************************************
      * Constructors
      **********************************************************/
-
+	
     /**
+     * Initialize a new item with given directory, name and writability.
+     *
+     * @param	dir
+     * 			The directory of the new item.
+     * @param  	name
+     *         	The name of the new item.
+     * @param  	writable
+     *         	The writability of the new item.
+     * @effect  The directory of the item is set to the given directory.
+     *          | setDirectory(name)
+     * @effect  The name of the item is set to the given name.
+     * 			If the given name is not valid, a default name is set.
+     *          | setName(name)
+     * @effect	The writability is set to the given flag
+     * 			| setWritable(writable)
+     * @post    The new creation time of this item is initialized to some time during
+     *          constructor execution.
+     *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
+     *          | (new.getCreationTime().getTime() <= (new System).currentTimeMillis())
+     * @post    The new item has no time of last modification.
+     *          | new.getModificationTime() == null
+     */
+	public Item(Directory dir, String name, boolean writable) {
+        setName(name);
+        setWritable(writable);
+        setDirectory(dir);
+    }
+	
+	/**
      * Initialize a new item with given name and writability.
      *
      * @param  	name
@@ -49,19 +78,6 @@ public class Item {
 	public Item(String name, boolean writable) {
         setName(name);
         setWritable(writable);
-    }
-
-    /**
-     * Initialize a new item with given name.
-     *
-     * @param   name
-     *          The name of the new item.
-     * @effect  This new item is initialized with the given name
-     * 			and true writability
-     *         | this(name,true)
-     */
-    public Item(String name) {
-        this(name,true);
     }
     
     
@@ -316,5 +332,43 @@ public class Item {
     public void setWritable(boolean isWritable) {
         this.isWritable = isWritable;
     }
-
+    
+    /**********************************************************
+     * directory
+     **********************************************************/
+	Directory dir = null;
+    
+    /**
+     * Returns the current directory of this item
+     * @return	Returns the current directory
+     * @return 	Returns null when this item is in the root directory
+     */
+    public Directory getDirectory () {
+    	return this.dir;
+    }
+    
+    /**
+     * Set the directory of this item to the given directory.
+     * 
+     * @param 	dir
+     * 			The new directory
+     * @post	The given directory is registered as the new directory for this item.
+     * 			| new.getDirectory() == dir
+     */
+    private void setDirectory(Directory dir) {
+    	this.dir = dir;
+    	
+    }
+    
+    
+    /**
+     * Moves an item to the new directory
+     * @param 	dir
+     * 			The new directory, when dir is null the new item will be in the root directory.
+     * @post	The given directory is registered as the new directory for this item.
+     * 			The item will be removed from his old directory and added into the new directory.
+     */
+    public void move(Directory dir) {
+    	setDirectory(dir);
+    }
 }
