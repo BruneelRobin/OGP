@@ -155,20 +155,20 @@ public class Directory extends Item {
 	 * @return	Returns the index of the item with the given name.
 	 * 			Returns -1 when the given name is not found.
 	 */
-	private int binarySearch (int from, int to, String name, boolean matchCase) {
+	private int binarySearch (int from, int to, String name) {
 		if (to >= from) {
 	        int mid = from + (to - from) / 2; 
 	        Item midItem = children.get(mid);
-	        int comp = midItem.compareName(name, matchCase);
+	        int comp = midItem.compareName(name);
 	  
 	        // name == midItem.getName()
 	        if (comp == 0) {
 	            return mid; 
 	        }
 	        else if (comp == 1) { // midItem is hoger geranked dan name
-	            return binarySearch(from, mid - 1, name, matchCase); 
+	            return binarySearch(from, mid - 1, name); 
 	        } else { // midItem is lager geranked dan name
-	        	return binarySearch(mid + 1, to, name, matchCase); 
+	        	return binarySearch(mid + 1, to, name); 
 	        }
 	        
 	    } 
@@ -186,7 +186,7 @@ public class Directory extends Item {
 	 * 			Returns null when the item is not found.
 	 */
 	public Item getItem (String name) {
-		int index = binarySearch(0, this.getNbItems(), name, false);
+		int index = binarySearch(0, this.getNbItems(), name);
 		return index == -1 ? null : children.get(index);
 	}
 	
@@ -204,6 +204,25 @@ public class Directory extends Item {
 		
 	}*/
 	
+	/*public void test () {
+		for (int i = 0; i<100;i++) {
+			try {
+				Item item = new Item(this, String.valueOf((int)(Math.random() * 100 + 1)), true);
+				this.addChild(item);
+			} catch (AlreadyExistsException e) {
+				
+			}
+			
+		}
+		
+		for (int i = 0; i<getNbItems();i++) {
+			System.out.println(this.getItemAt(i+1).getName());
+		}
+		
+		
+		
+	}*/
+	
 	/**
 	 * Checks whether a file with the given name exists, doesn't match cases.
 	 * @param 	name
@@ -213,16 +232,60 @@ public class Directory extends Item {
 	 * 			Returns true when the file doesn't exist.
 	 */
 	public boolean exists (String name) {
-		int index = binarySearch(0, this.getNbItems(), name, true);
-		return index == -1 ? false : true;
+		return false;
 	}
 	
-	public void addChild(Item child) throws IsOwnAncestorException, AlreadyExistsException {
-		//Voorwaarden
-		children.add(child);
+	private int getInsertIndex (int from, int to, String name) {
+		if (to<from) {
+			return 0;
+		}
+		
+        int mid = from + (to - from) / 2; 
+        Item midItem = children.get(mid);
+        Item firstItem = children.get(from);
+        Item endItem = children.get(to);
+        int compFirst = firstItem.compareName(name);
+        int compMid = midItem.compareName(name);
+        int compEnd = endItem.compareName(name);
+        
+        if (compFirst == 0 || compMid == 0 || compEnd == 0) {
+        	// Equals
+        	//throw AlreadyExistsException(this, name);
+        	return -1;
+        }
+  
+        // name == midItem.getName()
+        if (compFirst == 1) { //dan moet voor deze geinsert worden (door from+1, mid+1)
+        	return from;
+        }
+        else if (compEnd == -1) { //dan moet na deze geinsert worden (door mid-1, from-1)
+        	return to+1;
+        }
+        else if (compFirst == -1 && compMid == 1) { // gezochte plek hiertussen
+        	if (mid-from <= 1) { // moet hiertussen
+        		return mid;
+        	}
+            return getInsertIndex(from+1, mid-1, name); 
+        }
+        else {
+        	if (to-mid <= 1) {
+        		return to;
+        	}
+        	return getInsertIndex(mid+1, to-1, name);
+        }
 	}
 	
-	public void removeChild(Item child) {
+	protected void addChild(Item child) throws IsOwnAncestorException, AlreadyExistsException {
+		int insertIndex = getInsertIndex(0, getNbItems()-1, child.getName());
+		if (insertIndex == -1) {
+			throw new AlreadyExistsException(this, child);
+		} else if (this.isDirectOrIndirectSubdirectoryOf(child)) {
+			throw new IsOwnAncestorException(child);
+		}
+		children.add(insertIndex, child);
+	}
+	
+	protected void removeChild(Item child) {
 		children.remove(child);
 	}
 }

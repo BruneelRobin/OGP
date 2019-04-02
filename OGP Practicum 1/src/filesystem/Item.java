@@ -163,14 +163,9 @@ public class Item {
      * 				Returns 0 when the name is alphabetically equal than the other name
      * 				Returns -1 when the name is alphabetically ranked lower than the other name
      */
-    protected int compareName (String other, boolean matchCase) {
+    protected int compareName (String other) {
     	String name1 = this.getName();
     	String name2 = other;
-    	
-    	if (!matchCase) {
-    		name1 = name1.toLowerCase();
-    		name2 = name2.toLowerCase();
-    	}
     	
         int lmin = Math.min(name1.length(), name2.length()); 
   
@@ -423,9 +418,21 @@ public class Item {
      * 			The new directory, when dir is null the new item will be in the root directory.
      * @post	The given directory is registered as the new directory for this item.
      * 			The item will be removed from his old directory and added into the new directory.
+     * @throws 	AlreadyExistsException
+     * 			When an item with the same name already exists in the given directory,
+     * 			The operation will be cancelled and this error will be thrown.
+     * @throws 	IsOwnAncestorException
+     * 			When you try to move the current item (when it's a directory) in one of his own
+     * 			subfolders, the operation will be cancelled and this error will be thrown.
+     * 			
      */
-    public void move(Directory dir) {
-    	setDirectory(dir);
+    public void move(Directory dir) throws AlreadyExistsException, IsOwnAncestorException {
+    	//lets try to add child first
+    	dir.addChild(this);
+    	//we added the file to the new dir, lets remove it from the old (doesn't throw errors)
+    	this.getDirectory().removeChild(this);
+    	//set the new directory
+    	this.setDirectory(dir);
     }
     
     /**

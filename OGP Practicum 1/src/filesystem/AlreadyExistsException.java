@@ -17,7 +17,8 @@ public class AlreadyExistsException extends RuntimeException {
 	/**
 	 * Variable referencing the item to which change was denied.
 	 */
-	private final Item item;
+	private final Directory dir;
+	private final Item child;
 
 	/**
 	 * Initialize this new item not writable exception involving the
@@ -30,16 +31,25 @@ public class AlreadyExistsException extends RuntimeException {
 	 * 			| new.getItem() == item
 	 */
 	@Raw
-	public AlreadyExistsException(Item item) {
-		this.item = item;
+	public AlreadyExistsException(Directory dir, Item child) {
+		this.dir = dir;
+		this.child = child;
 	}
 	
 	/**
 	 * Return the item involved in this item not writable exception.
 	 */
 	@Raw @Basic
-	public Item getItem() {
-		return item;
+	public Item getDirectory() {
+		return dir;
+	}
+	
+	/**
+	 * Return the child involved in this item not writable exception.
+	 */
+	@Raw @Basic
+	public Item getChild() {
+		return child;
 	}
 	
 	
