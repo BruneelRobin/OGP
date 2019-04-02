@@ -2,7 +2,6 @@ package filesystem;
 
 import be.kuleuven.cs.som.annotate.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -56,14 +55,36 @@ public class Item {
      * 			| getItem(name) == null
      * @throws  IsOwnAncestorException(this)
      * 			An item can't be its own parent, this would create an invalid loop.
-     * 			|  isDirectOrIndirectSubdirectoryOf()
-     * 			
-     * 			
+     * 			|  isDirectOrIndirectSubdirectoryOf()				
      */
 	public Item(Directory dir, String name, boolean writable) {
-        setWritable(writable);
         setName(name);
+        setWritable(writable);
         setDirectory(dir);
+    }
+	
+	/**
+     * Initialize a new item with given name and writability.
+     *
+     * @param  	name
+     *         	The name of the new item.
+     * @param  	writable
+     *         	The writability of the new item.
+     * @effect  The name of the item is set to the given name.
+     * 			If the given name is not valid, a default name is set.
+     *          | setName(name)
+     * @effect	The writability is set to the given flag
+     * 			| setWritable(writable)
+     * @post    The new creation time of this item is initialized to some time during
+     *          constructor execution.
+     *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
+     *          | (new.getCreationTime().getTime() <= (new System).currentTimeMillis())
+     * @post    The new item has no time of last modification.
+     *          | new.getModificationTime() == null
+     */
+	public Item(String name, boolean writable) {
+        setName(name);
+        setWritable(writable);
     }
     
     
@@ -134,6 +155,45 @@ public class Item {
     private static String getDefaultName() {
     	return "new_item";
     }
+    
+    /**
+     * Compares the name of this item with the name of the other item
+     * @param other	The name to compare with
+     * @return		Returns 1 when the name is alphabetically ranked higher than the other name
+     * 				Returns 0 when the name is alphabetically equal than the other name
+     * 				Returns -1 when the name is alphabetically ranked lower than the other name
+     */
+    protected int compareName (String other, boolean matchCase) {
+    	String name1 = this.getName();
+    	String name2 = other;
+    	
+    	if (!matchCase) {
+    		name1 = name1.toLowerCase();
+    		name2 = name2.toLowerCase();
+    	}
+    	
+        int lmin = Math.min(name1.length(), name2.length()); 
+  
+        for (int i = 0; i < lmin; i++) {
+            int name1_ch = (int)name1.charAt(i); 
+            int name2_ch = (int)name2.charAt(i);
+            
+            
+            // diff on char
+            if (name1_ch != name2_ch) {
+                return name1_ch > name2_ch ? 1 : -1;
+            } 
+        } 
+  
+        // diff on length
+        if (name1.length() != name2.length()) { 
+            return name1.length() > name2.length() ? 1 : -1; 
+        } 
+        // both equal
+        else {
+            return 0; 
+        } 
+    }
 
     /**
      * Change the name of this item to the given name.
@@ -163,6 +223,8 @@ public class Item {
             throw new NotWritableException(this);
         }
     }
+    
+    
     
     /**********************************************************
      * creationTime
