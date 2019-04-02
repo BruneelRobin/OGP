@@ -93,7 +93,12 @@ public class Directory extends Item {
      **********************************************************/
 	ArrayList<Item> children = new ArrayList<Item>();
 	
-	public void addChild(Item child) throws  {
-		
+	public void addChild(Item child) throws IsOwnAncestorException, AlreadyExistsException {
+		//Voorwaarden
+		children.add(child);
+	}
+	
+	public void removeChild(Item child) {
+		children.remove(child);
 	}
 }

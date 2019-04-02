@@ -54,7 +54,7 @@ public class Item {
      * @throws  AlreadyExistsException(this)
      * 			There is already a file with this name in the given directory.
      * 			| getItem(name) == null
-     * @throws  IsOwnParentException(this)
+     * @throws  IsOwnAncestorException(this)
      * 			An item can't be its own parent, this would create an invalid loop.
      * 			|  isDirectOrIndirectSubdirectoryOf()
      * 			
