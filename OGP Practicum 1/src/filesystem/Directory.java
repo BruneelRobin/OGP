@@ -100,6 +100,8 @@ public class Directory extends Item {
      * Children
      **********************************************************/
 	
+	ArrayList<Item> children = new ArrayList<Item>();
+	
 	/**
 	 * Returns the number of items in this directory.
 	 * @return Returns the number of items in this directory.
@@ -120,14 +122,6 @@ public class Directory extends Item {
 	}
 	
 	
-
-	
-		
-		
-		
-	
-	
-	ArrayList<Item> children = new ArrayList<Item>();
 	
 	/**
 	 * Returns the item at the given index
@@ -215,6 +209,16 @@ public class Directory extends Item {
 	public boolean exists (String name) {
 		int index = binarySearch(0, this.getNbItems(), name, true);
 		return index == -1 ? false : true;
+	}
+	
+	public boolean isDirectOrIndirectSubdirectoryOf(Directory directory) {
+		Directory folder = this.getDirectory();
+		while (folder != null) {
+			if (folder == directory) {
+				return true;
+			} else folder = folder.getDirectory();
+		}
+		return false;
 	}
 	
 	public void addChild(Item child) throws IsOwnAncestorException, AlreadyExistsException {
