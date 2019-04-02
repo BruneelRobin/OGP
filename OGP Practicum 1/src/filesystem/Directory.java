@@ -100,6 +100,8 @@ public class Directory extends Item {
      * Children
      **********************************************************/
 	
+	ArrayList<Item> children = new ArrayList<Item>();
+	
 	/**
 	 * Returns the number of items in this directory.
 	 * @return Returns the number of items in this directory.
@@ -120,14 +122,6 @@ public class Directory extends Item {
 	}
 	
 	
-
-	
-		
-		
-		
-	
-	
-	ArrayList<Item> children = new ArrayList<Item>();
 	
 	/**
 	 * Returns the item at the given index
@@ -279,7 +273,7 @@ public class Directory extends Item {
 		int insertIndex = getInsertIndex(0, getNbItems()-1, child.getName());
 		if (insertIndex == -1) {
 			throw new AlreadyExistsException(this, child);
-		} else if (this.isDirectOrIndirectSubdirectoryOf(child)) {
+		} else if (child.getClass() == Directory.class && this.isDirectOrIndirectSubdirectoryOf((Directory)child)) {
 			throw new IsOwnAncestorException(child);
 		}
 		children.add(insertIndex, child);
@@ -287,5 +281,15 @@ public class Directory extends Item {
 	
 	protected void removeChild(Item child) {
 		children.remove(child);
+	}
+		
+	public boolean isDirectOrIndirectSubdirectoryOf(Directory directory) {
+		Directory folder = this.getDirectory();
+		while (folder != null) {
+			if (folder == directory) {
+				return true;
+			} else folder = folder.getDirectory();
+		}
+		return false;
 	}
 }
