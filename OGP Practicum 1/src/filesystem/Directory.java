@@ -88,9 +88,43 @@ public class Directory extends Item {
 	}
 	
 
+	
+	
+	
+	
+	
+	
+	
+
     /**********************************************************
      * Children
      **********************************************************/
+	
+	/**
+	 * Returns the number of items in this directory.
+	 * @return Returns the number of items in this directory.
+	 */
+	public int getNbItems() {
+		return children.size();
+		
+	}
+		
+	/**
+	 * Returns the index of an item in a given directory.
+	 * @param item
+	 * 		  
+	 * @return
+	 */
+	public int getIndexOf(Item item) {
+		return this.children.indexOf(item);
+	}
+	
+	
+		
+		
+		
+	
+	
 	ArrayList<Item> children = new ArrayList<Item>();
 	
 	public void addChild(Item child) throws IsOwnAncestorException, AlreadyExistsException {
