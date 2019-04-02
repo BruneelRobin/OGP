@@ -93,6 +93,43 @@ public class Directory extends Item {
      **********************************************************/
 	ArrayList<Item> children = new ArrayList<Item>();
 	
+	public Item getItemAt(int index) throws IndexOutOfBoundsException {
+		return children.get(index-1);
+	}
+	
+	private int binarySearch (int from, int to, String name, boolean matchCase) {
+		if (to >= from) {
+	        int mid = from + (to - from) / 2; 
+	        Item midItem = children.get(mid);
+	        int comp = midItem.compareName(name, matchCase);
+	  
+	        // name == midItem.getName()
+	        if (comp == 0) {
+	            return mid; 
+	        }
+	        else if (comp == 1) { // midItem is hoger geranked dan name
+	            return binarySearch(from, mid - 1, name, matchCase); 
+	        } else { // midItem is lager geranked dan name
+	        	return binarySearch(mid + 1, to, name, matchCase); 
+	        }
+	        
+	    } 
+	  
+	    // We reach here when element is not 
+	    // present in array 
+	    return -1; 
+	}
+	
+	public Item getItem (String name) {
+		int index = binarySearch(0, this.getNbItems(), name, false);
+		return index == -1 ? null : children.get(index);
+	}
+	
+	public boolean exists (String name) {
+		int index = binarySearch(0, this.getNbItems(), name, true);
+		return index == -1 ? false : true;
+	}
+	
 	public void addChild(Item child) throws IsOwnAncestorException, AlreadyExistsException {
 		//Voorwaarden
 		children.add(child);
