@@ -110,15 +110,17 @@ public class Directory extends Item {
 	}
 		
 	/**
-	 * Returns the index of an item in a given directory.
+	 * Returns the index of an item in this directory.
 	 * @param item
-	 * 		  
-	 * @return
+	 * 		  The item for which the index is searched for in this directory.
+	 * @return Returns the index of an item in this directory.
 	 */
 	public int getIndexOf(Item item) {
 		return this.children.indexOf(item);
 	}
 	
+	
+
 	
 		
 		
