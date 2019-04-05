@@ -15,6 +15,8 @@ import java.util.Date;
  *          | isValidCreationTime(getCreationTime())
  * @invar   Each file must have a valid modification time.
  *          | canHaveAsModificationTime(getModificationTime())
+ $ @invar   Each file must have a valid type.
+ *          | isValidType(getType())
  * @author  Mark Dreesen
  * @author  Tommy Messelis
  * @version 3.1
@@ -130,7 +132,16 @@ public class File extends Item {
     /**********************************************************
      * type - defensive programming
      **********************************************************/
-    String type;
+    private String type;
+    
+    /**
+     * Returns the allowed extensions for a file
+     * @return	Returns the allowed extensions for a file as an ArrayList object.
+     */
+    @Immutable
+    public static ArrayList<String> getAllowedTypes () {
+    	return allowedTypes;
+    }
     
     /**
      * Sets the type of the current file
@@ -141,6 +152,7 @@ public class File extends Item {
      * 			Throws this exception when the given type is not valid
      * 			| isValidType(type)
      */
+    @Raw
     private void setType (String type) throws TypeNotAllowedException {
     	if (isValidType(type))
     		this.type = type;
@@ -156,14 +168,16 @@ public class File extends Item {
      * @return	Returns true when the given type is valid
      * 			Returns false when the given type is not valid
      */
-    public boolean isValidType(String type) {
-    	return allowedTypes.contains(type);
+    @Raw
+    public static boolean isValidType(String type) {
+    	return getAllowedTypes().contains(type);
     }
     
     /**
      * Returns the type of the current file.
      * @return	Returns the type of the current file.
      */
+    @Basic
     public String getType() {
     	return this.type;
     }

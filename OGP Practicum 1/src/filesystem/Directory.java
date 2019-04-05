@@ -5,7 +5,15 @@ import be.kuleuven.cs.som.annotate.*;
 
 /**
  * A class of directories.
- * 
+ *
+ * @invar	Each item must have a properly spelled name.
+ * 			| isValidName(getName())
+ * @invar   Each item must have a valid creation time.
+ *          | isValidCreationTime(getCreationTime())
+ * @invar   Each item must have a valid modification time.
+ *          | canHaveAsModificationTime(getModificationTime())
+ *          
+ *          
  * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0
  *
@@ -194,9 +202,19 @@ public class Directory extends Item {
 	 * @return	Returns the item with the given name.
 	 * 			Returns null when the item is not found.
 	 */
+	@Basic
 	public Item getItem (String name) {
 		int index = binarySearch(0, this.getNbItems(), name);
 		return index == -1 ? null : children.get(index);
+	}
+	
+	/**
+	 * Returns the children of the current directory
+	 * @return	Returns the children of the current directory as an ArrayList object
+	 */
+	@Basic
+	public ArrayList<Item> getChildren() {
+		return this.children;
 	}
 	
 	/*public void test () {
@@ -259,6 +277,7 @@ public class Directory extends Item {
 	 * @return	Returns the index where the item needs to be inserted
 	 * 			Returns -1 when the name already exists in the current directory
 	 */
+	
 	private int getInsertIndex (int from, int to, String name) {
 		if (to<from) {
 			return 0;
@@ -337,6 +356,7 @@ public class Directory extends Item {
 	 * @return	Returns true when the given directory is an ancestor of the current directory
 	 * 			Returns false when the given directory is not an ancestor of the current directory
 	 */
+	@Raw
 	public boolean isDirectOrIndirectSubdirectoryOf(Directory directory) {
 		Directory folder = this.getDirectory();
 		while (folder != null) {
