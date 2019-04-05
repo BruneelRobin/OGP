@@ -436,12 +436,12 @@ public class Item {
     }
     
     /**
-     * Returns the root item from the item's tree
-     * @return	Returns the root of the current item tree.
+     * Returns the root item from the current item's tree
+     * @return	Returns the root from the current item's tree.
      */
     public Item getRoot() {
-    	Item parent = this.dir;
-    	while (parent != null) {
+    	Item parent = this;
+    	while (parent.dir != null) {
     		parent = parent.dir;
     	}
     	

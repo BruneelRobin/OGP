@@ -221,14 +221,29 @@ public class Directory extends Item {
 	 * Checks whether a file with the given name exists, doesn't match cases.
 	 * @param 	name
 	 * 			The name of the file to check
-	 * @return	Checks whether a file exists in the current directory. This function doesn't ignores cases
+	 * @return	Checks whether a file exists in the current directory. This function ignores cases
 	 * 			Returns false when the file exists.
 	 * 			Returns true when the file doesn't exist.
 	 */
 	public boolean exists (String name) {
+		for (Item child : children) {
+			if (child.getName().toLowerCase() == name.toLowerCase())
+				return true;
+		}
 		return false;
 	}
 	
+	/**
+	 * Finds the correct index to insert a new item
+	 * @param 	from
+	 * 			the index from where to start looking
+	 * @param 	to
+	 * 			the index until where to look
+	 * @param 	name
+	 * 			the name that needs to be inserted
+	 * @return	Returns the index where the item needs to be inserted
+	 * 			Returns -1 when the name already exists in the current directory
+	 */
 	private int getInsertIndex (int from, int to, String name) {
 		if (to<from) {
 			return 0;
@@ -269,6 +284,16 @@ public class Directory extends Item {
         }
 	}
 	
+	/**
+	 * Adds a child to the directory
+	 * @param 	child
+	 * 			the child to be added
+	 * @throws 	IsOwnAncestorException
+	 * 			Throws this error when you try to add a child directory that is an ancestor 
+	 * 			of the current directory
+	 * @throws 	AlreadyExistsException
+	 * 			Throws this error when there already exists a child with the same name.
+	 */
 	protected void addChild(Item child) throws IsOwnAncestorException, AlreadyExistsException {
 		int insertIndex = getInsertIndex(0, getNbItems()-1, child.getName());
 		if (insertIndex == -1) {
@@ -279,10 +304,22 @@ public class Directory extends Item {
 		children.add(insertIndex, child);
 	}
 	
+	/**
+	 * Removes the child from this directory
+	 * @param 	child
+	 * 			the child to be removed
+	 */
 	protected void removeChild(Item child) {
 		children.remove(child);
 	}
-		
+	
+	/**
+	 * Checks whether the given directory is an ancestor of the current directory
+	 * @param 	directory
+	 * 			the directory to check
+	 * @return	Returns true when the given directory is an ancestor of the current directory
+	 * 			Returns false when the given directory is not an ancestor of the current directory
+	 */
 	public boolean isDirectOrIndirectSubdirectoryOf(Directory directory) {
 		Directory folder = this.getDirectory();
 		while (folder != null) {
