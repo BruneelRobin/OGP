@@ -2,7 +2,7 @@ package filesystem;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
- * A class for signaling illegal attempts to change an item.
+ * A class for signaling illegal attempts to add an item to a directory.
  * 
  * @author 	Tommy Messelis
  * @version	2.0 - 2015
@@ -13,22 +13,24 @@ public class AlreadyExistsException extends RuntimeException {
 	 * Required because this class inherits from Exception
 	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Variable referencing the item to which change was denied.
-	 */
+	
 	private final Directory dir;
 	private final Item child;
 
 	/**
-	 * Initialize this new item not writable exception involving the
-	 * given item.
+	 * Initialize this already exists exception involving the
+	 * given child and directory.
 	 * 
-	 * @param	item
-	 * 			The item for the new item not writable exception.
-	 * @post	The item involved in the new item not writable exception
-	 * 			is set to the given item.
-	 * 			| new.getItem() == item
+	 * @param 	dir
+	 * 			The directory for where an item with the same name already exists.
+	 * @param	child
+	 * 			The child for the new already exists exception.
+	 * @post	The child involved in the new already exists exception
+	 * 			is set to the given child.
+	 * 			| new.getChild() == child
+	 * @post	The directory involved in the new already exists exception
+	 * 			is set to the given directory.
+	 * 			| new.getDirectory() == dir
 	 */
 	@Raw
 	public AlreadyExistsException(Directory dir, Item child) {
@@ -37,7 +39,7 @@ public class AlreadyExistsException extends RuntimeException {
 	}
 	
 	/**
-	 * Return the item involved in this item not writable exception.
+	 * Return the directory involved in this item already exists exception.
 	 */
 	@Raw @Basic
 	public Item getDirectory() {
@@ -45,7 +47,7 @@ public class AlreadyExistsException extends RuntimeException {
 	}
 	
 	/**
-	 * Return the child involved in this item not writable exception.
+	 * Return the child involved in this item already exists exception.
 	 */
 	@Raw @Basic
 	public Item getChild() {

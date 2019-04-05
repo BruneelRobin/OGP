@@ -1,7 +1,7 @@
 package filesystem;
 
 import be.kuleuven.cs.som.annotate.*;
-
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -26,6 +26,8 @@ public class File extends Item {
     /**********************************************************
      * Constructors
      **********************************************************/
+	
+	private final static ArrayList<String> allowedTypes = new ArrayList<String>(java.util.Arrays.asList("pdf", "txt", "java"));
 	
 	/**
      * Initialize a new file with given name, size and writability.
@@ -126,13 +128,45 @@ public class File extends Item {
     }
     
     /**********************************************************
-     * type - total programming
+     * type - defensive programming
      **********************************************************/
     String type;
-    private void setType (String type) {
-    	this.type = type;
+    
+    /**
+     * Sets the type of the current file
+     * @param 	type
+     * 			The type to be set
+     * 			| new.getType() == type;
+     * @throws 	TypeNotAllowedException
+     * 			Throws this exception when the given type is not valid
+     * 			| isValidType(type)
+     */
+    private void setType (String type) throws TypeNotAllowedException {
+    	if (isValidType(type))
+    		this.type = type;
+    	else {
+    		throw new TypeNotAllowedException (type);
+    	}
     }
     
+    /**
+     * Returns true when the type is valid
+     * @param 	type
+     * 			The type to check
+     * @return	Returns true when the given type is valid
+     * 			Returns false when the given type is not valid
+     */
+    public boolean isValidType(String type) {
+    	return allowedTypes.contains(type);
+    }
+    
+    /**
+     * Returns the type of the current file.
+     * @return	Returns the type of the current file.
+     */
+    public String getType() {
+    	return this.type;
+    }
     
     /**********************************************************
      * size - nominal programming

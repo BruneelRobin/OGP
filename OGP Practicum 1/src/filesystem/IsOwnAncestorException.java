@@ -2,7 +2,7 @@ package filesystem;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
- * A class for signaling illegal attempts to change an item.
+ * A class for signaling illegal attempts to add an item to a directory.
  * 
  * @author 	Tommy Messelis
  * @version	2.0 - 2015
@@ -13,33 +13,30 @@ public class IsOwnAncestorException extends RuntimeException {
 	 * Required because this class inherits from Exception
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private final Item child;
 
 	/**
-	 * Variable referencing the item to which change was denied.
-	 */
-	private final Item item;
-
-	/**
-	 * Initialize this new item not writable exception involving the
-	 * given item.
+	 * Initialize this new is own ancestor exception involving the
+	 * given child.
 	 * 
-	 * @param	item
-	 * 			The item for the new item not writable exception.
-	 * @post	The item involved in the new item not writable exception
-	 * 			is set to the given item.
-	 * 			| new.getItem() == item
+	 * @param	child
+	 * 			The child for the new is own ancestor exception.
+	 * @post	The child involved in the new is own ancestor exception
+	 * 			is set to the given child.
+	 * 			| new.getChild() == child
 	 */
 	@Raw
-	public IsOwnAncestorException(Item item) {
-		this.item = item;
+	public IsOwnAncestorException(Item child) {
+		this.child = child;
 	}
 	
 	/**
-	 * Return the item involved in this item not writable exception.
+	 * Return the child involved in this is own ancestor exception.
 	 */
 	@Raw @Basic
-	public Item getItem() {
-		return item;
+	public Item getChild() {
+		return child;
 	}
 	
 	
