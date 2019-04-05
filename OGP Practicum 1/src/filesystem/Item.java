@@ -386,6 +386,7 @@ public class Item {
      * @return	Returns the current directory
      * @return 	Returns null when this item is in the root directory
      */
+	@Basic
     public Directory getDirectory () {
     	return this.dir;
     }
@@ -398,6 +399,7 @@ public class Item {
      * @post	The given directory is registered as the new directory for this item.
      * 			| new.getDirectory() == dir
      */
+	@Raw
     private void setDirectory(Directory dir) {
     	this.dir = dir;
     	
@@ -408,6 +410,7 @@ public class Item {
      * @post	The new directory is the root directory.
      * 			| new.dir == null
      */
+	@Raw
     public void makeRoot () {
     	this.dir = null;
     }
@@ -433,6 +436,20 @@ public class Item {
     	this.getDirectory().removeChild(this);
     	//set the new directory
     	this.setDirectory(dir);
+    }
+    
+    /**
+     * Deletes this object and its associations
+     * @post	This item is deleted from its directory and the item's directory is set to null
+     * @throws 	NotWritableException
+     * 			Throws this exception when the current file is not writable
+     */
+    protected void delete() throws NotWritableException {
+    	if (!isWritable())
+    		throw new NotWritableException(this);
+    	
+    	dir.removeChild(this);
+    	this.dir = null;
     }
     
     /**
