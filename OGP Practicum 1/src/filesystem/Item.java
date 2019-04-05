@@ -436,6 +436,20 @@ public class Item {
     }
     
     /**
+     * Deletes this object and its associations
+     * @post	This item is deleted from its directory and the item's directory is set to null
+     * @throws 	NotWritableException
+     * 			Throws this exception when the current file is not writable
+     */
+    protected void delete() throws NotWritableException {
+    	if (!isWritable())
+    		throw new NotWritableException(this);
+    	
+    	dir.removeChild(this);
+    	this.dir = null;
+    }
+    
+    /**
      * Returns the root item from the current item's tree
      * @return	Returns the root from the current item's tree.
      */

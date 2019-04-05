@@ -89,7 +89,22 @@ public class Directory extends Item {
 	
 
 	
-	
+    /**
+     * Deletes this object and its associations
+     * @effect	This item is deleted from its directory and the item's directory is set to null
+     * 			| ((Item)this).delete()
+     * @throws	DirectoryNotEmptyException
+     * 			Throws this exception when the current directory is not empty.
+     * @throws 	NotWritableException
+     * 			Throws this exception when the current file is not writable
+     */
+	@Override
+	protected void delete () throws DirectoryNotEmptyException, NotWritableException {
+		if (this.getNbItems() > 0)
+			throw new DirectoryNotEmptyException(this);
+		
+		super.delete();
+	}
 	
 	
 	
@@ -302,6 +317,7 @@ public class Directory extends Item {
 			throw new IsOwnAncestorException(child);
 		}
 		children.add(insertIndex, child);
+		this.setModificationTime();
 	}
 	
 	/**
@@ -311,6 +327,7 @@ public class Directory extends Item {
 	 */
 	protected void removeChild(Item child) {
 		children.remove(child);
+		this.setModificationTime();
 	}
 	
 	/**
