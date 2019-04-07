@@ -437,8 +437,9 @@ public class Item {
      */
 	@Raw
     public void makeRoot () {
-    	this.dir = null;
-    }
+		this.move(null);
+		}
+    
     
     /**
      * Moves an item to the new directory

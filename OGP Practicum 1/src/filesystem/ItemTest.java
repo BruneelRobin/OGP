@@ -22,8 +22,10 @@ import org.junit.jupiter.api.Test;
 public class ItemTest {
 	
 	private Item normalItem;
+	private Item normalItemRoot;
 	private Item nonWritableItem;
 	private Directory parentDir;
+	private Directory childDir;
 	private Item otherItem;
 	
 	Date timeBeforeConstruction, timeAfterConstruction;
@@ -36,7 +38,9 @@ public class ItemTest {
 	void setUp() throws Exception {
 		timeBeforeConstruction = new Date();
 		parentDir = new Directory("parentDir");
+		childDir = new Directory(parentDir, "childDir");
 		normalItem = new Item(parentDir, "normalItem", true);
+		normalItemRoot = new Item("normalItem", true);
 		nonWritableItem = new Item(parentDir, "nonWritableItem", false);
 		otherItem = new Item("otherItem", true);
 		timeAfterConstruction = new Date();
@@ -279,6 +283,59 @@ public class ItemTest {
 		assertTrue(nonWritableItem.isWritable());
 	}
 	
+	/**
+	 * Tests the effect of making an item a root.
+	 */
+	@Test
+	public void testMakeRoot() {
+		normalItem.makeRoot();
+		assertEquals(null, normalItem.getDirectory());
+			}
+	
+	@Test
+	void testDelete_LegalCase() {
+		normalItem.delete();
+		assertEquals(normalItem.getDirectory(), null);
+		assertEquals(parentDir.exists(normalItem.getName()), false);
+	}
+	
+	@Test
+	void testDelete_IllegalCase() {
+		assertThrows(NotWritableException.class, () -> {nonWritableItem.delete();});
+	}
+	
+	
+	@Test
+	public void testMove_LegalCase() {
+		normalItem.move(childDir);
+		assertEquals(normalItem.getDirectory(), childDir);
+		assertTrue(childDir.hasAsItem(normalItem));
+		assertFalse(parentDir.hasAsItem(normalItem));
+		
+	}
+	
+	@Test
+	public void testMove_IllegalCase() {
+		assertThrows(AlreadyExistsException.class, () -> {normalItemRoot.move(parentDir);});
+		assertThrows(IsOwnAncestorException.class, () -> {parentDir.move(childDir);});
+		
+		
+	}
+	
+	
+	@Test
+	public void testGetRoot_rootItem() {
+		assertEquals(parentDir.getRoot(), parentDir);
+		
+	}
+	
+	@Test
+	public void testGetRoot_noRootItem() {
+		assertEquals(normalItem.getRoot(), parentDir);
+		
+	}
+	
+	
 	private void sleep() {
         try {
             Thread.sleep(50);
@@ -287,16 +344,12 @@ public class ItemTest {
         }
     }
 	
-	/**
-	 * Tests the effect of making an item a root.
-	 */
-	@Test
-	public void makeRoot() {
-		normalItem.makeRoot();
-		assertEquals(null, normalItem.getRoot());
-		
-		
-	}
+
+	
+	
+	
+	
+	
 	
 	
 	

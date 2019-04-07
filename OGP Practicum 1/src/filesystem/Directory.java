@@ -251,11 +251,26 @@ public class Directory extends Item {
 		
 	}*/
 	
+	
 	/**
-	 * Checks whether a file with the given name exists, doesn't match cases.
+	 * Checks whether an item already exists within this directory, only check one level below. 
+	 * @param item
+	 * 		  The searched for item
+	 * @return Checks whether an item already exists within the current directory, only checks one level below.
+	 * 		   Returns false when the item does not exist within the current directory
+	 * 		   Returns true when the item does exist within the current directory
+	 */
+	
+	public boolean hasAsItem (Item item) {
+		return (this.getItem(item.getName()) == item);
+	}
+	
+	/**
+	 * Checks whether a file or subdirectory with the given name exists within this directory, 
+	 * doesn't match cases and only checks one level below.
 	 * @param 	name
 	 * 			The name of the file to check
-	 * @return	Checks whether a file exists in the current directory. This function ignores cases
+	 * @return	Checks whether an item exists in the current directory. This function ignores cases
 	 * 			Returns false when the file exists.
 	 * 			Returns true when the file doesn't exist.
 	 */
