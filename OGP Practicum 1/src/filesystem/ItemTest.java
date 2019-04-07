@@ -2,50 +2,36 @@ package filesystem;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
- * A class collecting tests for the class of items.
- * 
- * @author Robin Bruneel, Jean-Louis Carron en Edward Wiels
+ * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0
  *
  */
-
-import org.junit.jupiter.api.Test;
 
 public class ItemTest {
 	
 	private static Item normalItem;
 	
-	/**
-	 * 
-	 */
-	
-	@Before 
-	public void setUpMutableFixture() {
-		
-		normalItem = new Item(dir, "normalItem", true);
-		
-
+	@BeforeAll
+	static void setUpBeforeClass() throws Exception {
 	}
-	
-	/**
-	 * 
-	 * @throws InterruptedException
-	 */
-	
-	@BeforeClass
-	public static void setUpImmutableFixture() throws InterruptedException {
-		
+
+	@BeforeEach
+	void setUp() throws Exception {
+		normalItem = new Item("normalItem", true);
 	}
 	
 	/**
 	 * Tests the effect of making an item a root.
 	 */
-	@test
+	@Test
 	public void makeRoot() {
 		normalItem.makeRoot();
-		assertequals(null, normalItem.getRoot());
+		assertEquals(null, normalItem.getRoot());
 		
 		
 	}
