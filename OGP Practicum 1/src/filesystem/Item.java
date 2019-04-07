@@ -398,11 +398,21 @@ public class Item {
      * 			The new directory
      * @post	The given directory is registered as the new directory for this item.
      * 			| new.getDirectory() == dir
+     * @post	If the given directory is null, the current directory will be set to the root
+     * 			directory.
+     * @effect	The current item is added to the directory
+     * 			| dir.addChild(this);
+     * @throws 	IsOwnAncestorException
+	 * 			Throws this error when you try to add a child directory that is an ancestor 
+	 * 			of the current directory
+	 * @throws 	AlreadyExistsException
+	 * 			Throws this error when there already exists a child with the same name.
      */
 	@Raw
-    private void setDirectory(Directory dir) {
+    private void setDirectory(Directory dir) throws IsOwnAncestorException, AlreadyExistsException  {
+		if (dir != null)
+			dir.addChild(this);
     	this.dir = dir;
-    	
     }
     
     /**
@@ -444,11 +454,12 @@ public class Item {
      * @throws 	NotWritableException
      * 			Throws this exception when the current file is not writable
      */
-    protected void delete() throws NotWritableException {
+    public void delete() throws NotWritableException {
     	if (!isWritable())
     		throw new NotWritableException(this);
     	
-    	dir.removeChild(this);
+    	if (dir != null)
+    		dir.removeChild(this);
     	this.dir = null;
     }
     

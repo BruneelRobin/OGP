@@ -107,7 +107,7 @@ public class Directory extends Item {
      * 			Throws this exception when the current file is not writable
      */
 	@Override
-	protected void delete () throws DirectoryNotEmptyException, NotWritableException {
+	public void delete () throws DirectoryNotEmptyException, NotWritableException {
 		if (this.getNbItems() > 0)
 			throw new DirectoryNotEmptyException(this);
 		
@@ -136,12 +136,13 @@ public class Directory extends Item {
 		
 	/**
 	 * Returns the index of an item in this directory.
-	 * @param item
-	 * 		  The item for which the index is searched for in this directory.
-	 * @return Returns the index of an item in this directory.
+	 * @param 	item
+	 * 		  	The item for which the index is searched for in this directory.
+	 * @return 	Returns the index of an item in this directory.
+	 * @return 	Returns 0 when the given item is not in this directory.
 	 */
 	public int getIndexOf(Item item) {
-		return this.children.indexOf(item);
+		return this.children.indexOf(item)+1;
 	}
 	
 	
@@ -174,7 +175,7 @@ public class Directory extends Item {
 	 */
 	private int binarySearch (int from, int to, String name) {
 		if (to >= from) {
-	        int mid = from + (to - from) / 2; 
+	        int mid = from + (to - from) / 2;
 	        Item midItem = children.get(mid);
 	        int comp = midItem.compareName(name);
 	  
@@ -204,7 +205,7 @@ public class Directory extends Item {
 	 */
 	@Basic
 	public Item getItem (String name) {
-		int index = binarySearch(0, this.getNbItems(), name);
+		int index = binarySearch(0, this.getNbItems()-1, name);
 		return index == -1 ? null : children.get(index);
 	}
 	
@@ -260,7 +261,7 @@ public class Directory extends Item {
 	 */
 	public boolean exists (String name) {
 		for (Item child : children) {
-			if (child.getName().toLowerCase() == name.toLowerCase())
+			if (child.getName().toLowerCase().equals(name.toLowerCase()))
 				return true;
 		}
 		return false;
