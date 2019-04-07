@@ -37,7 +37,6 @@ public class Item {
      * @param  	writable
      *         	The writability of the new item.
      * @effect  The directory of the item is set to the given directory.
-     * 			
      *          | setDirectory(name)
      * @effect  The name of the item is set to the given name.
      * 			If the given name is not valid, a default name is set.
@@ -58,8 +57,7 @@ public class Item {
      * 			|  isDirectOrIndirectSubdirectoryOf()				
      */
 	public Item(Directory dir, String name, boolean writable) {
-        setName(name);
-        setWritable(writable);
+        this(name, writable);
         setDirectory(dir);
     }
 	
@@ -207,12 +205,29 @@ public class Item {
      * @throws  NotWritableException(this)
      *          This item is not writable
      *          | ! isWritable() 
+     * @throws  AlreadyExistsException(this)
+     *          An item in this directory has the same name
+     *          | this.getDirectory().getItem(name) != null
      */
-    public void changeName(String name) throws NotWritableException {
+    public void changeName(String name) throws NotWritableException, AlreadyExistsException {
         if (isWritable()) {
-            if (isValidName(name)){
+        	boolean canHave;
+        	if (this.getDirectory() != null) {
+        		canHave = this.getDirectory().getItem(name) == null;
+        	} else {
+        		canHave = true;
+        	}
+            if (isValidName(name) && canHave){
             	setName(name);
+            	//Reinsert this item
+            	if (this.getDirectory() != null) {
+            		this.getDirectory().removeChild(this);
+                	this.getDirectory().addChild(this);
+            	}
+            	
                 setModificationTime();
+            } else if (!canHave) {
+            	throw new AlreadyExistsException(this.dir, this);
             }
         } else {
             throw new NotWritableException(this);

@@ -45,6 +45,8 @@ class DirectoryTest {
 	@Test
 	void testDelete_IllegalCase() {
 		assertThrows(DirectoryNotEmptyException.class, () -> {parentDir.delete();});
+		childDir.setWritable(false);
+		assertThrows(NotWritableException.class, () -> {childDir.delete();});
 	}
 	
 	@Test
@@ -88,6 +90,28 @@ class DirectoryTest {
 	void testisDirectOrIndirectSubdirectoryOf_illegalCase() {
 		assertEquals(parentDir.isDirectOrIndirectSubdirectoryOf(childDir), false);
 		assertEquals(otherDir.isDirectOrIndirectSubdirectoryOf(parentDir), false);
+	}
+	
+	@Test
+	public void testSorting () {
+		
+		for (int i = 0; i<100;i++) {
+			try {
+				Item item = new Item(childDir, String.valueOf((int)(Math.random() * 100 + 1)), true);
+				childDir.addChild(item);
+			} catch (AlreadyExistsException e) {
+				
+			}
+			
+		}
+		
+		for (int i = 1; i<childDir.getNbItems();i++) {
+			//lexicologically sorted
+			assertTrue(childDir.getItemAt(i+1).compareName(childDir.getItemAt(i).getName()) == 1);
+		}
+		
+		
+		
 	}
 
 }
