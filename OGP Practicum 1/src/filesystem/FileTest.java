@@ -13,8 +13,10 @@ import org.junit.*;
  */
 public class FileTest {
 
-	File fileStringIntBoolean;
-	File fileString;
+	File fileDirStringIntBooleanString
+	File fileStringIntBooleanString;
+	File fileDirStringString;
+	File fileStringString;
 	Date timeBeforeConstruction, timeAfterConstruction;
 	
 	File fileNotWritable;
@@ -23,60 +25,128 @@ public class FileTest {
 	@Before
 	public void setUpFixture(){
 		timeBeforeConstruction = new Date();
-		fileStringIntBoolean = new File("bestand.txt",100, true);
-		fileString = new File("bestand.txt");
+		parentDir = new Directory("parentDir");
+		fileDirStringIntBooleanString = new File(parentDir,"bestand",100, true,"txt");
+		fileDirStringString = new File(parentDir,"bestand","txt");
+		fileStringIntBooleanString = new File("bestand",100, true,"txt")
+		fileStringString = new File("bestand","txt")
 		timeAfterConstruction = new Date();
 
 		timeBeforeConstructionNotWritable = new Date();
-		fileNotWritable = new File("bestand.txt",100,false);
+		fileNotWritable = new File("bestand",100,false,"txt");
 		timeAfterConstructionNotWritable = new Date();
 	}
 
 	@Test
-	public void testFileStringIntBoolean_LegalCase() {
-		assertEquals("bestand.txt",fileStringIntBoolean.getName());
-		assertEquals(fileStringIntBoolean.getSize(),100);
-		assertTrue(fileStringIntBoolean.isWritable());
-		assertNull(fileStringIntBoolean.getModificationTime());
-		assertFalse(timeBeforeConstruction.after(fileStringIntBoolean.getCreationTime()));
-		assertFalse(fileStringIntBoolean.getCreationTime().after(timeAfterConstruction));
+	public void testFileDirStringIntBooleanString_LegalCase() {
+		assertEquals("bestand",fileDirStringIntBooleanString.getName());
+		assertEquals(100,fileDirStringIntBooleanString.getSize());
+		assertEquals("txt",fileDirStringIntBooleanString.getType())
+		assertEquals(parentDir,fileDirStringIntBooleanString.getDirectory());
+		assertTrue(fileDirStringIntBooleanString.isWritable());
+		assertNull(fileDirStringIntBooleanString.getModificationTime());
+		assertFalse(timeBeforeConstruction.after(fileDirStringIntBooleanString.getCreationTime()));
+		assertFalse(fileDirStringIntBooleanString.getCreationTime().after(timeAfterConstruction));
 	}
 	
 	@Test
-	public void testFileStringIntBoolean_IllegalCase() {
+	public void testFileDirStringIntBooleanString_IllegalCase() {
 		timeBeforeConstruction = new Date();
-		fileStringIntBoolean = new File("$IllegalName$",File.getMaximumSize(),false);
+		fileDirStringIntBooleanString = new File(parentDir,"$illegalName$",File.getMaximumSize(),false,"$illegalType$");
 		timeAfterConstruction = new Date();
-		assertTrue(File.isValidName(fileStringIntBoolean.getName()));
-		assertEquals(File.getMaximumSize(),fileStringIntBoolean.getSize());
-		assertFalse(fileStringIntBoolean.isWritable());
-		assertNull(fileStringIntBoolean.getModificationTime());
-		assertFalse(timeBeforeConstruction.after(fileStringIntBoolean.getCreationTime()));
-		assertFalse(fileStringIntBoolean.getCreationTime().after(timeAfterConstruction));
+		assertTrue(File.isValidName(fileDirStringIntBooleanString.getName()));
+		assertEquals(File.getMaximumSize(),fileDirStringIntBooleanString.getSize());
+		assertEquals(parentDir,fileDirStringIntBooleanString.getDirectory());
+		assertFalse(fileDirStringIntBooleanString.isWritable());
+		assertThrows(TypeNotAllowedException.class,() -> setType("$illegalType$"));
+		assertNull(fileDirStringIntBooleanString.getModificationTime());
+		assertFalse(timeBeforeConstruction.after(fileDirStringIntBooleanString.getCreationTime()));
+		assertFalse(fileDirStringIntBooleanString.getCreationTime().after(timeAfterConstruction));
 	}
 
 	@Test
-	public void testFileString_LegalCase() {
-		assertEquals("bestand.txt",fileString.getName());
-		assertEquals(0,fileString.getSize());
-		assertTrue(fileString.isWritable());
-		assertNull(fileString.getModificationTime());
-		assertFalse(timeBeforeConstruction.after(fileString.getCreationTime()));
-		assertFalse(fileString.getCreationTime().after(timeAfterConstruction));
+	public void testFileDirStringString_LegalCase() {
+		assertEquals("bestand",fileDirStringString.getName());
+		assertEquals(0,fileDirStringString.getSize());
+		assertEquals("txt",fileDirStringString.getType());
+		assertEquals(parentDir, fileDirStringString.getDirectory());
+		assertTrue(fileDirStringString.isWritable());
+		assertNull(fileDirStringString.getModificationTime());
+		assertFalse(timeBeforeConstruction.after(fileDirStringString.getCreationTime()));
+		assertFalse(fileDirStringString.getCreationTime().after(timeAfterConstruction));
 	}
 	
 	@Test
-	public void testFileString_IllegalCase() {
+	public void testFileDirStringString_IllegalCase() {
 		timeBeforeConstruction = new Date();
-		fileString = new File("$IllegalName$");
+		fileDirStringString = new File(parentDir, "$illegalName$", "$illegalType$");
 		timeAfterConstruction = new Date();
-		assertTrue(File.isValidName(fileString.getName()));
-		assertEquals(0,fileString.getSize());
-		assertTrue(fileString.isWritable());
-		assertNull(fileString.getModificationTime());
-		assertFalse(timeBeforeConstruction.after(fileString.getCreationTime()));
-		assertFalse(fileString.getCreationTime().after(timeAfterConstruction));
+		assertTrue(File.isValidName(fileDirStringString.getName()));
+		assertEquals(0,fileDirStringString.getSize());
+		assertEquals(parentDir, fileDirStringString.getDirectory());
+		assertThrows(TypeNotAllowedException.class,() -> setType("$illegalType$"));
+		assertTrue(fileDirStringString.isWritable());
+		assertNull(fileDirStringString.getModificationTime());
+		assertFalse(timeBeforeConstruction.after(fileDirStringString.getCreationTime()));
+		assertFalse(fileDirStringString.getCreationTime().after(timeAfterConstruction));
 	}
+	
+	// Same but as rootFile
+	
+	@Test
+	public void testFileStringIntBooleanString_LegalCase() {
+		assertEquals("bestand",fileStringIntBooleanString.getName());
+		assertEquals(100,fileStringIntBooleanString.getSize());
+		assertEquals("txt",fileStringIntBooleanString.getType())
+		assertNull(fileStringIntBooleanString.getDirectory());
+		assertTrue(fileStringIntBooleanString.isWritable());
+		assertNull(fileStringIntBooleanString.getModificationTime());
+		assertFalse(timeBeforeConstruction.after(fileStringIntBooleanString.getCreationTime()));
+		assertFalse(fileStringIntBooleanString.getCreationTime().after(timeAfterConstruction));
+	}
+	
+	@Test
+	public void testFileStringIntBooleanString_IllegalCase() {
+		timeBeforeConstruction = new Date();
+		fileStringIntBooleanString = new File("$illegalName$",File.getMaximumSize(),false,"$illegalType$");
+		timeAfterConstruction = new Date();
+		assertTrue(File.isValidName(fileStringIntBooleanString.getName()));
+		assertEquals(File.getMaximumSize(),fileStringIntBooleanString.getSize());
+		assertNull(fileStringIntBooleanString.getDirectory());
+		assertFalse(fileStringIntBooleanString.isWritable());
+		assertThrows(TypeNotAllowedException.class,() -> setType("$illegalType$"));
+		assertNull(fileStringIntBooleanString.getModificationTime());
+		assertFalse(timeBeforeConstruction.after(fileStringIntBooleanString.getCreationTime()));
+		assertFalse(fileStringIntBooleanString.getCreationTime().after(timeAfterConstruction));
+	}
+
+	@Test
+	public void testFileStringString_LegalCase() {
+		assertEquals("bestand",fileStringString.getName());
+		assertEquals(0,fileStringString.getSize());
+		assertEquals("txt",fileStringString.getType());
+		assertNull(fileStringString.getDirectory());
+		assertTrue(fileStringString.isWritable());
+		assertNull(fileStringString.getModificationTime());
+		assertFalse(timeBeforeConstruction.after(fileStringString.getCreationTime()));
+		assertFalse(fileStringString.getCreationTime().after(timeAfterConstruction));
+	}
+	
+	@Test
+	public void testFileStringString_IllegalCase() {
+		timeBeforeConstruction = new Date();
+		fileStringString = new File("$illegalName$", "$illegalType$");
+		timeAfterConstruction = new Date();
+		assertTrue(File.isValidName(fileStringString.getName()));
+		assertEquals(0,fileStringString.getSize());
+		assertNull(fileStringString.getDirectory());
+		assertThrows(TypeNotAllowedException.class,() -> setType("$illegalType$"));
+		assertTrue(fileStringString.isWritable());
+		assertNull(fileStringString.getModificationTime());
+		assertFalse(timeBeforeConstruction.after(fileStringString.getCreationTime()));
+		assertFalse(fileStringString.getCreationTime().after(timeAfterConstruction));
+	}
+	
 
 	@Test
 	public void testIsValidName_LegalCase() {
