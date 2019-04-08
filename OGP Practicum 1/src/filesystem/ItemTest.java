@@ -290,7 +290,7 @@ public class ItemTest {
 	public void testMakeRoot() {
 		normalItem.makeRoot();
 		assertEquals(null, normalItem.getDirectory());
-			}
+	}
 	
 	@Test
 	void testDelete_LegalCase() {
@@ -318,21 +318,17 @@ public class ItemTest {
 	public void testMove_IllegalCase() {
 		assertThrows(AlreadyExistsException.class, () -> {normalItemRoot.move(parentDir);});
 		assertThrows(IsOwnAncestorException.class, () -> {parentDir.move(childDir);});
-		
-		
 	}
 	
 	
 	@Test
 	public void testGetRoot_rootItem() {
 		assertEquals(parentDir.getRoot(), parentDir);
-		
 	}
 	
 	@Test
 	public void testGetRoot_noRootItem() {
 		assertEquals(normalItem.getRoot(), parentDir);
-		
 	}
 	
 	
@@ -343,40 +339,5 @@ public class ItemTest {
             e.printStackTrace();
         }
     }
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-
-
 
 }

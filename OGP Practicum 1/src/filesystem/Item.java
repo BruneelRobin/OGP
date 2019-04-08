@@ -438,7 +438,7 @@ public class Item {
 	@Raw
     public void makeRoot () {
 		this.move(null);
-		}
+	}
     
     
     /**
@@ -456,12 +456,14 @@ public class Item {
      * 			
      */
     public void move(Directory dir) throws AlreadyExistsException, IsOwnAncestorException {
+    	
+    	Directory oldDir = this.getDirectory();
     	//lets try to add child first
-    	dir.addChild(this);
-    	//we added the file to the new dir, lets remove it from the old (doesn't throw errors)
-    	this.getDirectory().removeChild(this);
-    	//set the new directory
     	this.setDirectory(dir);
+    	//we added the file to the new dir, lets remove it from the old (doesn't throw errors)
+    	if (oldDir != null)
+    		oldDir.removeChild(this);
+    	
     }
     
     /**
