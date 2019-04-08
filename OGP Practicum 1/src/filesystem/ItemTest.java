@@ -66,7 +66,7 @@ public class ItemTest {
 		Date tAfter = new Date();
 		assertEquals(newItemWrongName.getName(), "new_item");
 		assertEquals(newItemWrongName.getDirectory(), parentDir);
-		assertEquals(newItemWrongName.isWritable(), true);
+		assertTrue(newItemWrongName.isWritable());
 		assertNull(newItemWrongName.getModificationTime());
 		assertFalse(tBefore.after(newItemWrongName.getCreationTime()));
 		assertFalse(newItemWrongName.getCreationTime().after(tAfter));
