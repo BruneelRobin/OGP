@@ -164,7 +164,7 @@ public class FileTest {
 	@Test
 	public void testChangeName_LegalCase() {
 		Date timeBeforeSetName = new Date();
-		fileString.changeName("NewLegalName");
+		fileStringString.changeName("NewLegalName");
 		Date timeAfterSetName = new Date();
 		
 		assertEquals("NewLegalName",fileString.getName());
@@ -181,8 +181,8 @@ public class FileTest {
 	@Test
 	public void testChangeName_IllegalName() {
 		fileString.changeName("$IllegalName$");
-		assertEquals("bestand.txt",fileString.getName());
-		assertNull(fileString.getModificationTime());
+		assertEquals("bestand",fileStringString.getName());
+		assertNull(fileStringString.getModificationTime());
 	}
 
 	@Test
