@@ -231,6 +231,19 @@ public class FileTest {
 	public void testShorten_FileNotWritable() {
 		fileNotWritable.shorten(1);
 	}
+	
+	@Test
+	public void testIsValidType_LegalCase() {
+		assertTrue(File.isValidType("txt"))
+		assertTrue(File.isValidType("pdf"))
+		assertTrue(File.isValidType("java"))
+	}
+	
+	@Test
+	public void testIsValidType_IllegalCase() {
+		assertFalse(File.isValidType("illegal"))
+		assertFalse(File.isValidType(1))
+	}
 
 	@Test
 	public void testIsValidCreationTime_LegalCase() {
