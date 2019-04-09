@@ -100,7 +100,7 @@ public class File extends Item {
 		//super(name, writable); //maakt item aan
         //setSize(size);
         //setType(type);
-		this(null, name, type);
+		this(null,name, size, writable, type);
     }
 
 	/**
