@@ -1,88 +1,25 @@
 package filesystem;
 
+import filesystem.exception.*;
 import be.kuleuven.cs.som.annotate.*;
-import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * A class of files.
  *
- * @invar	Each file must have a properly spelled name.
- * 			| isValidName(getName())
  * @invar	Each file must have a valid size.
  * 			| isValidSize(getSize())
- * @invar   Each file must have a valid creation time.
- *          | isValidCreationTime(getCreationTime())
- * @invar   Each file must have a valid modification time.
- *          | canHaveAsModificationTime(getModificationTime())
- $ @invar   Each file must have a valid type.
+ * @invar   Each file must have a valid type.
  *          | isValidType(getType())
- * @author  Mark Dreesen
- * @author  Tommy Messelis
- * @version 3.1
  * 
- * @note		See Coding Rule 48 for more info on the encapsulation of class invariants.
+ * @author 	Tommy Messelis
+ * @version	3.1 - 2016       
  */
-public class File extends Item {
+public class File extends DiskItem{
 
     /**********************************************************
      * Constructors
      **********************************************************/
-	
-	private final static ArrayList<String> allowedTypes = new ArrayList<String>(java.util.Arrays.asList("pdf", "txt", "java"));
-	
-	/**
-     * Initialize a new file with given name, size and writability.
-     * @param	dir
-     * 			The directory of the current file.
-     * @param  	name
-     *         	The name of the new file.
-     * @param  	size
-     *         	The size of the new file.
-     * @param  	writable
-     *         	The writability of the new file.
-     * @param	type
-     * 			The type of the new file.
-     * @effect  The directory of the file is set to the given directory.
-     * 			If the given directory is not valid, an error is thrown.
-     * @effect  The name of the file is set to the given name.
-     * 			If the given name is not valid, a default name is set.
-     *          | setName(name)
-     * @effect	The size is set to the given size (must be valid)
-     * 			| setSize(size)
-     * @effect	The writability is set to the given flag
-     * 			| setWritable(writable)
-     * @effect	The type of the current file is set to the given string
-     * 			| setType(type)
-     * @post    The new creation time of this file is initialized to some time during
-     *          constructor execution.
-     *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
-     *          | (new.getCreationTime().getTime() <= (new System).currentTimeMillis())
-     * @post    The new file has no time of last modification.
-     *          | new.getModificationTime() == null
-     */
-	public File(Directory dir, String name, int size, boolean writable, String type) {
-		super(dir, name, writable); //maakt item aan
-		setSize(size);
-		setType(type);
-	}
-	
-	/**
-     * Initialize a new file with given name.
-     * @param	dir
-     * 			The directory of the current file.
-     * @param   name
-     *          The name of the new file.
-     * @param	type
-     * 			The type of the new file.
-     * @effect  This new file is initialized with the given directory,
-     * 			given name, a zero size, true writability and given type.
-     *         | this(dir, name, 0, true, type)
-     */
-	public File(Directory dir, String name, String type) {
-		this(dir, name, 0, true, type);
-	}
-	
+
     /**
      * Initialize a new file with given name, size and writability.
      *
@@ -92,95 +29,159 @@ public class File extends Item {
      *         	The size of the new file.
      * @param  	writable
      *         	The writability of the new file.
-     * @effect  This new file is initialized with the given name, size, writability and type.
-     * 			The parent directory is set to null. This file is a root file.
-     * 			| this(null,name,type)
+     * @param  	type
+     *         	The type of the new file.        
+     * 
+     * @pre		type is effective
+     * 			|type != null
+     * @effect 	The new file is a disk item with the given
+     *         	name and writability.
+     *         	| super(name,writable)
+     * @effect 	The new file has the given size
+     *          | setSize(size)
+     * @post   	The type of this new file is set to the given type.
+     *         	|new.getType() == type        
      */
-	public File(String name, int size, boolean writable, String type) {
-		//super(name, writable); //maakt item aan
-        //setSize(size);
-        //setType(type);
-		this(null,name, size, writable, type);
+    public File(String name, Type type, int size, boolean writable) {
+    	super(name,writable);
+        setSize(size);
+        this.type=type;
     }
 
-	/**
-     * Initialize a new file with given name.
-     * @param   name
-     *          The name of the new file.
-     * @param	type
-     * 			The type of the new file.
-     * @effect  This new file is initialized with the given name, 
-     * 			a zero size, true writability and given type.
-     *         	| this(name, 0, true, type)
+    /**
+     * Initialize a new writable, empty file with given name.
+     *
+     * @param  name
+     *         The name of the new file.
+     * @param  type
+     *         The type of the new file.        
+     * 
+     * @effect This new file is initialized with the given name
+     *         and the given type, the new file is empty
+     *         and writable.
+     *         | this(name,type,0,true)
      */
-	public File(String name, String type) {
-		this(name, 0, true, type);
+    public File(String name, Type type) {
+        this(name,type,0,true);
+    }
+   
+    /**
+     * Initialize a new file with given parent directory, name,
+     * size and writability.
+     *
+     * @param  	parent
+     *         	The parent directory of the new file.       
+     * @param  	name
+     *         	The name of the new file.
+     * @param  	size
+     *         	The size of the new file.
+     * @param  	writable
+     *         	The writability of the new file.
+     * @param  	type
+     *         	The type of the new file. 
+     * 
+     * @pre		type is effective
+     * 			|type != null
+     * @effect 	The new file is a disk item with the given
+     *         	parent, name and writability.
+     *         	| super(parent,name,writable)
+     * @effect 	The new file has the given size
+     *         	| setSize(size)
+     * @post   	The type of this new file is set to the given type.
+     *         	|new.getType() == type        
+     */
+    public File(Directory parent, String name, Type type, int size, boolean writable)
+    		throws IllegalArgumentException, DiskItemNotWritableException {
+    	super(parent,name,writable);
+    	setSize(size);
+    	this.type=type;
+    }
+
+    /**
+     * Initialize a new writable, empty file with given parent directory
+     * and name.
+     *
+     * @param  parent
+     *         The parent directory of the new file.
+     * @param  name
+     *         The name of the new file.
+     * @param  type
+     *         The type of the new file.        
+     * 
+     * @effect This new file is initialized with the given name
+     *         and the given parent directory, type, 
+     *         the new file is empty and writable.
+     *         | this(parent,name,type,0,true)
+     */
+    public File(Directory parent, String name, Type type)
+    		throws IllegalArgumentException, DiskItemNotWritableException {
+    	this(parent,name,type,0,true);
+    }    
+    
+   /**
+	* Return a textual representation of this file.
+	* 
+	* @return  The name of this file followed by a dot
+	*          followed by the extension representing the
+	*          type of this file.
+	*          | result.equals(getName()+"."+getType().getExtension())
+	*/    
+    public String toString(){
+    	  return getName()+"."+getType().getExtension();
+    }
+    
+	
+    /**********************************************************
+	 * delete/termination
+	 **********************************************************/
+    
+    
+    /**
+	 * Check whether this disk item can be terminated.
+	 * 
+	 * @return	True if the disk item is not yet terminated, is writable and it is either a root or
+	 * 			its parent directory is writable
+	 * 			| result == !isTerminated() && isWritable() && (isRoot() || getParentDirectory().isWritable())
+	 * @note	This specification can now be closed
+	 */
+    @Override
+    public boolean canBeTerminated(){
+    	// no additional implementation required
+		return super.canBeTerminated();
 	}
     
-    /**
-     * Return the name for a new item which is to be used when the
-     * given name is not valid.
-     *
-     * @return   A valid item name.
-     *         | isValidName(result)
-     */
-    @Model
-    private static String getDefaultName() {
-    	return "new_file";
-    }
     
     /**********************************************************
-     * type - defensive programming
+     * type
      **********************************************************/
-    private String type;
     
     /**
-     * Returns the allowed extensions for a file
-     * @return	Returns the allowed extensions for a file as an ArrayList object.
+	 * Variable referencing the type of this file.					
+	 */
+    private final Type type;
+    
+    /**
+     * Return whether the given type is a valid type for a file.
+     *
+     * @param  type
+     *         The type to check.
+     * @return True if and only if the given type is effective.
+     *         | result == (type != null)
      */
-    @Immutable
-    public static ArrayList<String> getAllowedTypes () {
-    	return allowedTypes;
+    public static boolean isValidType(Type type){
+    	  return type != null;
     }
     
     /**
-     * Sets the type of the current file
-     * @param 	type
-     * 			The type to be set
-     * 			| new.getType() == type;
-     * @throws 	TypeNotAllowedException
-     * 			Throws this exception when the given type is not valid
-     * 			| isValidType(type)
-     */
-    @Raw
-    private void setType (String type) throws TypeNotAllowedException {
-    	if (isValidType(type))
-    		this.type = type;
-    	else {
-    		throw new TypeNotAllowedException (type);
-    	}
+     * Return the type of this file.
+     */ 
+    @Raw @Basic @Immutable
+    public Type getType(){
+    	  return type;
     }
+
     
-    /**
-     * Returns true when the type is valid
-     * @param 	type
-     * 			The type to check
-     * @return	Returns true when the given type is valid
-     * 			Returns false when the given type is not valid
-     */
-    @Raw
-    public static boolean isValidType(String type) {
-    	return getAllowedTypes().contains(type);
-    }
     
-    /**
-     * Returns the type of the current file.
-     * @return	Returns the type of the current file.
-     */
-    @Basic
-    public String getType() {
-    	return this.type;
-    }
     
     /**********************************************************
      * size - nominal programming
@@ -252,7 +253,7 @@ public class File extends Item {
      * @effect  The size of this file is increased with the given delta.
      *          | changeSize(delta)
      */
-    public void enlarge(int delta) throws NotWritableException {
+    public void enlarge(int delta) throws DiskItemNotWritableException {
         changeSize(delta);
     }
 
@@ -267,7 +268,7 @@ public class File extends Item {
      * @effect  The size of this file is decreased with the given delta.
      *          | changeSize(-delta)
      */
-    public void shorten(int delta) throws NotWritableException {
+    public void shorten(int delta) throws DiskItemNotWritableException {
         changeSize(-delta);
     }
 
@@ -288,14 +289,13 @@ public class File extends Item {
      *         | ! isWritable()
      */
     @Model 
-    private void changeSize(int delta) throws NotWritableException{
+    private void changeSize(int delta) throws DiskItemNotWritableException{
         if (isWritable()) {
             setSize(getSize()+delta);
-            setModificationTime();   
-        } else {
-        	throw new NotWritableException(this);
+            setModificationTime();            
+        }else{
+        	throw new DiskItemNotWritableException(this);
         }
     }
     
 }
-
