@@ -508,7 +508,7 @@ public abstract class DiskItem {
 	/**
 	 * Variable registering whether or not this disk item is writable.
 	 */
-	private boolean isWritable = true;
+	protected boolean isWritable = true;
 
 	/**
 	 * Check whether this disk item is writable.
