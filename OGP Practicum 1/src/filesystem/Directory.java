@@ -28,15 +28,15 @@ public class Directory extends RealItem {
 	 *         The name of the new directory.
 	 * @param  writable
 	 *         The writability of the new directory.
-	 * @effect The new directory is a disk item with the given
+	 * @post   The new directory is a root disk item with the given
 	 *         name and writability.
-	 *         | super(name,writable)
+	 *         | super(null,name,writable)
 	 * @post   The new directory has no items.
 	 *         | new.getNbItems() == 0
 	 * 
 	 */
 	public Directory(String name, boolean writable) {
-		super(name,writable);
+		super(null, name,writable);
 	}
 
 	/**
@@ -113,25 +113,6 @@ public class Directory extends RealItem {
 
 	
 	
-	
-	/**********************************************************
-	 * delete/termination
-	 **********************************************************/
-
-	/**
-	 * Check whether this directory can be terminated.
-	 * 
-	 * @return	True if the directory is not yet terminated, is writable, contains 0 items
-	 * 			and it is either a root or its parent directory is writable
-	 * 			| result == getNbItems() == 0 && !isTerminated() && isWritable() 
-	 * 			|            && (isRoot() || getParentDirectory().isWritable())
-	 * @note	We have added a condition to the open specs of the superclass. Now the specification
-	 * 			is in closed form.
-	 */
-	@Override
-	public boolean canBeTerminated() {
-		return getNbItems() == 0 && super.canBeTerminated();			
-	}
 	
 	/**********************************************************
 	 * Root
@@ -234,25 +215,6 @@ public class Directory extends RealItem {
 			return false;
 		else return (directory.isWritable() && directory.canHaveAsItem(this) &&
 				(this.isRoot() || this.getParentDirectory().isWritable()) );
-	}
-	
-	/** 
-	 * Check whether this directory has a proper parent directory as
-	 * its parent directory.
-	 * 
-	 * @return  true if this disk item can have its registered parent directory 
-	 * 			as its parent directory and it is either a root, or 
-	 * 			its registered parent directory has this item as a registered item.
-	 *          | result == canHaveAsParentDirectory(getParentDirectory()) &&
-	 *			|            (isRoot() || getParentDirectory().hasAsItem(this))
-	 *	@note	This checker is split up in two parts, the consistency of the 
-	 *			bidirectional relationship is added to the functionality of 
-	 *			the internal state checker (canHaveAsParentDirectory())
-	 */
-	@Raw@Override
-	public boolean hasProperParentDirectory() {
-		return canHaveAsParentDirectory(getParentDirectory()) &&
-				(isRoot() || getParentDirectory().hasAsItem(this));
 	}
 	
 	
@@ -426,7 +388,7 @@ public class Directory extends RealItem {
 	 * 			|				 then result == for one I in 1..getNbItems:
 	 *          |      								item.getName().equalsIgnoreCase(getItemAt(I).getName())
 	 * 			|				 else result == (!this.containsDiskItemWithName(item.getName()) &&
-	 * 			|									(item.isRoot() || item.getParentDirectory().isWritable())) 	
+	 * 			|									&& item.canHaveAsParentDirectory(this)) 	
 	 * 
 	 * @note	This checker does not verify the consistency of the bidirectional relationship.
 	 */
@@ -441,7 +403,7 @@ public class Directory extends RealItem {
 			}
 			return count == 1;
 		}else{
-			return (!this.containsDiskItemWithName(item.getName()) && (item.isRoot() || item.getParentDirectory().isWritable())); 
+			return (!this.containsDiskItemWithName(item.getName()) && item.canHaveAsParentDirectory(this)); 
 		}
 	}
 
@@ -704,6 +666,69 @@ public class Directory extends RealItem {
 			//this should not happen
 			assert false;
 		}
+	}
+	
+	/**********************************************************
+	 * DirectoryIterator
+	 **********************************************************/
+	
+	public DirectoryIterator getIterator () {
+		return new DirectoryIterator() {
+			private int cursorPosition;
+			
+			/**
+			 * Return the number of remaining disk items to be
+			 * returned by this directory-iterator, including
+			 * the current item.
+			 * 
+			 * @return	The resulting number equals the remaining items
+			 * 			| getNbItems()-cursorPosition
+			 */
+			@Override
+			public int getNbRemainingItems() {
+				return getNbItems()-cursorPosition;
+			}
+			
+			/**
+			 * Return the current disk item of this directory-iterator.
+			 * 
+			 * @return	The current item
+			 * 			| getItemAt(cursorPosition)
+			 * @throws	IndexOutOfBoundsException
+			 * 			This directory-iterator has no current item.
+			 * 			| getNbRemainingItems() == 0
+			 */
+			@Override
+			public DiskItem getCurrentItem() throws IndexOutOfBoundsException {
+				return getItemAt(cursorPosition);
+			}
+			
+			/**
+			 * Advance the current item of this directory-iterator to the
+			 * next disk item. 
+			 * 
+			 * @pre		This directory-iterator must still have some remaining items.
+			 * 			| getNbRemainingItems() > 0
+			 * @post	The number of remaining disk items is decremented
+			 * 			by 1, since the cursorPosition is increased by one.
+			 * 			| new.getNbRemainingItems() == getNbRemainingItems() - 1 && new.cursorPosition = this.cursorPosition + 1
+			 */
+			@Override
+			public void advance() {
+				this.cursorPosition ++;
+			}
+
+			/**
+			 * Reset this directory-iterator to its first item.
+			 * @post	The cursorPosition is reset to 0
+			 * 			| new.cursorPosition = 0 && getNbRemainingItems() == getNbItems() 
+			 */
+			@Override
+			public void reset() {
+				this.cursorPosition = 0;
+			}
+        };
+ 
 	}
 	
 	
