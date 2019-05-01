@@ -112,6 +112,28 @@ public class Directory extends RealItem {
 	}
 
 	
+	/**********************************************************
+	 * writable
+	 **********************************************************/
+	
+	/**
+	 * Set the writability to false, if the input is false. 
+	 * 
+	 * 
+	 * @post  The new writability is false, if the input is false.
+	 *        | new.isWritable() == isWritable
+	 * 	
+	 * @post  The new writability remains untouched, if the input is true.
+	 * 		  | new.isWritable() == this.isWritable
+	 */
+	@Raw @Override
+	public void setWritable(boolean isWritable) {
+		if(isWritable == false) {		
+			this.isWritable = isWritable;
+		}
+		
+	}
+	
 	
 	
 	/**********************************************************
