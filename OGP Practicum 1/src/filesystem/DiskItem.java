@@ -22,6 +22,34 @@ import filesystem.exception.*;
  * 
  */
 public abstract class DiskItem {
+	
+	/**
+	 * Initialize a new root disk item with given name and writability.
+	 * 
+	 * @param  	name
+	 *         	The name of the new disk item.
+	 * @param  	writable
+	 *         	The writability of the new disk item.
+	 * 
+	 * @effect  The name of the disk item is set to the given name.
+	 * 			If the given name is not valid, a default name is set.
+	 *          | setName(name) 
+	 * @effect	The writability is set to the given flag
+	 * 			| setWritable(writable)
+	 * @post 	The disk item is a root item
+	 * 			| new.isRoot()
+	 * @post    The new creation time of this disk item is initialized to some time during
+	 *          constructor execution.
+	 *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
+	 *          | (new.getCreationTime().getTime() <= (new System).currentTimeMillis())
+	 * @post    The new disk item has no time of last modification.
+	 *          | new.getModificationTime() == null
+	 */
+	@Model
+	protected DiskItem(String name, boolean writable) {
+		setName(name);
+		setWritable(writable);
+	}
 
 	/**
 	 * Initialize a new disk item with given parent directory, name and 
@@ -198,8 +226,8 @@ public abstract class DiskItem {
 	 *          |      then new.getName().equals(name)
 	 *          |      else new.getName().equals(getDefaultName())
 	 */
-	@Raw @Model 
-	private void setName(String name) {
+	@Raw @Model
+	protected void setName(String name) {
 		if (canHaveAsName(name)) {
 			this.name = name;
 		} else {
@@ -651,7 +679,7 @@ public abstract class DiskItem {
 	 *			|		 	if (directory == this) then result == false
 	 *			|			if (this.isDirectOrIndirectParentOf(directory)) then result == false
 	 *			|			else result == (directory.isWritable() && directory.canHaveAsItem(this) &&
-	 *			|							(this.isRoot() || this.getParentDirectory().isWritable()) )
+	 *			|							(this.getParentDirectory() == null || this.getParentDirectory().isWritable()) )
 	 *	@note	This checker checks all conditions except the consistency of the bidirectional relationship
 	 *			This checker can thus be used to check whether a disk item can accept a directory
 	 *			as its new parent directory
@@ -666,8 +694,7 @@ public abstract class DiskItem {
 			return false;
 		if (this.isDirectOrIndirectParentOf(directory))
 			return false;
-		else return (directory.isWritable() && directory.canHaveAsItem(this) &&
-				 this.getParentDirectory().isWritable());
+		else return (directory.isWritable() && directory.canHaveAsItem(this) && (this.getParentDirectory() == null || this.getParentDirectory().isWritable()));
 	}
 
 	/**

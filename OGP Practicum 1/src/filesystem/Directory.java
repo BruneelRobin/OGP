@@ -28,15 +28,15 @@ public class Directory extends RealItem {
 	 *         The name of the new directory.
 	 * @param  writable
 	 *         The writability of the new directory.
-	 * @post   The new directory is a root disk item with the given
+	 * @effect   The new directory is a root disk item with the given
 	 *         name and writability.
-	 *         | super(null,name,writable)
+	 *         | super(name,writable)
 	 * @post   The new directory has no items.
 	 *         | new.getNbItems() == 0
 	 * 
 	 */
 	public Directory(String name, boolean writable) {
-		super(null, name,writable);
+		super(name,writable);
 	}
 
 	/**
@@ -410,7 +410,7 @@ public class Directory extends RealItem {
 	 * 			|				 then result == for one I in 1..getNbItems:
 	 *          |      								item.getName().equalsIgnoreCase(getItemAt(I).getName())
 	 * 			|				 else result == (!this.containsDiskItemWithName(item.getName()) &&
-	 * 			|									&& item.canHaveAsParentDirectory(this)) 	
+	 * 			|									(item.getParentDirectory() == null || item.getParentDirectory().isWritable())) 	
 	 * 
 	 * @note	This checker does not verify the consistency of the bidirectional relationship.
 	 */
@@ -425,7 +425,7 @@ public class Directory extends RealItem {
 			}
 			return count == 1;
 		}else{
-			return (!this.containsDiskItemWithName(item.getName()) && item.canHaveAsParentDirectory(this)); 
+			return (!this.containsDiskItemWithName(item.getName()) && (item.getParentDirectory() == null || item.getParentDirectory().isWritable())); 
 		}
 	}
 

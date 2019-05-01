@@ -9,5 +9,11 @@ public class RealItem extends DiskItem {
 		super(parent, name, writable);
 		// TODO Auto-generated constructor stub
 	}
+	
+	protected RealItem(String name, boolean writable)
+			throws IllegalArgumentException, DiskItemNotWritableException {
+		super(name, writable);
+		// TODO Auto-generated constructor stub
+	}
 
 }
