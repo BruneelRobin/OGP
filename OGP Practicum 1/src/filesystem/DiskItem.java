@@ -9,7 +9,7 @@ import filesystem.exception.*;
  * An abstract class of disk items.
  *
  * @invar	Each disk item must have a properly spelled name.
- * 			| isValidName(getName())
+ * 			| canHaveAsName(getName())
  * @invar   Each disk item must have a valid creation time.
  *          | isValidCreationTime(getCreationTime())
  * @invar   Each disk item must have a valid modification time.
@@ -89,21 +89,21 @@ public abstract class DiskItem {
 	 * @throws 	IllegalArgumentException
 	 *         	The given valid name already exists in the effective and writable parent directory
 	 *          | parent != null && parent.isWritable() && 
-	 *         	|   isValidName(name) && parent.containsDiskItemWithName(name)
+	 *         	|   canHaveAsName(name) && parent.containsDiskItemWithName(name)
 	 * @throws 	IllegalArgumentException
 	 *         	The given name is not valid and the default name already exists in 
 	 *         	the effective parent directory
 	 *          | parent != null && parent.isWritable() && 
-	 *         	|   !isValidName(name) && parent.containsDiskItemWithName(getDefaultName())
+	 *         	|   !canHaveAsName(name) && parent.containsDiskItemWithName(getDefaultName())
 	 */
 	@Model
 	protected DiskItem(Directory parent, String name, boolean writable) 
 			throws IllegalArgumentException, DiskItemNotWritableException {
 		if (parent == null) 
 			throw new IllegalArgumentException();
-		if (parent.isWritable() && isValidName(name) && parent.containsDiskItemWithName(name))
+		if (parent.isWritable() && canHaveAsName(name) && parent.containsDiskItemWithName(name))
 			throw new IllegalArgumentException();
-		if (parent.isWritable() && !isValidName(name) && parent.containsDiskItemWithName(getDefaultName()))
+		if (parent.isWritable() && !canHaveAsName(name) && parent.containsDiskItemWithName(getDefaultName()))
 			throw new IllegalArgumentException();
 		if (!parent.isWritable()) 
 			throw new DiskItemNotWritableException(parent);
@@ -214,7 +214,7 @@ public abstract class DiskItem {
 	 * 			| result ==
 	 * 			|	(name != null) && name.matches("[a-zA-Z_0-9.-]+")
 	 */
-	public static boolean isValidName(String name) {
+	public boolean canHaveAsName(String name) {
 		return (name != null && name.matches("[a-zA-Z_0-9.-]+"));
 	}
 
@@ -226,13 +226,13 @@ public abstract class DiskItem {
 	 * @post    If the given name is valid, the name of
 	 *          this disk item is set to the given name,
 	 *          otherwise the name of the disk item is set to a valid name (the default).
-	 *          | if (isValidName(name))
+	 *          | if (canHaveAsName(name))
 	 *          |      then new.getName().equals(name)
 	 *          |      else new.getName().equals(getDefaultName())
 	 */
 	@Raw @Model 
 	private void setName(String name) {
-		if (isValidName(name)) {
+		if (canHaveAsName(name)) {
 			this.name = name;
 		} else {
 			this.name = getDefaultName();
@@ -244,7 +244,7 @@ public abstract class DiskItem {
 	 * given name is not valid.
 	 *
 	 * @return	A valid file name.
-	 *         	| isValidName(result)
+	 *         	| canHaveAsName(result)
 	 */
 	@Model
 	private static String getDefaultName() {
@@ -261,11 +261,11 @@ public abstract class DiskItem {
 	 *          and either this item is a root item or the parent directory does not 
 	 *          already contain an other item with the given name;
 	 *          false otherwise.
-	 *          | result == !isTerminated() && isWritable() && isValidName(name) && 
+	 *          | result == !isTerminated() && isWritable() && canHaveAsName(name) && 
 	 *          |			!getName().equals(name) && ( isRoot() || !getParentDirectory().containsDiskItemWithName(name) )
 	 */
 	public boolean canAcceptAsNewName(String name) {
-		return !isTerminated() && isWritable() && isValidName(name) && !getName().equals(name) &&
+		return !isTerminated() && isWritable() && canHaveAsName(name) && !getName().equals(name) &&
 				(isRoot() || !getParentDirectory().containsDiskItemWithName(name));
 	}	
 
@@ -634,67 +634,17 @@ public abstract class DiskItem {
 	}
 
 
-	/**
-	 * Turns this disk item in a root disk item.
-	 * 
-	 * @post    The disk item is a root disk item.
-	 *          | new.isRoot()
-	 * @effect  If this disk item is not a root, this disk item is
-	 *          removed from its parent directory.
-	 *          | if (!isRoot())
-	 *          | then getParentDirectory().removeAsItem(this)
-	 * @effect  If this disk item is not a root, its modification time changed
-	 * 			| if (!isRoot())
-	 *          | then setModificationTime()         
-	 * 
-	 * @throws	DiskItemNotWritableException(this)
-	 * 			This disk item is not a root and it is not writable
-	 * 			| !isRoot() && !isWritable()
-	 * @throws	DiskItemNotWritable(getParentDirectory())	
-	 * 			This disk item is not a root and its parent directory is not writable
-	 * 			| !isRoot() && !getParentDirectory().isWritable()
-	 * @throws 	IllegalStateException
-	 * 			This disk item is terminated
-	 * 			| isTerminated()
-	 */ 
-	public void makeRoot() throws DiskItemNotWritableException {
-		if ( isTerminated()) 
-			throw new IllegalStateException("Diskitem is terminated!");
-		if (!isRoot()) {
-			if (!isWritable()) 
-				throw new DiskItemNotWritableException(this);
-			if(!getParentDirectory().isWritable())
-				throw new DiskItemNotWritableException(getParentDirectory());
-
-			Directory dir = getParentDirectory();
-			setParentDirectory(null); 
-			//this item is now in a raw state
-			dir.removeAsItem(this);
-			setModificationTime();
-		}
-	}
-
-	/**
-	 * Check whether this item is a root item.
-	 * 
-	 * @return  True if this item has a non-effective parent directory;
-	 *          false otherwise.
-	 *        	| result == (getParentDirectory() == null)
-	 */
-	@Raw
-	public boolean isRoot() {
-		return getParentDirectory() == null;
-	}
+	
 
 	/** 
 	 * Check whether this disk item has a proper parent directory as
 	 * its parent directory.
 	 * 
 	 * @return  true if this disk item can have its registered parent directory 
-	 * 			as its parent directory and it is either a root, or 
+	 * 			as its parent directory and its parent directory is not null and 
 	 * 			its registered parent directory has this item as a registered item.
-	 *          | result == canHaveAsParentDirectory(getParentDirectory()) &&
-	 *			|            (isRoot() || getParentDirectory().hasAsItem(this))
+	 *          | result = canHaveAsParentDirectory(getParentDirectory()) &&
+				| 	getParentDirectory().hasAsItem(this)
 	 *	@note	This checker is split up in two parts, the consistency of the 
 	 *			bidirectional relationship is added to the functionality of 
 	 *			the internal state checker (canHaveAsParentDirectory())
@@ -702,7 +652,7 @@ public abstract class DiskItem {
 	@Raw 
 	public boolean hasProperParentDirectory() {
 		return canHaveAsParentDirectory(getParentDirectory()) &&
-				(isRoot() || getParentDirectory().hasAsItem(this));
+				getParentDirectory().hasAsItem(this);
 	}
 	
 	/** 
@@ -743,13 +693,13 @@ public abstract class DiskItem {
 		if (this.isTerminated())
 			return (directory == null);
 		if (directory == null)
-			return (this.isRoot() || this.getParentDirectory().isWritable());
+			return false;
 		if (directory.isTerminated())
 			return false;
 		if (this.isDirectOrIndirectParentOf(directory))
 			return false;
 		else return (directory.isWritable() && directory.canHaveAsItem(this) &&
-				(this.isRoot() || this.getParentDirectory().isWritable()) );
+				 this.getParentDirectory().isWritable());
 	}
 
 	/**

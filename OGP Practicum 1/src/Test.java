@@ -1,13 +1,21 @@
 import filesystem.File;
-import filesystem.File;
+import filesystem.Directory;
+import filesystem.Link;
+import filesystem.RealItem;
 
 public class Test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		File f = new File("Test", 100, false, "txt");
+		RealItem re = (RealItem) new File(null, null, null);
+		File f = (File) re;
 		
-		System.out.println(f.getSize());
+		Directory d = new Directory(null);
+		Link l = new Link(d, null, false);
+		
+		re = (RealItem)d;
+		
+		re = (RealItem)l;
 	}
 
 }

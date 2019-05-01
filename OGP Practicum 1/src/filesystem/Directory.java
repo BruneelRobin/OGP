@@ -15,7 +15,7 @@ import filesystem.exception.*;
  * @author 	Tommy Messelis
  * @version 2.3 - 2018
  */
-public class Directory extends DiskItem {
+public class Directory extends RealItem {
 
 	/**********************************************************
 	 * Constructors
@@ -89,7 +89,27 @@ public class Directory extends DiskItem {
 	public Directory(Directory parent, String name) 
 			throws IllegalArgumentException, DiskItemNotWritableException {
 		this(parent,name,true);    
-	}    
+	} 
+	
+	/**********************************************************
+	 * Name
+	 **********************************************************/
+	
+	/**
+	 * Check whether the given name is a legal name for a directory.
+	 * 
+	 * @param  	name
+	 *			The name to be checked
+	 * @return	True if the given string is effective, not
+	 * 			empty and consisting only of letters, digits,
+	 * 			hyphens and underscores; false otherwise.
+	 * 			| result ==
+	 * 			|	(name != null) && name.matches("[a-zA-Z_0-9-]+")
+	 */
+	@Override
+	public boolean canHaveAsName(String name) {
+		return (name != null && name.matches("[a-zA-Z_0-9-]+"));
+	}
 
 	
 	
@@ -112,8 +132,128 @@ public class Directory extends DiskItem {
 	public boolean canBeTerminated() {
 		return getNbItems() == 0 && super.canBeTerminated();			
 	}
-
 	
+	/**********************************************************
+	 * Root
+	 **********************************************************/
+
+	/**
+	 * Turns this disk item in a root disk item.
+	 * 
+	 * @post    The disk item is a root disk item.
+	 *          | new.isRoot()
+	 * @effect  If this disk item is not a root, this disk item is
+	 *          removed from its parent directory.
+	 *          | if (!isRoot())
+	 *          | then getParentDirectory().removeAsItem(this)
+	 * @effect  If this disk item is not a root, its modification time changed
+	 * 			| if (!isRoot())
+	 *          | then setModificationTime()         
+	 * 
+	 * @throws	DiskItemNotWritableException(this)
+	 * 			This disk item is not a root and it is not writable
+	 * 			| !isRoot() && !isWritable()
+	 * @throws	DiskItemNotWritable(getParentDirectory())	
+	 * 			This disk item is not a root and its parent directory is not writable
+	 * 			| !isRoot() && !getParentDirectory().isWritable()
+	 * @throws 	IllegalStateException
+	 * 			This disk item is terminated
+	 * 			| isTerminated()
+	 */ 
+	public void makeRoot() throws DiskItemNotWritableException {
+		if ( isTerminated()) 
+			throw new IllegalStateException("Diskitem is terminated!");
+		if (!isRoot()) {
+			if (!isWritable()) 
+				throw new DiskItemNotWritableException(this);
+			if(!getParentDirectory().isWritable())
+				throw new DiskItemNotWritableException(getParentDirectory());
+
+			Directory dir = getParentDirectory();
+			setParentDirectory(null); 
+			//this item is now in a raw state
+			dir.removeAsItem(this);
+			setModificationTime();
+		}
+	}
+
+	/**
+	 * Check whether this item is a root item.
+	 * 
+	 * @return  True if this item has a non-effective parent directory;
+	 *          false otherwise.
+	 *        	| result == (getParentDirectory() == null)
+	 */
+	@Raw
+	public boolean isRoot() {
+		return getParentDirectory() == null;
+	}
+	
+	/** 
+	 * Check whether this disk item can have the given directory as
+	 * its parent directory.
+	 * 
+	 * @param  	directory
+	 *          The directory to check.
+	 * @return  If this disk item is terminated, 
+	 * 			true if the given directory is not effective, 
+	 * 			false otherwise.
+	 *          | if (this.isTerminated())
+	 *          | then result == (directory == null)
+	 * @return	If this disk item is not terminated,
+	 * 				if the given directory is not effective,
+	 * 				then true if this disk item is a root item or the parent of this item is writable, 
+	 * 					 false otherwise
+	 * 				else if the given directory is terminated, then false
+	 * 					 if this disk item is the same as the given directory, then false
+	 * 					 if this disk item is a direct or indirect parent of the given directory, then false
+	 * 					 else true if the given directory is writable and it can have this item as an item
+	 * 							and this item is a root or the parent directory of this item is writable,
+	 * 						  false otherwise.
+	 *			| if (!this.isTerminated())
+	 *			| then if (directory == null)
+	 *			|	   then result == (isRoot() || this.getParentDirectory().isWritable())
+	 *			|	   else if (directory.isTerminated()) then result == false
+	 *			|		 	if (directory == this) then result == false
+	 *			|			if (this.isDirectOrIndirectParentOf(directory)) then result == false
+	 *			|			else result == (directory.isWritable() && directory.canHaveAsItem(this) &&
+	 *			|							(this.isRoot() || this.getParentDirectory().isWritable()) )
+	 *	@note	This checker checks all conditions except the consistency of the bidirectional relationship
+	 *			This checker can thus be used to check whether a disk item can accept a directory
+	 *			as its new parent directory
+	 */
+	@Raw @Override
+	public boolean canHaveAsParentDirectory(Directory directory) {
+		if (this.isTerminated())
+			return (directory == null);
+		if (directory == null)
+			return (this.isRoot() || this.getParentDirectory().isWritable());
+		if (directory.isTerminated())
+			return false;
+		if (this.isDirectOrIndirectParentOf(directory))
+			return false;
+		else return (directory.isWritable() && directory.canHaveAsItem(this) &&
+				(this.isRoot() || this.getParentDirectory().isWritable()) );
+	}
+	
+	/** 
+	 * Check whether this directory has a proper parent directory as
+	 * its parent directory.
+	 * 
+	 * @return  true if this disk item can have its registered parent directory 
+	 * 			as its parent directory and it is either a root, or 
+	 * 			its registered parent directory has this item as a registered item.
+	 *          | result == canHaveAsParentDirectory(getParentDirectory()) &&
+	 *			|            (isRoot() || getParentDirectory().hasAsItem(this))
+	 *	@note	This checker is split up in two parts, the consistency of the 
+	 *			bidirectional relationship is added to the functionality of 
+	 *			the internal state checker (canHaveAsParentDirectory())
+	 */
+	@Raw@Override
+	public boolean hasProperParentDirectory() {
+		return canHaveAsParentDirectory(getParentDirectory()) &&
+				(isRoot() || getParentDirectory().hasAsItem(this));
+	}
 	
 	
 	/**********************************************************

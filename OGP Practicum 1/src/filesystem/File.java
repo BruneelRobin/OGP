@@ -14,7 +14,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @author 	Tommy Messelis
  * @version	3.1 - 2016       
  */
-public class File extends DiskItem{
+public class File extends RealItem {
 
     /**********************************************************
      * Constructors
