@@ -753,5 +753,78 @@ public class Directory extends RealItem {
  
 	}
 	
+	/**
+	 * Return the total disk usage of this directory.
+	 * @return	Uses the iterator to iterate over all items in this directory and adds the size of a directory or file.
+	 */
+	public int getTotalDiskUsage() {
+		DirectoryIterator iterator = getIterator();
+		int size = 0;
+		while (iterator.getNbRemainingItems() > 0) {
+			DiskItem curItem = iterator.getCurrentItem();
+			
+			if (curItem instanceof Directory) {
+				size += ((Directory)curItem).getTotalDiskUsage();
+			} else if (curItem instanceof File) {
+				size += ((File)curItem).getSize();
+			}
+			
+			iterator.advance();
+		}
+		return size;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean canDeleteRecursive () {
+		if (!this.isWritable)
+			return false;
+		
+		DirectoryIterator iterator = getIterator();
+		while (iterator.getNbRemainingItems() > 0) {
+			DiskItem curItem = iterator.getCurrentItem();
+			
+			if (curItem instanceof Directory) {
+				if (!((Directory)curItem).canDeleteRecursive()) {
+					return false;
+				}
+			} else {
+				if (curItem.canBeTerminated() == false) {
+					return false;
+				}
+			}
+				
+			iterator.advance();
+		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 */
+	public void deleteRecursive () {
+		if (!canDeleteRecursive()) {
+			throw new IllegalStateException("This directory cannot be recursively deleted");
+		} else {
+			DirectoryIterator iterator = getIterator();
+			while (iterator.getNbRemainingItems() > 0) {
+				DiskItem curItem = iterator.getCurrentItem();
+				
+				if (curItem instanceof Directory) {
+					((Directory) curItem).deleteRecursive();
+				} else {
+					curItem.terminate();
+				}
+				
+					
+				iterator.advance();
+			}
+		}
+	}
+		
+	
+	
 	
 }
