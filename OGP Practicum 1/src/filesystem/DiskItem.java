@@ -758,5 +758,33 @@ public abstract class DiskItem {
 		return parentDirectory;
 	}
 
+	/**********************************************************
+	 * Path
+	 **********************************************************/
 
+	/**
+	 * Return the absolute path of an item.
+	 * 
+	 * @return	The name of the item is returned alongside the direct
+	 * 			or indirect parent directories, separated by slashes.
+	 * 			If the item is a file, the type of the file is also
+	 * 			returned at the end behind a point.
+	 */
+	public String getAbsolutePath() {
+		String path = "";
+		Directory parent = this.getParentDirectory();
+		while (parent != null) {
+			path = "/" + parent.getName() + path;
+			parent = parent.getParentDirectory();
+		}
+		if (this instanceof File) {
+			File file = (File) this;
+			path = path + "/" + file.getName() + "." + file.getType().getExtension();
+		}
+		else {
+			path = path + "/" + this.getName();
+		}
+		return path;
+	}
+	
 }
