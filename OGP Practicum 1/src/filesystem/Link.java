@@ -20,18 +20,23 @@ public class Link extends DiskItem {
 		if (!canHaveAsReference(reference))
 			throw new IllegalArgumentException();
 		this.referencedItem = reference;
+		if (!canHaveAsName(name)) {
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	private final RealItem referencedItem;
 	
 	@Override
 	public boolean canHaveAsName(String name) {
-		return this.referencedItem.canHaveAsName(name);
+		if (getReference() == null) // we postponen deze check want reference bestaat nog niet in diskitem constructor
+			return true;
+		return getReference().canHaveAsName(name);
 	}
 	
 	@Raw
 	public RealItem getReference () throws IllegalStateException {
-		if (this.referencedItem.isTerminated()) {
+		if (this.referencedItem != null && this.referencedItem.isTerminated()) {
 			throw new IllegalStateException("The current reference is not valid");
 		}
 		return this.referencedItem;
