@@ -23,6 +23,9 @@ class DirectoryTest {
 	Directory dirUnwritable;
 	Directory dirWritable;
 	
+	File fileWritable;
+	File fileUnwritable;
+	
 	Directory parentDir;
 	Directory childDir;
 	Directory otherDir;
@@ -32,6 +35,8 @@ class DirectoryTest {
 	
 		dirUnwritable = new Directory("DirUnwr", false);
 		dirWritable = new Directory("DirWr", true);
+		fileWritable = new File(dirWritable,"fileWritable", null);
+		fileUnwritable = new File(dirUnwritable, "fileUnwritable", null);
 	
 		parentDir = new Directory("Parent");
 		childDir = new Directory(parentDir, "ChildDir");	
@@ -62,7 +67,7 @@ class DirectoryTest {
 	@Test
 	void testsetWritable_trueTorue() {
 		dirWritable.setWritable(true);
-		assertEquals(dirWritable.isWritable(), true);
+		assertTrue(dirWritable.isWritable());
 		
 	}
 	
@@ -90,9 +95,14 @@ class DirectoryTest {
 		assertEquals(parentDir.getTotalDiskUsage(), childFile.getSize() + childFile2.getSize());
 	}
 	
-	
-	
-	
+//	@Test
+//	void testDeleteRecursive() {
+//		assertTrue()
+//		assertTrue
+//		assertTrue
+//	}
+//	
+//	
 	
 	
 	
