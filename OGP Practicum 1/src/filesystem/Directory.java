@@ -13,6 +13,7 @@ import filesystem.exception.*;
  *        	| hasProperItems()
  * 
  * @author 	Tommy Messelis
+ * @author 	Robin Bruneel, Edward Wiels, Jean-Louis Carron
  * @version 2.3 - 2018
  */
 public class Directory extends RealItem {

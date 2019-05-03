@@ -8,7 +8,7 @@ import filesystem.exception.DiskItemNotWritableException;
  * A class of links.
  * @invar 	Each link can only reference one item in its lifetime.
  * 
- * @author 	Robin Bruneel
+ * @author 	Robin Bruneel, Edward Wiels, Jean-Louis Carron
  * @version 2.3 - 2018
  */
 

@@ -12,8 +12,10 @@ import be.kuleuven.cs.som.annotate.*;
  *          | isValidType(getType())
  * 
  * @author 	Tommy Messelis
+ * @author 	Robin Bruneel, Edward Wiels, Jean-Louis Carron
  * @version	3.1 - 2016       
  */
+
 public class File extends RealItem {
 
     /**********************************************************

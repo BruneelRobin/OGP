@@ -17,7 +17,8 @@ import filesystem.exception.*;
  * @invar   Each disk item must have a valid parent directory.
  *          | hasProperParentDirectory()
  * 
- * @author 	Tommy Messelis      
+ * @author 	Tommy Messelis
+ * @author 	Robin Bruneel, Edward Wiels, Jean-Louis Carron    
  * @version	2.3 - 2018
  * 
  */
