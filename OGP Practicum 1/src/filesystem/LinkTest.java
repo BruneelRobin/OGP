@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
  *
  */
 
-class DirectoryTest {
+class LinkTest {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -42,6 +42,17 @@ class DirectoryTest {
 		 
 		assertEquals(l.getReference(), dir); 
 		assertThrows(IllegalStateException.class, () -> lTerminated.getReference()); 
+	}
+	
+	@Test
+	void Test_isValidReference () { 
+		Directory dir = new Directory("d", true); 
+		Directory dirTerminated = new Directory("d2", true); 
+		 
+		dirTerminated.terminate(); 
+		 
+		assertEquals(Link.isValidReference(dirTerminated), false); 
+		assertEquals(Link.isValidReference(dir), true);
 	}
 
 }

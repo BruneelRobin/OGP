@@ -42,7 +42,7 @@ public class Link extends DiskItem {
 	public Link(Directory parent, String name, RealItem reference)
 			throws IllegalArgumentException, DiskItemNotWritableException {
 		super(parent, name, true);
-		if (!canHaveAsReference(reference)) {
+		if (!isValidReference(reference)) {
 			this.terminate();
 			throw new IllegalArgumentException();
 		}
@@ -105,7 +105,7 @@ public class Link extends DiskItem {
 	 * 			| 	reference != null && !reference.isTerminated()
 	 */
 	@Raw
-	public boolean canHaveAsReference (RealItem reference) {
+	public static boolean isValidReference (RealItem reference) {
 		return reference != null && !reference.isTerminated();
 	}
 }
