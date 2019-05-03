@@ -2,6 +2,8 @@ package filesystem;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
@@ -35,7 +37,21 @@ class DirectoryTest {
 	}
 	
 	
-	
+	@Test
+	void Test_DirectoryIterator () {
+		Directory childDir2 = new Directory(parentDir, "ChildDir2");
+		
+		DirectoryIterator iterator = parentDir.getIterator();
+		assertEquals(iterator.getCurrentItem(), childDir);
+		assertEquals(iterator.getNbRemainingItems(), 2);
+		iterator.advance();
+		assertEquals(iterator.getCurrentItem(), childDir2);
+		iterator.advance();
+		
+		assertEquals(iterator.getNbRemainingItems(), 0);
+		iterator.reset();
+		assertEquals(iterator.getNbRemainingItems(), 2);
+	}
 	
 	
 	

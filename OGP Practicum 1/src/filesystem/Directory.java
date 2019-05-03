@@ -722,7 +722,7 @@ public class Directory extends RealItem {
 			 */
 			@Override
 			public DiskItem getCurrentItem() throws IndexOutOfBoundsException {
-				return getItemAt(cursorPosition);
+				return getItemAt(cursorPosition+1);
 			}
 			
 			/**
