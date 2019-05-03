@@ -53,6 +53,14 @@ class DirectoryTest {
 		assertEquals(iterator.getNbRemainingItems(), 2);
 	}
 	
+	@Test
+	void Test_getTotalDiskUsage () {
+		File childFile = new File(parentDir, "f", Type.JAVA, 199, true);
+		File childFile2 = new File(childDir, "f", Type.JAVA, 99, true);
+		
+		assertEquals(parentDir.getTotalDiskUsage(), childFile.getSize() + childFile2.getSize());
+	}
+	
 	
 	
 	

@@ -37,7 +37,7 @@ public abstract class DiskItem {
 	 * @effect	The writability is set to the given flag
 	 * 			| setWritable(writable)
 	 * @post 	The disk item is a root item
-	 * 			| new.isRoot()
+	 * 			| new.getParentDirectory() == null
 	 * @post    The new creation time of this disk item is initialized to some time during
 	 *          constructor execution.
 	 *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
@@ -160,7 +160,7 @@ public abstract class DiskItem {
 	 * @post 	This disk item is terminated.
 	 *       	| new.isTerminated()
 	 * @effect 	If this disk item is not terminated and it is not a root, it is made a root
-	 * 			| if (!isTerminated() && !isRoot())  
+	 * 			| if (!isTerminated() && getParentDirectory() != null)  
 	 * 			| then makeRoot()
 	 * @throws 	IllegalStateException
 	 * 		   	This disk item is not yet terminated and it can not be terminated.
@@ -283,7 +283,7 @@ public abstract class DiskItem {
 	 *          | then setModificationTime()
 	 * @effect  If this disk item is not a root item, the order of the items in the parent
 	 * 			directory is restored given the new name
-	 * 			| if (!isRoot()) then 
+	 * 			| if (getParentDirectory() != null) then 
 	 * 			|	getParentDirectory().restoreOrderAfterNameChangeAt(getParentDirectory().getIndexOf(this))
 	 * @throws  DiskItemNotWritableException(this)
 	 *          This disk item is not writable.
@@ -550,7 +550,7 @@ public abstract class DiskItem {
 	 * @return If this item is a root item, this item is returned;
 	 *         Otherwise the root to which the parent item of this 
 	 *         item belongs is returned.
-	 *         | if (isRoot())
+	 *         | if (getParentDirectory() == null)
 	 *         | then result == this
 	 *         | else result == getParentDirectory().getRoot()
 	 */
@@ -569,7 +569,7 @@ public abstract class DiskItem {
 	 *          The target directory.
 	 * @effect  If this disk item is not a root, this disk item is
 	 *          removed from its parent directory.
-	 *          | if (!isRoot())
+	 *          | if (getParentDirectory() != null)
 	 *          | then getParentDirectory().removeAsItem(this) 
 	 * @effect  This disk item is added to the target directory.
 	 *          | target.addAsItem(this)
@@ -674,7 +674,7 @@ public abstract class DiskItem {
 	 * 						  false otherwise.
 	 *			| if (!this.isTerminated())
 	 *			| then if (directory == null)
-	 *			|	   then result == (isRoot() || this.getParentDirectory().isWritable())
+	 *			|	   then result == (getParentDirectory() == null || this.getParentDirectory().isWritable())
 	 *			|	   else if (directory.isTerminated()) then result == false
 	 *			|		 	if (directory == this) then result == false
 	 *			|			if (this.isDirectOrIndirectParentOf(directory)) then result == false

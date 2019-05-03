@@ -193,7 +193,7 @@ public class Directory extends RealItem {
 	}
 	
 	/** 
-	 * Check whether this disk item can have the given directory as
+	 * Check whether this directory can have the given directory as
 	 * its parent directory.
 	 * 
 	 * @param  	directory
@@ -203,15 +203,15 @@ public class Directory extends RealItem {
 	 * 			false otherwise.
 	 *          | if (this.isTerminated())
 	 *          | then result == (directory == null)
-	 * @return	If this disk item is not terminated,
+	 * @return	If this directory is not terminated,
 	 * 				if the given directory is not effective,
-	 * 				then true if this disk item is a root item or the parent of this item is writable, 
+	 * 				then true if this directory is a root item or the parent of this directory is writable, 
 	 * 					 false otherwise
 	 * 				else if the given directory is terminated, then false
-	 * 					 if this disk item is the same as the given directory, then false
-	 * 					 if this disk item is a direct or indirect parent of the given directory, then false
-	 * 					 else true if the given directory is writable and it can have this item as an item
-	 * 							and this item is a root or the parent directory of this item is writable,
+	 * 					 if this directory is the same as the given directory, then false
+	 * 					 if this directory is a direct or indirect parent of the given directory, then false
+	 * 					 else true if the given directory is writable and it can have this directory as an item
+	 * 							and this directory is a root or the parent directory of this item is writable,
 	 * 						  false otherwise.
 	 *			| if (!this.isTerminated())
 	 *			| then if (directory == null)
