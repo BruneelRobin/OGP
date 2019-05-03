@@ -20,13 +20,47 @@ class DirectoryTest {
 	static void setUpBeforeClass() throws Exception {
 	}
 	
-	Directory dirUnwritable;
+	
+	Directory dir;
+	File file;
+	Link linkToDir;
+	Link linkToFile;
 
 
 	@BeforeEach
 	void setUp() throws Exception {
 	
-		dirUnwritable = new Directory("DirUnwr", false);
+		dir = new Directory("Dir", true);
+		file = new File(dir, "file", null);
+		linkToDir = new Link(dir, "linkToDir", dir);
+		linkToFile = new Link(dir, "linkToFile", file);
+		
+	}
+		
+	
+	@Test
+	void testcanHaveAsName_legalCaseDirectoryLink() {
+		assertEquals(linkToDir.canHaveAsName("adF7_-"), true);
+	}
+	
+	@Test
+	void testcanHaveAsName_illegalCaseDirectoryLink() {
+		assertEquals(linkToDir.canHaveAsName("adF7_.-"), false);
+	}
+	
+	@Test
+	void testcanHaveAsName_legalCaseFileLink() {
+		assertEquals(linkToFile.canHaveAsName("adF7_.-"), true);
+	}
+	
+	
+	@Test
+	void testcanHaveAsName_illegalCaseFileLink() {
+		assertEquals(linkToFile.canHaveAsName("adF.@7_-"), false);
+	}
+		
+		
+		
 
 	}
 

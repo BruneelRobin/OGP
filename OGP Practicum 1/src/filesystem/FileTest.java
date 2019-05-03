@@ -1,20 +1,53 @@
 package filesystem;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+
+
 /**
- * A test class of File.
+ * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
+ * @version 1.0
  *
- * @author 	Robin Bruneel, Edward Wiels, Jean-Louis Carron
- * @version	2.3 - 2019      
  */
 
-class FileTest {
+class DirectoryTest {
 
-	@Test
-	void test() {
-		fail("Not yet implemented");
+	@BeforeAll
+	static void setUpBeforeClass() throws Exception {
 	}
+	
+	Directory dir;
+	File file;
+	
+	
 
-}
+
+	@BeforeEach
+	void setUp() throws Exception {
+	
+		dir = new Directory("Dir", true);
+		file = new File(dir, "file", null);
+
+		
+	}
+		
+	
+	@Test
+	void testcanHaveAsName_legalCase() {
+		assertEquals(file.canHaveAsName("adF7_.-"), true);
+	}
+	
+	
+	@Test
+	void testcanHaveAsName_illegalCase() {
+		assertEquals(file.canHaveAsName("adF.@7_-"), false);
+	}
+		
+		
+		
+
+	}
