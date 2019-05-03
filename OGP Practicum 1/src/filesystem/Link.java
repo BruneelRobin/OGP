@@ -29,8 +29,11 @@ public class Link extends DiskItem {
 		return this.referencedItem.canHaveAsName(name);
 	}
 	
-	@Raw@Basic
-	public RealItem getReference () {
+	@Raw
+	public RealItem getReference () throws IllegalStateException {
+		if (this.referencedItem.isTerminated()) {
+			throw new IllegalStateException("The current reference is not valid");
+		}
 		return this.referencedItem;
 	}
 	

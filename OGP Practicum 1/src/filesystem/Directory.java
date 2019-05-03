@@ -821,6 +821,8 @@ public class Directory extends RealItem {
 					
 				iterator.advance();
 			}
+			
+			this.terminate();
 		}
 	}
 		
