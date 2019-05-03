@@ -2,6 +2,8 @@ package filesystem;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
@@ -18,7 +20,8 @@ class DirectoryTest {
 	static void setUpBeforeClass() throws Exception {
 	}
 	
-	Directory dir;
+	Directory dirUnwritable;
+	Directory dirWritable;
 	
 	Directory parentDir;
 	Directory childDir;
@@ -27,13 +30,41 @@ class DirectoryTest {
 	@BeforeEach
 	void setUp() throws Exception {
 	
-		dir = new Directory("Dir", false);
+		dirUnwritable = new Directory("DirUnwr", false);
+		dirWritable = new Directory("DirWr", true);
 	
 		parentDir = new Directory("Parent");
 		childDir = new Directory(parentDir, "ChildDir");	
 		otherDir = new Directory("Other");
 	}
 	
+	@Test
+	void testsetWritable_falseTofalse() {
+		dirUnwritable.setWritable(false);
+		assertEquals(dirUnwritable.isWritable(), false);
+		
+	}
+	
+	@Test
+	void testsetWritable_falseTotrue() {
+		dirUnwritable.setWritable(true);
+		assertEquals(dirUnwritable.isWritable(), false);
+		
+	}
+	
+	@Test
+	void testsetWritable_trueTofalse() {
+		dirWritable.setWritable(false);
+		assertEquals(dirWritable.isWritable(), false);
+		
+	}
+	
+	@Test
+	void testsetWritable_trueTorue() {
+		dirWritable.setWritable(true);
+		assertEquals(dirWritable.isWritable(), true);
+		
+	}
 	
 	
 	
