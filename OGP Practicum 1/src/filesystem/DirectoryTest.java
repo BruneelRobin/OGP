@@ -24,7 +24,8 @@ class DirectoryTest {
 	Directory dirWritable;
 	
 	File fileWritable;
-	File fileUnwritable;
+	
+	Link link;
 	
 	Directory parentDir;
 	Directory childDir;
@@ -35,8 +36,8 @@ class DirectoryTest {
 	
 		dirUnwritable = new Directory("DirUnwr", false);
 		dirWritable = new Directory("DirWr", true);
-		fileWritable = new File(dirWritable,"fileWritable", null);
-		fileUnwritable = new File(dirUnwritable, "fileUnwritable", null);
+		fileWritable = new File(dirWritable,"fileWritable", null, 10, true);
+		link = new Link(dirWritable, "link", dirUnwritable);
 	
 		parentDir = new Directory("Parent");
 		childDir = new Directory(parentDir, "ChildDir");	
@@ -65,7 +66,7 @@ class DirectoryTest {
 	}
 	
 	@Test
-	void testsetWritable_trueTorue() {
+	void testsetWritable_trueTotrue() {
 		dirWritable.setWritable(true);
 		assertTrue(dirWritable.isWritable());
 		
@@ -95,14 +96,25 @@ class DirectoryTest {
 		assertEquals(parentDir.getTotalDiskUsage(), childFile.getSize() + childFile2.getSize());
 	}
 	
-//	@Test
-//	void testDeleteRecursive() {
-//		assertTrue()
-//		assertTrue
-//		assertTrue
-//	}
-//	
-//	
+	@Test
+	void testDeleteRecursive_legalCase() {
+		dirWritable.deleteRecursive();
+		assertTrue(dirWritable.isTerminated());
+		assertTrue(fileWritable.isTerminated());
+		assertTrue(link.isTerminated());
+	}
+	
+	@Test
+	void testDeleteRecursive_illegalCase() {
+		fileWritable.setWritable(false);
+		assertThrows(IllegalStateException.class, () -> dirWritable.deleteRecursive()); 
+		assertFalse(dirWritable.isTerminated());
+		assertFalse(fileWritable.isTerminated());
+		assertFalse(link.isTerminated());
+
+	}
+	
+	
 	
 	
 	
