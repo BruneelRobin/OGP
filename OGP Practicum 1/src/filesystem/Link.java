@@ -64,7 +64,7 @@ public class Link extends DiskItem {
 	 * @param	name
 	 * 			The name to be checked.
 	 * 
-	 * @return	Return wether the given name is a legal name for this link
+	 * @return	Return whether the given name is a legal name for this link
 	 * 			| result = getReference().canHaveAsName(name)
 	 * 			If this link doesn't reference an item yet, the result will always be true.
 	 * 			| result = true
