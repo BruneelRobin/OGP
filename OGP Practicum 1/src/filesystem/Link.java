@@ -59,12 +59,13 @@ public class Link extends DiskItem {
 	private final RealItem referencedItem;
 	
 	/**
-	 * Check whether the given name is a legal name for a link.
+	 * Check whether the given name is a legal name for this link.
 	 * 
 	 * @param	name
 	 * 			The name to be checked.
 	 * 
-	 * @return	
+	 * @return	Return wether the given name is a legal name for this link
+	 * 			If this link doesn't reference an item yet, the result will always be true.
 	 * 			
 	 */
 	@Override
