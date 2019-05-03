@@ -17,10 +17,13 @@ public class Link extends DiskItem {
 	public Link(Directory parent, String name, RealItem reference)
 			throws IllegalArgumentException, DiskItemNotWritableException {
 		super(parent, name, true);
-		if (!canHaveAsReference(reference))
+		if (!canHaveAsReference(reference)) {
+			this.terminate();
 			throw new IllegalArgumentException();
+		}
 		this.referencedItem = reference;
 		if (!canHaveAsName(name)) {
+			this.terminate();
 			throw new IllegalArgumentException();
 		}
 	}
