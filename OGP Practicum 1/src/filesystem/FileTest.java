@@ -47,7 +47,22 @@ class DirectoryTest {
 		assertEquals(file.canHaveAsName("adF.@7_-"), false);
 	}
 		
-		
+	@Test
+	void testCanHaveAsParentDirectory_legalCase() {
+		assertTrue(file.canHaveAsParentDirectory(dir));
+		file.terminate();
+		assertTrue(file.canHaveAsParentDirectory(null));	
+	}
+	
+	@Test
+	void testCanHaveAsParentDirectory_illegalCase() {
+		assertFalse(file.canHaveAsParentDirectory(null));
+		dir.terminate();
+		assertFalse(file.canHaveAsParentDirectory(dir));
+		file.terminate();
+		Directory dir2 = new Directory("dir2", true);
+		assertFalse(file.canHaveAsParentDirectory(dir2));
+	}
 		
 
 	}

@@ -88,6 +88,24 @@ class LinkTest {
 		assertEquals(Link.isValidReference(dirTerminated), false); 
 		assertEquals(Link.isValidReference(dir), true);
 	}
+	
+	@Test
+	void testCanHaveAsParentDirectory_legalCase() {
+		assertTrue(linkToDir.canHaveAsParentDirectory(dir));
+		assertTrue(linkToFile.canHaveAsParentDirectory(dir));
+		linkToFile.terminate();
+		assertTrue(linkToFile.canHaveAsParentDirectory(null));
+	}
+	
+	@Test
+	void testCanHaveAsParentDirectory_illegalCase() {
+		assertFalse(linkToFile.canHaveAsParentDirectory(null));
+		dir.terminate();
+		assertFalse(linkToFile.canHaveAsParentDirectory(dir));
+		linkToFile.terminate();
+		Directory dir2 = new Directory("dir2", true);
+		assertFalse(linkToFile.canHaveAsParentDirectory(dir2));
+	}
 
 }
 

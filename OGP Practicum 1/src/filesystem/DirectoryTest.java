@@ -114,9 +114,26 @@ class DirectoryTest {
 
 	}
 	
+	@Test
+	void testCanHaveAsParentDirectory_legalCase() {
+		assertTrue(parentDir.canHaveAsParentDirectory(dirWritable));
+		assertTrue(childDir.canHaveAsParentDirectory(dirWritable));
+		assertTrue(dirWritable.canHaveAsParentDirectory(null));
+		dirWritable.terminate();
+		assertTrue(dirWritable.canHaveAsParentDirectory(null));
+	}
 	
-	
-	
+	@Test
+	void testCanHaveAsParentDirectory_illegalCase() {
+		Directory childFromUnwritable = new Directory(dirUnwritable,"childFromUnwr");
+		assertFalse(parentDir.canHaveAsParentDirectory(dirUnwritable));
+		assertFalse(childFromUnwritable.canHaveAsParentDirectory(dirWritable));
+		assertFalse(parentDir.canHaveAsParentDirectory(childDir));
+		assertFalse(dirWritable.canHaveAsParentDirectory(null));
+		dirWritable.terminate();
+		assertFalse(parentDir.canHaveAsParentDirectory(dirWritable));
+		assertFalse(dirWritable.canHaveAsParentDirectory(parentDir));
+	}
 	
 
 }
