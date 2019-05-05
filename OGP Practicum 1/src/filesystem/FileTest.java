@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
  *
  */
 
-class DirectoryTest {
+class FileTest {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {

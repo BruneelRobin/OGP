@@ -173,8 +173,8 @@ public abstract class DiskItem {
 				throw new IllegalStateException("This item cannot be terminated");
 			}
 			if(parentDirectory != null){
-				setParentDirectory(null); 
 				parentDirectory.removeAsItem(this);
+				this.parentDirectory = null;
 			}
 			this.isTerminated = true;
 		}

@@ -776,8 +776,9 @@ public class Directory extends RealItem {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Return a boolean indicating whether all direct or indirect subitems can be terminated
+	 * @return	Returns true when all subitems can be terminated
+	 * 			Returns false when not all subitems can be terminated
 	 */
 	public boolean canDeleteRecursive () {
 		if (!this.isWritable)
@@ -803,7 +804,12 @@ public class Directory extends RealItem {
 	}
 	
 	/**
-	 * 
+	 * Terminates all items recursively
+	 * @post	Deletes all items recursively using the iterator.
+	 * @throws	IllegalStateException
+	 * 			iterates over all items in this directory and checks whether they can be terminated
+	 * 			if not, this error is thrown
+	 * 			| this.canDeleteRecursive()
 	 */
 	public void deleteRecursive () {
 		if (!canDeleteRecursive()) {
@@ -821,6 +827,7 @@ public class Directory extends RealItem {
 				
 					
 				iterator.advance();
+				iterator = getIterator(); // nieuwe iterator want punten opgeschoven
 			}
 			
 			this.terminate();
