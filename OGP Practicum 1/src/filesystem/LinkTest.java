@@ -106,6 +106,11 @@ class LinkTest {
 		Directory dir2 = new Directory("dir2", true);
 		assertFalse(linkToFile.canHaveAsParentDirectory(dir2));
 	}
+	
+	@Test
+	void testGetAbsolutePath() {
+		assertEquals(linkToFile.getAbsolutePath(), "/Dir/linkToFile");
+	}
 
 }
 

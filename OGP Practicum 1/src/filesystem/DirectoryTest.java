@@ -40,7 +40,7 @@ class DirectoryTest {
 		link = new Link(dirWritable, "link", dirUnwritable);
 	
 		parentDir = new Directory("Parent");
-		childDir = new Directory(parentDir, "ChildDir");	
+		childDir = new Directory(parentDir, "Child");	
 		otherDir = new Directory("Other");
 	}
 	
@@ -136,6 +136,11 @@ class DirectoryTest {
 	}
 	
 
+	@Test
+	void testGetAbsolutePath() {
+		assertEquals(parentDir.getAbsolutePath(), "/Parent");
+		assertEquals(childDir.getAbsolutePath(), "/Parent/Child");
+	}
 }
 
 

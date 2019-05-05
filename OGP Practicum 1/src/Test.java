@@ -11,7 +11,7 @@ public class Test {
 		Directory rootDir = new Directory("root");
 		Directory parDir = new Directory(rootDir, "parent");
 		File file_1 = new File(parDir, "file", Type.JAVA);
-		System.out.println(file_1.getAbsolutePath());
+		System.out.println(rootDir.getAbsolutePath());
 		
 	}
  

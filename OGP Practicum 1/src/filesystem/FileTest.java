@@ -64,5 +64,10 @@ class DirectoryTest {
 		assertFalse(file.canHaveAsParentDirectory(dir2));
 	}
 		
+	@Test
+	void testGetAbsolutePath() {
+		File filepdf = new File(dir,"filepdf",Type.PDF);
+		assertEquals(filepdf.getAbsolutePath(), "/Dir/filepdf.pdf");
+	}
 
 	}
