@@ -1,5 +1,8 @@
 package MindCraft;
 
+import java.util.Map;
+import java.util.HashMap;
+
 /**
  * A class of characters.
  * @invar 	Each character must have proper items anchored.
@@ -153,6 +156,44 @@ public abstract class Character {
 	public abstract int getProtection();
 	
 	
+	/***********************
+	 * Anchors
+	 ***********************/
+	
+	Map<int, Item> anchors = new HashMap<>();
+	
+	
+	/**
+	 * 
+	 */
+	public void Equip(int anchor, Item item) {
+		
+	}
+	
+	/**
+	 * 
+	 */
+	public void PickUp(Item item) {
+		
+	}
+	
+	/***********************
+	 * Other Methods
+	 ***********************/
+	
+	/**
+	 * 
+	 */
+	public void Hit(Character character) {
+		
+	}
+	
+	/**
+	 * 
+	 */
+	public void CollectTreasures(Character character) {
+		
+	}
 	
 	
 }
