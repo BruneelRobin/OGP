@@ -18,9 +18,10 @@ public class Hero extends Character{
 	 * @param hitpoints
 	 * @param strength
 	 */
-	public Hero(String name, Int hitpoints, Float strength) throws IllegalArgumentException {
+	public Hero(String name, int hitpoints, float strength) throws IllegalArgumentException {
 		super(name, hitpoints);
 		
+		this.setStrength(strength);
 		
 	}
 	
@@ -70,6 +71,38 @@ public class Hero extends Character{
 	}
 	
 	
+	
+	/***********************
+	 * Other methods
+	 ***********************/
+	
+	
+	/**
+	 * Returns whether or not the Hero wants to take an item
+	 * 
+	 * 
+	 */
+	public boolean wantsToTakeItem(Item item) {
+		
+	}
+	
+	/**
+	 * Makes the character hit the given character
+	 * 
+	 */
+	public void hit(Character character) {
+		
+		
+	}
+	
+	/**
+	 * Heals the hero by adding hitpoints
+	 * 
+	 */
+	
+	public void heal() {
+		
+	}
 	
 
 }
