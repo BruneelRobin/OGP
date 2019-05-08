@@ -40,7 +40,7 @@ public class Backpack {
 	 * @param 	capacity
 	 * 			the new capacity
 	 * @post	the new capacity is set to the given capacity
-	 * 			| new.getCapacity() = capacity
+	 * 			| new.getCapacity() == capacity
 	 */
 	private void setCapacity(float capacity) {
 		this.capacity = capacity;
@@ -142,7 +142,7 @@ public class Backpack {
 	/**
 	 * Return the total value of this purse
 	 * @return	Return the total value of this purse in ducates
-	 * 			| result = this.getContent()
+	 * 			| result == this.getContent()
 	 */
 	public int getTotalValue() {
 		return 0;

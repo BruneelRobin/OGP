@@ -37,7 +37,7 @@ public class Purse {
 	 * @param 	capacity
 	 * 			the new capacity
 	 * @post	the new capacity is set to the given capacity
-	 * 			| new.getCapacity() = capacity
+	 * 			| new.getCapacity() == capacity
 	 */
 	@Raw
 	private void setCapacity(int capacity) {
@@ -64,7 +64,7 @@ public class Purse {
 	 * @param	isTorn
 	 * 			the new torn state
 	 * @post	the new torn state is set to the given state
-	 * 			| new.isTorn() = isTorn
+	 * 			| new.isTorn() == isTorn
 	 */
 	private void setTorn (boolean isTorn) {
 		this.isTorn = isTorn;
@@ -73,9 +73,9 @@ public class Purse {
 	/**
 	 * Set the torn state of this container to true
 	 * @post	the new torn state is set to true
-	 * 			| new.isTorn() = true
+	 * 			| new.isTorn() == true
 	 * @post	the content is set to 0
-	 * 			| new.getContent() = 0
+	 * 			| new.getContent() == 0
 	 */
 	@Raw
 	public void makeTorn() {
@@ -102,7 +102,7 @@ public class Purse {
 	 * @param 	content
 	 * 			the new content
 	 * @post	the new content is set to the given content
-	 * 			| new.getContent() = content
+	 * 			| new.getContent() == content
 	 */
 	@Raw
 	private void setContent(int content) {
@@ -114,7 +114,7 @@ public class Purse {
 	 * @param 	amount
 	 * 			The amount to add
 	 * @post	The new content is increased with the given amount
-	 * 			| this.getContent() = this.getContent() + amount
+	 * 			| this.getContent() == this.getContent() + amount
 	 * @effect	When the new content is higher than the allowed capacity this purse is torn
 	 * 			| makeTorn()
 	 * @throws	TornException
@@ -129,7 +129,7 @@ public class Purse {
 	 * @param 	purse
 	 * 			The purse to empty
 	 * @post	The new content is increased with the content of the current purse
-	 * 			| this.getContent() = this.getContent() + purse.getContent()
+	 * 			| this.getContent() == this.getContent() + purse.getContent()
 	 * @post	The emptied purse is dropped
 	 * 			| purse.drop()
 	 * @effect	When the new content is higher than the allowed capacity this purse is torn
@@ -158,7 +158,7 @@ public class Purse {
 	/**
 	 * Return the total weight of this purse
 	 * @return	Return the total weight of this purse
-	 * 			| result = this.getContent() * DUCATE_WEIGHT
+	 * 			| result == this.getContent() * DUCATE_WEIGHT
 	 */
 	public float getTotalWeight() {
 		return 0;
@@ -167,7 +167,7 @@ public class Purse {
 	/**
 	 * Return the total value of this purse
 	 * @return	Return the total value of this purse in ducates
-	 * 			| result = this.getContent()
+	 * 			| result == this.getContent()
 	 */
 	public int getTotalValue() {
 		return this.getContent();

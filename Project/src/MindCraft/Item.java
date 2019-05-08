@@ -37,7 +37,7 @@ public abstract class Item {
 	 * @param identification
 	 * 		  the new identification
 	 * @post  The item's new identification is the given identification
-	 * 		  | new.getIdentification() = identification
+	 * 		  | new.getIdentification() == identification
 	 */
 	private void setIdentification(long identification) {
 		this.identification = identification;
@@ -72,7 +72,7 @@ public abstract class Item {
 	 * @param weight
 	 * 		  The new value of the weight
 	 * @post  The weight is set to the given weight
-	 * 		  | new.getWeight() = weight
+	 * 		  | new.getWeight() == weight
 	 */
 	private void setWeight(float weight) {
 		this.weight = weight;
@@ -99,7 +99,7 @@ public abstract class Item {
 	 * @param value
 	 * 		  The new value
 	 * @post  The value is set to the given value
-	 * 		  | new.getValue() = value
+	 * 		  | new.getValue() == value
 	 */
 	private void setValue(int value) {
 		this.value = value;
@@ -125,7 +125,7 @@ public abstract class Item {
 	 * @param holder
 	 * 		  The new holder
 	 * @post  The holder is set to the given holder
-	 * 		  | new.getHolder() = holder
+	 * 		  | new.getHolder() == holder
 	 */
 	private void setHolder(Character holder) {
 		this.holder = holder;
@@ -152,7 +152,7 @@ public abstract class Item {
 	 * @param backpack
 	 * 		  The new parentBackpack of the item
 	 * @post  The parentBackpack is set to the given parentBackpack
-	 * 		  | new.getParentBackpack() = backpack
+	 * 		  | new.getParentBackpack() == backpack
 	 */
 	private void setParentBackpack(Backpack backpack) {
 		this.parentBackpack = backpack;

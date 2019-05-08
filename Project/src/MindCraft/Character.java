@@ -60,7 +60,7 @@ public abstract class Character {
 	 * @param 	name
 	 * 			the new name
 	 * @post	The name is set to the given name
-	 * 			| new.getName() = name
+	 * 			| new.getName() == name
 	 */
 	@Raw
 	private void setName(String name) {
@@ -72,7 +72,7 @@ public abstract class Character {
 	 * @param 	name
 	 * 			the new name
 	 * @post	The name is set to the given name
-	 * 			| new.getName() = name
+	 * 			| new.getName() == name
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when the given name is not valid
 	 * 			| !isValidName(name)
@@ -112,7 +112,7 @@ public abstract class Character {
 	 * @param 	hitpoints
 	 * 			the new amount of hitpoints
 	 * @post	The character's hitpoints are set to the given hitpoints
-	 * 			| new.getHitpoints() = hitpoints
+	 * 			| new.getHitpoints() == hitpoints
 	 */
 	private void setHitpoints(int hitpoints) {
 		this.hitpoints = hitpoints;
@@ -131,9 +131,9 @@ public abstract class Character {
 	 * @param	hitpoints
 	 * 			The amount of hitpoints to be taken
 	 * @post	Removes the given amount of hitpoints
-	 * 			| new.getHitpoints() = this.getHitpoints() - hitpoints
+	 * 			| new.getHitpoints() == this.getHitpoints() - hitpoints
 	 * @post	when the character takes damage, isFighting is set to true
-	 * 			| new.isFighting() = true
+	 * 			| new.isFighting() == true
 	 */
 	public void takeDamage(int hitpoints) {
 		
@@ -144,7 +144,7 @@ public abstract class Character {
 	 * @param 	isFighting
 	 * 			The new state of isFighting
 	 * @post	Sets the current fighting state to the given state
-	 * 			| new.isFighting() = isFighting
+	 * 			| new.isFighting() == isFighting
 	 */
 	private void setFighting(boolean isFighting) {
 		this.isFighting = isFighting;
@@ -195,7 +195,7 @@ public abstract class Character {
 	 * @param 	hitpoints
 	 * 			the new amount of maximum hitpoints
 	 * @post	Increase the amount of maximum hitpoints with the given amount
-	 * 			| new.getMaxHitpoints() = this.getMaxHitpoints() + hitpoints
+	 * 			| new.getMaxHitpoints() == this.getMaxHitpoints() + hitpoints
 	 * @pre		the new amount of maximum hitpoints must be valid
 	 * 			| canHaveAsMaxHitpoints(this.getMaxHitpoints() + hitpoints)
 	 */
@@ -208,7 +208,7 @@ public abstract class Character {
 	 * @param 	hitpoints
 	 * 			the new amount of maximum hitpoints
 	 * @post	Lower the amount of maximum hitpoints with the given amount
-	 * 			| new.getMaxHitpoints() = this.getMaxHitpoints() - hitpoints
+	 * 			| new.getMaxHitpoints() == this.getMaxHitpoints() - hitpoints
 	 * @post	When the new amount of maximum hitpoints is lower than the current value of hitpoints.
 	 * 			Then the current value of hitpoints is set to the maximum amount of hitpoints.
 	 * @pre		the new amount of maximum hitpoints must be valid
