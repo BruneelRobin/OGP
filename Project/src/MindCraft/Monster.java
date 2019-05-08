@@ -29,6 +29,12 @@ public class Monster extends Character {
 	private int damage = 0;
 	
 	/**
+	 * Variable referencing the protection of a monster.
+	 */
+	private int protection = 0;
+	
+	
+	/**
 	 * Set the damage to a given amount of damage.
 	 * 
 	 * @param	damage
@@ -40,19 +46,6 @@ public class Monster extends Character {
 	}
 	
 	/**
-	 * Return the damage of the monster.
-	 * @return	Return the monster of the monster.
-	 */
-	public int getDamage() {
-		return this.damage;
-	}
-	
-	/**
-	 * Variable referencing the protection of a monster.
-	 */
-	private int protection = 0;
-	
-	/**
 	 * Set the protection to a given amount of protection.
 	 * 
 	 * @param	protection
@@ -62,6 +55,15 @@ public class Monster extends Character {
 	private void setProtection(int protection) {
 		this.protection = protection;
 	}
+	
+	/**
+	 * Return the damage of the monster.
+	 * @return	Return the monster of the monster.
+	 */
+	public int getDamage() {
+		return this.damage;
+	}
+	
 	
 	/**
 	 * Return the protection of the monster
