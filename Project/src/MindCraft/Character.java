@@ -287,11 +287,11 @@ public abstract class Character {
 	}
 	
 	/**
-	 * Return a boolean whether the character will take this item
-	 * @return	Returns true if the character will take this item
-	 * 			Returns false when the character won't take this item
+	 * Return a boolean whether the character wants to take this item
+	 * @return	Returns true if the character wants to take this item
+	 * 			Returns false when the character doesn't want to take this item
 	 */
-	public abstract boolean wantsToTakeItem();
+	public abstract boolean wantsToTakeItem(Item item);
 	
 	
 }

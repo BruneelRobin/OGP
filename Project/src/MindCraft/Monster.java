@@ -70,4 +70,13 @@ public class Monster extends Character {
 	public int getProtection() {
 		return this.protection;
 	}
+	
+	/**
+	 * Return a boolean whether the monster wants to take this item
+	 * @return	Returns true if the monster wants to take this item
+	 * 			Returns false when the monster doesn't want to take this item
+	 */
+	public boolean wantsToTakeItem(Item item) {
+		
+	}
 }
