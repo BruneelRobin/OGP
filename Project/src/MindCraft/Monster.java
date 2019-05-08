@@ -10,7 +10,7 @@ package MindCraft;
 public class Monster extends Character {
 	
 	/**
-	 * Creates a monster
+	 * Creates a monster.
 	 * @post	Creates a monster with the given name.
 	 * @post	Creates a monster with the given hitpoints.
 	 * @throws	IllegalArgumentException
@@ -35,7 +35,7 @@ public class Monster extends Character {
 	
 	
 	/**
-	 * Set the damage to a given amount of damage.
+	 * Set the damage of a monster to a given amount of damage.
 	 * 
 	 * @param	damage
 	 * 			The new damage.
@@ -46,7 +46,7 @@ public class Monster extends Character {
 	}
 	
 	/**
-	 * Set the protection to a given amount of protection.
+	 * Set the protection of a monster to a given amount of protection.
 	 * 
 	 * @param	protection
 	 * 			The new protection.
@@ -57,8 +57,8 @@ public class Monster extends Character {
 	}
 	
 	/**
-	 * Return the damage of the monster.
-	 * @return	Return the monster of the monster.
+	 * Return the damage of this monster.
+	 * @return	Return the damage of this monster.
 	 */
 	public int getDamage() {
 		return this.damage;
