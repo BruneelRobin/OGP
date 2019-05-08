@@ -291,7 +291,7 @@ public abstract class Character {
 	 * @return	Returns true if the character will take this item
 	 * 			Returns false when the character won't take this item
 	 */
-	public abstract boolean wantsToTakeItem();
+	public abstract boolean wantsToTakeItem(Item item);
 	
 	
 }
