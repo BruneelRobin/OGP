@@ -153,8 +153,7 @@ public abstract class Character {
 	
 	/**
 	 * Return the protection of the character
-	 * @return	Return the protection of the current character based
-	 * 			on armor and default protection
+	 * @return	Return the protection of the current character
 	 */
 	public abstract int getProtection();
 	
@@ -272,18 +271,27 @@ public abstract class Character {
 	 ***********************/
 	
 	/**
-	 * 
+	 * This character hits the given character
+	 * @post	This character hits the given character
 	 */
-	public void hit(Character character) {
-		
-	}
+	public abstract void hit(Character character);
 	
 	/**
-	 * 
+	 * This character collects the treasures found on a dead body
+	 * @post	Collects all anchored items of the other character 
+	 * 			when the current character wants to take it
+	 * 			| wantsToTakeItem(item)
 	 */
 	public void collectTreasures(Character character) {
 		
 	}
+	
+	/**
+	 * Return a boolean whether the character will take this item
+	 * @return	Returns true if the character will take this item
+	 * 			Returns false when the character won't take this item
+	 */
+	public abstract boolean wantsToTakeItem();
 	
 	
 }
