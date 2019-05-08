@@ -1,9 +1,10 @@
 package MindCraft;
 
 import java.util.Map;
-import java.util.HashMap;
 
 import be.kuleuven.cs.som.annotate.*;
+
+import java.util.HashMap;
 
 /**
  * A class of characters.
@@ -162,6 +163,19 @@ public abstract class Character {
 	 * Anchors
 	 ***********************/
 	
+	/**
+	 * Variable referencing a dictionary of all anchored items of this character. 
+	 * This class has a bidirectional relation with the class Item. An item can be anchored using the function equip/unequip
+	 * or the protected function removeItemFromHolder.
+	 * 
+	 * @invar Each non null element in the hashmap references an effective item. 
+	 *        | for (HashMap.Entry<Integer,Item> entry : anchors.entrySet())
+	 *        | 	entry.getValue() != null
+	 * @invar Each element in the hashmap references an item that references
+	 *        back to this character.
+	 *        | for (HashMap.Entry<Integer,Item> entry : anchors.entrySet())
+	 *        | 	entry.getValue().getHolder() == this
+	 */	
 	HashMap<Integer, Item> anchors = new HashMap<Integer, Item>();
 	
 	/**
