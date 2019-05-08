@@ -160,22 +160,96 @@ public abstract class Character {
 	 * Anchors
 	 ***********************/
 	
-	HashMap<Long, Item> anchors = new HashMap<Long, Item>();
-	
+	HashMap<Integer, Item> anchors = new HashMap<Integer, Item>();
 	
 	/**
-	 * 
+	 * Set the item at the given anchorId
+	 * @param 	anchorId
+	 * 			The anchorId to set the item at
+	 * @param 	item
+	 * 			The item to set at the given anchorId
 	 */
-	public void Equip(int anchor, Item item) {
+	private void setAnchorAt(int anchorId, Item item) {
 		
 	}
 	
 	/**
-	 * 
+	 * Return the item at the given anchorId
+	 * @param 	anchorId
+	 * 			The anchorId of the item
+	 * @return	Return the item at the given anchorId
 	 */
-	public void PickUp(Item item) {
+	public Item getAnchorAt (int anchorId) {
+		return null;
+	}
+	
+	/**
+	 * Return true when the given item can be equipped
+	 * @param 	item
+	 * 			the item to be checked
+	 * @return	Return true when the given item can be equipped
+	 * 			| ...
+	 */
+	public boolean canEquipItem(Item item) {
+		return true;
+	}
+	
+	/**
+	 * Equip item on the given slot
+	 * @param	anchorId
+	 * 			The id of the anchor to be set
+	 * @param	item
+	 * 			the item to be equipped
+	 * @effect	Unequip the item in that slot if not null
+	 * 			| unequip(anchorId)
+	 * @post	Equip the given item in the given slot when possible, unequips the item in that slot when not null
+	 * 			| canEquipItem(item)
+	 */
+	public void equip(int anchorId, Item item) {
 		
 	}
+	
+	/**
+	 * Unequip item on the given slot
+	 * @post	Unequip the item on the given slot and tries to put it in a backpack when possible otherwise drops it on the ground
+	 */
+	public void unequip(int anchorId) {
+		
+	}
+	
+	/**
+	 * Removes the given item from its anchor when equipped
+	 * @param 	item
+	 * 			The item to be removed from its anchor
+	 * @post	Searches and removes the given item from its anchor
+	 */
+	protected void removeItemFromHolder(Item item) {
+		
+	}
+	
+	/**
+	 * Checks whether an item can be picked up
+	 * @param 	item
+	 * 			The item to be picked up
+	 * @return	Returns true when the holder of the item is null or dead
+	 * 			| ...
+	 */
+	public boolean canPickItem(Item item) {
+		return true;
+	}
+	
+	/**
+	 * Picks an item up from a dead body or from the ground
+	 * @param	item
+	 * 			The item to be picked up
+	 * @post	Picks an item up from a dead body or from the ground when it can be picked up
+	 * 			| canPickItem(item)
+	 */
+	public void pickUp(Item item) {
+		
+	}
+	
+	
 	
 	/***********************
 	 * Other Methods
@@ -184,14 +258,14 @@ public abstract class Character {
 	/**
 	 * 
 	 */
-	public void Hit(Character character) {
+	public void hit(Character character) {
 		
 	}
 	
 	/**
 	 * 
 	 */
-	public void CollectTreasures(Character character) {
+	public void collectTreasures(Character character) {
 		
 	}
 	
