@@ -8,6 +8,9 @@ package MindCraft;
  */
 public class Armor extends Item {
 
-	
+	/**
+	 * Class variable referencing the maximum value of any armor.
+	 */
+	private static int MAX_VALUE = 1000;
 	
 }
