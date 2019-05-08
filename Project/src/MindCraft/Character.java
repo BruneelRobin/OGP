@@ -3,6 +3,8 @@ package MindCraft;
 import java.util.Map;
 import java.util.HashMap;
 
+import be.kuleuven.cs.som.annotate.*;
+
 /**
  * A class of characters.
  * @invar 	Each character must have proper items anchored.
