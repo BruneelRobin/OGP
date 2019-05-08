@@ -66,6 +66,9 @@ private void setProtection(int protection) {
 	
 
 
-	
+	/**
+	 * Class variable referencing the maximum value of any armor.
+	 */
+	private static int MAX_VALUE = 1000;
 	
 }
