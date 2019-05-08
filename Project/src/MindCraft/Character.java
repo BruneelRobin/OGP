@@ -160,7 +160,7 @@ public abstract class Character {
 	 * Anchors
 	 ***********************/
 	
-	Map<int, Item> anchors = new HashMap<>();
+	HashMap<Long, Item> anchors = new HashMap<Long, Item>();
 	
 	
 	/**
