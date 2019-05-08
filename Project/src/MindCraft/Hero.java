@@ -10,8 +10,6 @@ package MindCraft;
  */
 
 public class Hero extends Character{
-	
-	
 	/**
 	 * 
 	 * @param name
@@ -82,6 +80,7 @@ public class Hero extends Character{
 	 * 
 	 * 
 	 */
+	@Override
 	public boolean wantsToTakeItem(Item item) {
 		
 	}
@@ -102,6 +101,16 @@ public class Hero extends Character{
 	
 	public void heal() {
 		
+	}
+	
+	private int defaultProtection = 10;
+	/**
+	 * Return the protection of the hero
+	 * @return	Return the protection of the hero based on default protection value and armor
+	 */
+	@Override
+	public int getProtection() {
+		return 0;
 	}
 	
 
