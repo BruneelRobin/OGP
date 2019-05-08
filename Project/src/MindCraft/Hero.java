@@ -10,8 +10,6 @@ package MindCraft;
  */
 
 public class Hero extends Character{
-	
-	
 	/**
 	 * 
 	 * @param name
@@ -96,6 +94,7 @@ public class Hero extends Character{
 	 * @return Returns true when the hero wants to take the item
 	 * @return Returns false when the hero does not want to take the item
 	 */
+	@Override
 	public boolean wantsToTakeItem(Item item) {
 		
 	}
@@ -120,6 +119,16 @@ public class Hero extends Character{
 	//om priem te zijn, checken waar dichtste priem is via +2 en -2, dan nog eens checken
 	public void heal() {
 		
+	}
+	
+	private int defaultProtection = 10;
+	/**
+	 * Return the protection of the hero
+	 * @return	Return the protection of the hero based on default protection value and armor
+	 */
+	@Override
+	public int getProtection() {
+		return 0;
 	}
 	
 	/**

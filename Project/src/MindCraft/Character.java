@@ -19,10 +19,18 @@ public abstract class Character {
 	
 	/**
 	 * Creates a character
+	 * @param	name
+	 * 			The name of the new character
+	 * @param	hitpoints
+	 * 			The max amount of hitpoints
+	 * @pre		The given amount of maximum hitpoints must be valid
+	 * 			| canHaveAsMaxHitpoints(hitpoints)
 	 * @post	Creates a character with the given name
 	 * 			| new.getName() == name
 	 * @post	Creates a character with the given hitpoints
 	 * 			| new.getHitpoints() == hitpoints
+	 * @post	Creates a character with the maximum amount of hitpoints
+	 * 			| new.getMaximumHitpoints() == hitpoints
 	 * @throws	IllegalArgumentException
 	 * 			Throws this exception when the given name is not valid
 	 * 			| !isValidName(name)
@@ -86,11 +94,14 @@ public abstract class Character {
 	 ***********************/
 	private int hitpoints;
 	private boolean isFighting = false;
+	private int maxHitpoints;
 	
 	/**
-	 * 
-	 * @param hitpoints
-	 * @return
+	 * Returns whether the player can have the given amount of hitpoints
+	 * @param 	hitpoints
+	 * 			the amount of hitpoints to check
+	 * @return	Return true when the character can have the amount of hitpoints
+	 * @return	Return false when the character can't have the amount of hitpoints
 	 */
 	public boolean canHaveAsHitpoints(int hitpoints) {
 		return hitpoints >= 0 && (isFighting() || isprime(hitpoints));
@@ -145,6 +156,66 @@ public abstract class Character {
 	 */
 	public boolean isFighting() {
 		return this.isFighting;
+	}
+	
+	/**
+	 * Returns whether the player can have the maximum amount of hitpoints
+	 * @param 	hitpoints
+	 * 			the maximum amount of hitpoints to check
+	 * @return	Return true when the character can have the maximum amount of hitpoints
+	 * @return	Return false when the character can't have the maximum amount of hitpoints
+	 */
+	public boolean canHaveAsMaxHitpoints(int hitpoints) {
+		return hitpoints >= 0 && isprime(hitpoints);
+	}
+	
+	/**
+	 * Return the maximum amount of hitpoints
+	 * @return	Return the maximum amount of hitpoints
+	 */
+	@Basic
+	public int getMaxHitpoints () {
+		return this.maxHitpoints;
+	}
+	
+	/**
+	 * Set the maximum amount of hitpoints
+	 * @param 	maxHitpoints
+	 * 			the maximum amount of hitpoints
+	 * @post	Sets the maximum amount of hitpoints to the given value
+	 * 			| new.getMaxHitpoints() == maxHitpoints
+	 */
+	@Raw
+	private void setMaxHitpoints (int maxHitpoints) {
+		this.maxHitpoints = maxHitpoints;
+	}
+	
+	/**
+	 * Increase the maximum amount of hitpoints
+	 * @param 	hitpoints
+	 * 			the new amount of maximum hitpoints
+	 * @post	Increase the amount of maximum hitpoints with the given amount
+	 * 			| new.getMaxHitpoints() = this.getMaxHitpoints() + hitpoints
+	 * @pre		the new amount of maximum hitpoints must be valid
+	 * 			| canHaveAsMaxHitpoints(this.getMaxHitpoints() + hitpoints)
+	 */
+	public void increaseMaxHitpoints (int hitpoints) {
+		
+	}
+	
+	/**
+	 * Lowers the maximum amount of hitpoints
+	 * @param 	hitpoints
+	 * 			the new amount of maximum hitpoints
+	 * @post	Lower the amount of maximum hitpoints with the given amount
+	 * 			| new.getMaxHitpoints() = this.getMaxHitpoints() - hitpoints
+	 * @post	When the new amount of maximum hitpoints is lower than the current value of hitpoints.
+	 * 			Then the current value of hitpoints is set to the maximum amount of hitpoints.
+	 * @pre		the new amount of maximum hitpoints must be valid
+	 * 			| canHaveAsMaxHitpoints(this.getMaxHitpoints() - hitpoints)
+	 */
+	public void lowerMaxHitpoints (int hitpoints) {
+		
 	}
 	
 	/***********************
@@ -287,11 +358,11 @@ public abstract class Character {
 	}
 	
 	/**
-	 * Return a boolean whether the character will take this item
-	 * @return	Returns true if the character will take this item
-	 * 			Returns false when the character won't take this item
+	 * Return a boolean whether the character wants to take this item
+	 * @return	Returns true if the character wants to take this item
+	 * 			Returns false when the character doesn't want to take this item
 	 */
-	public abstract boolean wantsToTakeItem();
+	public abstract boolean wantsToTakeItem(Item item);
 	
 	
 }
