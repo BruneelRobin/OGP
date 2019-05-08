@@ -19,10 +19,18 @@ public abstract class Character {
 	
 	/**
 	 * Creates a character
+	 * @param	name
+	 * 			The name of the new character
+	 * @param	hitpoints
+	 * 			The max amount of hitpoints
+	 * @pre		The given amount of maximum hitpoints must be valid
+	 * 			| canHaveAsMaxHitpoints(hitpoints)
 	 * @post	Creates a character with the given name
 	 * 			| new.getName() == name
 	 * @post	Creates a character with the given hitpoints
 	 * 			| new.getHitpoints() == hitpoints
+	 * @post	Creates a character with the maximum amount of hitpoints
+	 * 			| new.getMaximumHitpoints() == hitpoints
 	 * @throws	IllegalArgumentException
 	 * 			Throws this exception when the given name is not valid
 	 * 			| !isValidName(name)
@@ -86,11 +94,14 @@ public abstract class Character {
 	 ***********************/
 	private int hitpoints;
 	private boolean isFighting = false;
+	private int maxHitpoints;
 	
 	/**
-	 * 
-	 * @param hitpoints
-	 * @return
+	 * Returns whether the player can have the given amount of hitpoints
+	 * @param 	hitpoints
+	 * 			the amount of hitpoints to check
+	 * @return	Return true when the character can have the amount of hitpoints
+	 * @return	Return false when the character can't have the amount of hitpoints
 	 */
 	public boolean canHaveAsHitpoints(int hitpoints) {
 		return hitpoints >= 0 && (isFighting() || isprime(hitpoints));
@@ -145,6 +156,66 @@ public abstract class Character {
 	 */
 	public boolean isFighting() {
 		return this.isFighting;
+	}
+	
+	/**
+	 * Returns whether the player can have the maximum amount of hitpoints
+	 * @param 	hitpoints
+	 * 			the maximum amount of hitpoints to check
+	 * @return	Return true when the character can have the maximum amount of hitpoints
+	 * @return	Return false when the character can't have the maximum amount of hitpoints
+	 */
+	public boolean canHaveAsMaxHitpoints(int hitpoints) {
+		return hitpoints >= 0 && isprime(hitpoints);
+	}
+	
+	/**
+	 * Return the maximum amount of hitpoints
+	 * @return	Return the maximum amount of hitpoints
+	 */
+	@Basic
+	public int getMaxHitpoints () {
+		return this.maxHitpoints;
+	}
+	
+	/**
+	 * Set the maximum amount of hitpoints
+	 * @param 	maxHitpoints
+	 * 			the maximum amount of hitpoints
+	 * @post	Sets the maximum amount of hitpoints to the given value
+	 * 			| new.getMaxHitpoints() == maxHitpoints
+	 */
+	@Raw
+	private void setMaxHitpoints (int maxHitpoints) {
+		this.maxHitpoints = maxHitpoints;
+	}
+	
+	/**
+	 * Increase the maximum amount of hitpoints
+	 * @param 	hitpoints
+	 * 			the new amount of maximum hitpoints
+	 * @post	Increase the amount of maximum hitpoints with the given amount
+	 * 			| new.getMaxHitpoints() = this.getMaxHitpoints() + hitpoints
+	 * @pre		the new amount of maximum hitpoints must be valid
+	 * 			| canHaveAsMaxHitpoints(this.getMaxHitpoints() + hitpoints)
+	 */
+	public void increaseMaxHitpoints (int hitpoints) {
+		
+	}
+	
+	/**
+	 * Lowers the maximum amount of hitpoints
+	 * @param 	hitpoints
+	 * 			the new amount of maximum hitpoints
+	 * @post	Lower the amount of maximum hitpoints with the given amount
+	 * 			| new.getMaxHitpoints() = this.getMaxHitpoints() - hitpoints
+	 * @post	When the new amount of maximum hitpoints is lower than the current value of hitpoints.
+	 * 			Then the current value of hitpoints is set to the maximum amount of hitpoints.
+	 * @pre		the new amount of maximum hitpoints must be valid
+	 * 			| canHaveAsMaxHitpoints(this.getMaxHitpoints() - hitpoints)
+	 */
+	public void lowerMaxHitpoints (int hitpoints) {
+		
 	}
 	
 	/***********************
@@ -293,5 +364,22 @@ public abstract class Character {
 	 */
 	public abstract boolean wantsToTakeItem(Item item);
 	
-	
+	/**
+	 * Returns whether the given number is a prime number
+	 * @param 	number
+	 * 			The number to check
+	 * @return	Return true when the given number is a prime number
+	 * @return	Return false otherwise
+	 */
+	private static boolean isPrime(int number) 
+	{
+	        if (number == 2) 
+	            return true;
+	        if (number < 2 || number % 2 == 0) 
+	            return false;
+	        for (int i = 3; i * i <= number; i += 2)
+	            if (number % i == 0) 
+	                return false;
+	        return true;
+	}
 }
