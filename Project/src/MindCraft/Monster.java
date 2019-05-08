@@ -67,6 +67,7 @@ public class Monster extends Character {
 	 * Return the protection of the monster
 	 * @return	Return the protection of the monster
 	 */
+	@Override
 	public int getProtection() {
 		return this.protection;
 	}
@@ -76,7 +77,17 @@ public class Monster extends Character {
 	 * @return	Returns true if the monster wants to take this item
 	 * 			Returns false when the monster doesn't want to take this item
 	 */
+	@Override
 	public boolean wantsToTakeItem(Item item) {
+		
+	}
+	
+	/**
+	 * This monster hits the given character.
+	 * @post	The character that was hit by this monster will take damage.
+	 */
+	@Override
+	public void hit(Character character) {
 		
 	}
 }
