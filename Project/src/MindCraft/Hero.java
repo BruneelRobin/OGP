@@ -64,8 +64,7 @@ public class Hero extends Character{
 	private void setStrength(float strength) {
 		this.strength = strength;
 		
-		
-	}
+		}
 	
 	
 	/***********************
