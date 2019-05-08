@@ -96,7 +96,7 @@ public class Hero extends Character{
 	 */
 	@Override
 	public boolean wantsToTakeItem(Item item) {
-		
+		return false;
 	}
 	
 	/**
@@ -134,8 +134,8 @@ public class Hero extends Character{
 	/**
 	 * Checks if a hero can have the given name as name
 	 */
-	public boolean isValidName(String name) {
-		
+	public static boolean isValidName(String name) {
+		return false;
 	}
 	
 

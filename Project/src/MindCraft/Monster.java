@@ -81,7 +81,7 @@ public class Monster extends Character {
 	 */
 	@Override
 	public boolean wantsToTakeItem(Item item) {
-		
+		return false;
 	}
 	
 	/**

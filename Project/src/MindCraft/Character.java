@@ -104,7 +104,7 @@ public abstract class Character {
 	 * @return	Return false when the character can't have the amount of hitpoints
 	 */
 	public boolean canHaveAsHitpoints(int hitpoints) {
-		return hitpoints >= 0 && (isFighting() || isprime(hitpoints));
+		return hitpoints >= 0 && (isFighting() || isPrime(hitpoints));
 	}
 	
 	/**
@@ -166,7 +166,7 @@ public abstract class Character {
 	 * @return	Return false when the character can't have the maximum amount of hitpoints
 	 */
 	public boolean canHaveAsMaxHitpoints(int hitpoints) {
-		return hitpoints >= 0 && isprime(hitpoints);
+		return hitpoints >= 0 && isPrime(hitpoints);
 	}
 	
 	/**
@@ -365,7 +365,21 @@ public abstract class Character {
 	public abstract boolean wantsToTakeItem(Item item);
 	
 	/**
-	 * Returns whether the given number is a prime number
+	 * Return the closest prime number between the given boundaries
+	 * @param 	number
+	 * 			The number to find the closest prime for
+	 * @param 	min
+	 * 			The minimum boundary
+	 * @param 	max
+	 * 			The maximum boundary
+	 * @return	Return the closest prime number between the given boundaries
+	 */
+	private static int getClosestPrime(int number, int min, int max) {
+		return 2;
+	}
+	
+	/**
+	 * Return whether the given number is a prime number
 	 * @param 	number
 	 * 			The number to check
 	 * @return	Return true when the given number is a prime number
