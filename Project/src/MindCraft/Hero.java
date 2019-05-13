@@ -5,11 +5,14 @@ package MindCraft;
  * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  *
- *
- *
  */
 
-public class Hero extends Character{
+public class Hero extends Character {
+	
+	/***********************
+	 * Constructors
+	 ***********************/
+	
 	/**
 	 * 
 	 * @param name
@@ -36,12 +39,9 @@ public class Hero extends Character{
 	
 	
 	
-	
-	
-	
-	/***********************
-	 * Strength
-	 ***********************/
+	/*******************************
+	 * Strength - total programming
+	 *******************************/
 	
 	private float strength;
 	
@@ -100,8 +100,8 @@ public class Hero extends Character{
 	
 	/**
 	 * Makes the character hit the given character
-	 * @post the given character loses hitpoints
-	 * 		 |
+	 * @post	The given character loses hitpoints.
+	 * 			|
 	 * 
 	 */
 	public void hit(Character character) {

@@ -9,8 +9,14 @@ package MindCraft;
 public class Weapon extends Item {
 	
 	/***********************
-	 * Damage
+	 * Constructors
 	 ***********************/
+	
+	
+	
+	/********************************
+	 * Damage - nominal programming
+	 ********************************/
 
 	/**
 	 * Class variable referencing the maximum damage of any weapon.

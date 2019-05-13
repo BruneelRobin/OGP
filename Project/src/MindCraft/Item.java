@@ -9,6 +9,10 @@ package MindCraft;
  */
 public abstract class Item {
 	
+	/***********************
+	 * Constructors
+	 ***********************/
+	
 	/**
 	 * Creates an item
 	 */
@@ -18,9 +22,9 @@ public abstract class Item {
 	}
 	
 	
-	/***********************
-	 * Identification
-	 ***********************/
+	/*************************************
+	 * Identification - total programming
+	 *************************************/
 	private long identification;
 	
 	/**
@@ -54,9 +58,9 @@ public abstract class Item {
 	}
 	
 	
-	/***********************
-	 * Weight
-	 ***********************/
+	/*****************************
+	 * Weight - total programming
+	 *****************************/
 	private final float weight;
 	
 	/**

@@ -8,6 +8,9 @@ package MindCraft;
  */
 public class Armor extends Item {
 	
+	/***********************
+	 * Constructors
+	 ***********************/
 	
 	
 	

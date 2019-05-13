@@ -13,16 +13,20 @@ import be.kuleuven.cs.som.annotate.Basic;
  */
 public class Backpack {
 	
+	/***********************
+	 * Constructors
+	 ***********************/
+	
 	/**
-	 * 
+	 * Creates a backpack
 	 */
 	public Backpack () {
 		
 	}
 	
-	/***********************
-	 * Capacity
-	 ***********************/
+	/*******************************
+	 * Capacity - total programming
+	 *******************************/
 	
 	private float capacity;
 	
@@ -46,9 +50,9 @@ public class Backpack {
 		this.capacity = capacity;
 	}
 	
-	/***********************
-	 * Content
-	 ***********************/
+	/**********************************
+	 * Content - defensive programming
+	 **********************************/
 	
 	/**
 	 * Variable referencing a dictionary of lists of items in this backpack. 
@@ -129,6 +133,10 @@ public class Backpack {
 	public void addItem(Item item) throws IllegalArgumentException {
 		
 	}
+	
+	/*************************
+	 * Other methods
+	 *************************/
 	
 	/**
 	 * Return the total weight of this backpack
