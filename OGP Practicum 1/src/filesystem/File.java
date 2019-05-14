@@ -11,41 +11,45 @@ import be.kuleuven.cs.som.annotate.*;
  * @invar   Each file must have a valid type.
  *          | isValidType(getType())
  * 
+ * @note	Subclasses may only add/strengthen invariants (Liskov principle)
+ * 
+ * @note	Please note how this class does not provide constructors without a parent directory.
+ * 			Calling such a constructor prohibits this parent to be null.
+ * 
  * @author 	Tommy Messelis
- * @author 	Robin Bruneel, Edward Wiels, Jean-Louis Carron
- * @version	3.1 - 2016       
+ * @version	4.1 - 2017        
  */
-
-public class File extends RealItem {
-
+public class File extends ActualItem{
+	
+	
     /**********************************************************
      * Constructors
      **********************************************************/
    
     /**
      * Initialize a new file with given parent directory, name,
-     * size and writability.
+     * type, size and writability.
      *
      * @param  	parent
      *         	The parent directory of the new file.       
      * @param  	name
      *         	The name of the new file.
+     * @param  	type
+     *         	The type of the new file. 
      * @param  	size
      *         	The size of the new file.
      * @param  	writable
      *         	The writability of the new file.
-     * @param  	type
-     *         	The type of the new file. 
      * 
      * @pre		type is effective
      * 			|type != null
-     * @effect 	The new file is a disk item with the given
+     * @effect 	The new file is an actual disk item with the given
      *         	parent, name and writability.
      *         	| super(parent,name,writable)
      * @effect 	The new file has the given size
      *         	| setSize(size)
      * @post   	The type of this new file is set to the given type.
-     *         	|new.getType() == type        
+     *         	| new.getType() == type        
      */
     public File(Directory parent, String name, Type type, int size, boolean writable)
     		throws IllegalArgumentException, DiskItemNotWritableException {
@@ -55,26 +59,122 @@ public class File extends RealItem {
     }
 
     /**
-     * Initialize a new writable, empty file with given parent directory
-     * and name.
+     * Initialize a new writable, empty file with given parent directory,
+     * name and type.
      *
-     * @param  parent
-     *         The parent directory of the new file.
-     * @param  name
-     *         The name of the new file.
-     * @param  type
-     *         The type of the new file.        
+     * @param  	parent
+     *         	The parent directory of the new file.
+     * @param  	name
+     *         	The name of the new file.
+     * @param  	type
+     *         	The type of the new file.        
      * 
-     * @effect This new file is initialized with the given name
-     *         and the given parent directory, type, 
-     *         the new file is empty and writable.
-     *         | this(parent,name,type,0,true)
+     * @effect 	This new file is initialized with the given parent directory,
+     * 			name, type, zero size and true writability.
+     *         	| this(parent,name,type,0,true)
      */
     public File(Directory parent, String name, Type type)
     		throws IllegalArgumentException, DiskItemNotWritableException {
     	this(parent,name,type,0,true);
     }    
     
+ 
+    
+    
+    /**********************************************************
+	 * delete/termination
+	 **********************************************************/
+
+    /**
+	 * Check whether this disk item can be terminated. 
+	 * 
+	 * @return	True if the file is not yet terminated, and it is either a root or
+	 * 			its parent directory is writable, false otherwise
+	 * 			| result == !isTerminated() isWritable() && (isRoot() || getParentDirectory().isWritable())
+	 * 
+	 * @note	We must close the specification from the superclass.
+	 * 			(The superclass says nothing about the conditions under which ‘true' can be returned.)
+	 * 			
+	 */
+	@Override
+    public boolean canBeTerminated(){
+		//implementation-wise, we can simply refer to the superclass, because we know it will
+		//behave correctly. (Because we implemented it!)
+		return super.canBeTerminated();
+	}
+	
+	/**
+     * Check whether this file can be recursively deleted
+     * 
+     */
+	@Override
+    public boolean canBeRecursivelyDeleted(){
+    	return canBeTerminated();
+    }
+	
+	/**
+     * Delete this link recursively.  
+     *
+	 * @note	This specification should not be repeated, the parent spec suffices.
+     */    
+    @Override
+	public void deleteRecursive() throws IllegalStateException{
+    	terminate();
+    }
+	
+    
+    
+    
+    /**********************************************************
+	 * writable
+	 **********************************************************/
+
+    /**
+	 * Check whether the new writability is allowed
+	 * 
+	 * @param 	writability
+	 * 			the writability to check
+	 * @return	always true 
+	 * 			| result == true
+	 */
+	public boolean canAcceptAsNewWritability(boolean writability){
+		return true;
+	}
+	
+	
+	
+	
+	/**********************************************************
+	 * Name
+	 **********************************************************/
+	
+	/**
+	 * Check whether the given name is a legal name for a file.
+	 * 
+	 * @param  	name
+	 *			The name to be checked
+	 * @return	True if the given string is effective, not
+	 * 			empty and consisting only of letters, digits, dots,
+	 * 			hyphens and underscores; false otherwise.
+	 * 			| result ==
+	 * 			|	(name != null) && name.matches("[a-zA-Z_0-9.-]+")
+	 */
+	@Override
+	@Raw
+	public boolean canHaveAsName(String name) {
+		return (name != null && name.matches("[a-zA-Z_0-9.-]+"));
+	}
+    
+	/**
+	 * Returns the absolute path of the link
+	 * 
+	 * @return	the string representation of this File, preceded with the absolute path of the parent
+	 * 			| result.equals(getParentDirectory().getAbsolutePath() + "/" + toString())
+	 */
+	public String getAbsolutePath(){
+		return getParentDirectory().getAbsolutePath() + "/" + toString();	
+	}
+	
    /**
 	* Return a textual representation of this file.
 	* 
@@ -86,26 +186,8 @@ public class File extends RealItem {
     public String toString(){
     	  return getName()+"."+getType().getExtension();
     }
-    
 	
-    /**********************************************************
-	 * delete/termination
-	 **********************************************************/
-    
-    
-    /**
-	 * Check whether this disk item can be terminated.
-	 * 
-	 * @return	True if the disk item is not yet terminated, is writable and it is either a root or
-	 * 			its parent directory is writable
-	 * 			| result == !isTerminated() && isWritable() && (isRoot() || getParentDirectory().isWritable())
-	 * @note	This specification can now be closed
-	 */
-    @Override
-    public boolean canBeTerminated(){
-    	// no additional implementation required
-		return super.canBeTerminated();
-	}
+	
     
     
     /**********************************************************
@@ -241,7 +323,7 @@ public class File extends RealItem {
      *         | setSize(getSize()+delta)
      * @effect The modification time is updated.
      *         | setModificationTime()
-     * @throws FileNotWritableException(this)
+     * @throws DiskItemNotWritableException(this)
      *         This file is not writable.
      *         | ! isWritable()
      */
@@ -253,6 +335,64 @@ public class File extends RealItem {
         }else{
         	throw new DiskItemNotWritableException(this);
         }
-    }
+    }  
+    
+    
+    /**********************************************************
+	 * parent directory
+	 **********************************************************/
+
+    /** 
+	 * Check whether this disk item can have the given directory as
+	 * its parent directory.
+	 * 
+	 * @param  	directory
+	 *          The directory to check.
+	 * @return  If this disk item is terminated, 
+	 * 			true if the given directory is not effective, 
+	 * 			false otherwise.
+	 *          | if (this.isTerminated())
+	 *          | then result == (directory == null)
+	 * @return	If this disk item is not terminated,
+	 * 				if the given directory is not effective,
+	 * 				then true if this disk item is a root item or the parent of this item is writable, 
+	 * 					 false otherwise
+	 * 				else if the given directory is terminated, then false
+	 * 					 if this disk item is the same as the given directory, then false
+	 * 					 if this disk item is a direct or indirect parent of the given directory, then false
+	 * 					 else true if the given directory is writable and it can have this item as an item
+	 * 							and this item is a root or the parent directory of this item is writable,
+	 * 						  false otherwise.
+	 *			| if (!this.isTerminated())
+	 *			| then if (directory != null)
+	 *			|	   then if (directory.isTerminated()) then result == false
+	 *			|		 	if (directory == this) then result == false
+	 *			|			if (this.isDirectOrIndirectParentOf(directory)) then result == false
+	 *			|			else result == (directory.isWritable() && directory.canHaveAsItem(this) &&
+	 *			|							(this.isRoot() || this.getParentDirectory().isWritable()) )
+	 *			|	   else result == false
+	 *	
+	 *	@note 	The specification must now be closed.
+	 *	@note	Please note that null is not always forbidden: terminated Files don't have a parent!
+	 */
+	@Raw @Override
+	public boolean canHaveAsParentDirectory(Directory directory) {
+		// the implementation of the superclass is sufficient
+		return super.canHaveAsParentDirectory(directory);
+	}
+    
+    /**********************************************************
+	 * disk usage
+	 **********************************************************/
+
+	/**
+	 * Returns the total disk usage of this File
+	 * 
+	 * @return	the size of this file
+	 * 			| result == getSize()
+	 */
+	public int getTotalDiskUsage(){
+		return getSize();
+	}
     
 }
