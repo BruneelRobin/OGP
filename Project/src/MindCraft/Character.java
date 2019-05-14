@@ -355,6 +355,14 @@ public abstract class Character {
 		
 	}
 	
+	/**
+	 * Return the total value of this character
+	 * @return	Return the total value of this character in ducates
+	 */
+	public int getTotalValue () {
+		return 0;
+	}
+	
 	
 	
 	/***********************

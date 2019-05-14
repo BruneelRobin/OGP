@@ -1,5 +1,7 @@
 package filesystem;
 
+import be.kuleuven.cs.som.annotate.*;
+
 /**
  *  A directory-iterator is an iterator specifically aimed at
  *  returning items belonging to a directory.
@@ -15,7 +17,7 @@ package filesystem;
  * 	current element for the iterator.
  * 
  * @author 	Tommy Messelis
- * @version	2.0 - 2015
+ * @version	2.1 - 2016
  */
 
 public interface DirectoryIterator {
@@ -28,6 +30,7 @@ public interface DirectoryIterator {
 	 * @return	The resulting number cannot be negative.
 	 * 			| result >= 0 
 	 */
+	@Basic
 	int getNbRemainingItems();
 	
 	/**
