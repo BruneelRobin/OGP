@@ -8,10 +8,22 @@ package MindCraft;
  */
 public class Weapon extends Item {
 	
+	/**
+	 * TODO: implementeren
+	 * 
+	 * @param identification
+	 * @param weight
+	 * @param value
+	 * @param holder
+	 * @param parentBackpack
+	 */
+	public Weapon(long identification, float weight, int value, Character holder, Backpack parentBackpack) {
+		super(identification, weight, value, holder, parentBackpack);
+	}
+	
 	/***********************
 	 * Damage
 	 ***********************/
-
 	/**
 	 * Class variable referencing the maximum damage of any weapon.
 	 */
