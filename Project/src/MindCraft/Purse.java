@@ -8,18 +8,22 @@ import be.kuleuven.cs.som.annotate.*;
  * @version 1.0 - 2019
  *
  */
-public class Purse {
+public class Purse extends Item {
+	
+	/***********************
+	 * Constructors
+	 ***********************/
 	
 	/**
-	 * 
+	 * Creates a purse
 	 */
 	public Purse () {
 		
 	}
 	
-	/***********************
-	 * Capacity
-	 ***********************/
+	/*******************************
+	 * Capacity - total programming
+	 *******************************/
 	
 	private int capacity;
 	
@@ -82,9 +86,9 @@ public class Purse {
 		setTorn(true);
 	}
 	
-	/***********************
-	 * Content
-	 ***********************/
+	/**********************************
+	 * Content - defensive programming
+	 **********************************/
 	
 	private int content;
 	

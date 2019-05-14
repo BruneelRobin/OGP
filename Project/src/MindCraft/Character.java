@@ -17,6 +17,10 @@ import java.util.HashMap;
 
 public abstract class Character {
 	
+	/***********************
+	 * Constructors
+	 ***********************/
+	
 	/**
 	 * Creates a character
 	 * @param	name
@@ -39,9 +43,9 @@ public abstract class Character {
 		
 	}
 	
-	/***********************
-	 * Name
-	 ***********************/
+	/********************************
+	 * Name - defensive programming
+	 ********************************/
 	
 	private String name;
 	
@@ -57,14 +61,18 @@ public abstract class Character {
 	
 	/**
 	 * Sets the name to the given name
+	 * 
 	 * @param 	name
 	 * 			the new name
 	 * @post	The name is set to the given name
 	 * 			| new.getName() == name
+	 * @throws	IllegalArgumentException
+	 * 			Throws this error when the given name is not valid
+	 * 			| !isValidName(name)	
 	 */
 	@Raw
 	private void setName(String name) {
-		this.name = name;
+		
 	}
 	
 	/**
@@ -89,9 +97,9 @@ public abstract class Character {
 		return this.name;
 	}
 	
-	/***********************
-	 * Hitpoints
-	 ***********************/
+	/*************************************
+	 * Hitpoints - nominal programming
+	 *************************************/
 	private int hitpoints;
 	private boolean isFighting = false;
 	private int maxHitpoints;
@@ -111,7 +119,9 @@ public abstract class Character {
 	 * Sets the character's hitpoints to the given hitpoints
 	 * @param 	hitpoints
 	 * 			the new amount of hitpoints
-	 * @post	The character's hitpoints are set to the given hitpoints
+	 * @pre		The given amount of hitpoints is a valid amount.
+	 * 			| canHaveAsHitpoints(hitpoints)
+	 * @post	The character's hitpoints are set to the given hitpoints.
 	 * 			| new.getHitpoints() == hitpoints
 	 */
 	private void setHitpoints(int hitpoints) {
@@ -182,6 +192,8 @@ public abstract class Character {
 	 * Set the maximum amount of hitpoints
 	 * @param 	maxHitpoints
 	 * 			the maximum amount of hitpoints
+	 * @pre		The given maximum amount of hitpoints must be a valid amount.
+	 * 			| canHaveAsMaxHitpoints(hitpoints)
 	 * @post	Sets the maximum amount of hitpoints to the given value
 	 * 			| new.getMaxHitpoints() == maxHitpoints
 	 */
@@ -194,10 +206,10 @@ public abstract class Character {
 	 * Increase the maximum amount of hitpoints
 	 * @param 	hitpoints
 	 * 			the new amount of maximum hitpoints
-	 * @post	Increase the amount of maximum hitpoints with the given amount
-	 * 			| new.getMaxHitpoints() == this.getMaxHitpoints() + hitpoints
 	 * @pre		the new amount of maximum hitpoints must be valid
 	 * 			| canHaveAsMaxHitpoints(this.getMaxHitpoints() + hitpoints)
+	 * @post	Increase the amount of maximum hitpoints with the given amount
+	 * 			| new.getMaxHitpoints() == this.getMaxHitpoints() + hitpoints
 	 */
 	public void increaseMaxHitpoints (int hitpoints) {
 		
@@ -207,12 +219,12 @@ public abstract class Character {
 	 * Lowers the maximum amount of hitpoints
 	 * @param 	hitpoints
 	 * 			the new amount of maximum hitpoints
+	 * @pre		the new amount of maximum hitpoints must be valid
+	 * 			| canHaveAsMaxHitpoints(this.getMaxHitpoints() - hitpoints)
 	 * @post	Lower the amount of maximum hitpoints with the given amount
 	 * 			| new.getMaxHitpoints() == this.getMaxHitpoints() - hitpoints
 	 * @post	When the new amount of maximum hitpoints is lower than the current value of hitpoints.
 	 * 			Then the current value of hitpoints is set to the maximum amount of hitpoints.
-	 * @pre		the new amount of maximum hitpoints must be valid
-	 * 			| canHaveAsMaxHitpoints(this.getMaxHitpoints() - hitpoints)
 	 */
 	public void lowerMaxHitpoints (int hitpoints) {
 		
@@ -277,7 +289,7 @@ public abstract class Character {
 	 * 			| ...
 	 */
 	public boolean canEquipItem(Item item) {
-		return true;
+		return false;
 	}
 	
 	/**
@@ -328,8 +340,9 @@ public abstract class Character {
 	 * Picks an item up from a dead body or from the ground
 	 * @param	item
 	 * 			The item to be picked up
-	 * @post	Picks an item up from a dead body or from the ground when it can be picked up
+	 * @pre		The character must be able te pick up the item.
 	 * 			| canPickItem(item)
+	 * @post	Picks an item up from a dead body or from the ground.
 	 */
 	public void pickUp(Item item) {
 		

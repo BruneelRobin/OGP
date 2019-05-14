@@ -9,6 +9,10 @@ package MindCraft;
 
 public class Monster extends Character {
 	
+	/***********************
+	 * Constructors
+	 ***********************/
+	
 	/**
 	 * Creates a monster.
 	 * @post	Creates a monster with the given name.
@@ -23,16 +27,14 @@ public class Monster extends Character {
 		setProtection(protection);
 	}
 	
+	/********************************
+	 * Damage - nominal programming
+	 ********************************/
+	
 	/**
 	 * Variable referencing the damage of a monster.
 	 */
 	private int damage = 0;
-	
-	/**
-	 * Variable referencing the protection of a monster.
-	 */
-	private int protection = 0;
-	
 	
 	/**
 	 * Set the damage of a monster to a given amount of damage.
@@ -46,6 +48,24 @@ public class Monster extends Character {
 	}
 	
 	/**
+	 * Return the damage of this monster.
+	 * @return	Return the damage of this monster.
+	 */
+	public int getDamage() {
+		return this.damage;
+	}
+
+	
+	/********************************
+	 * Protection
+	 ********************************/
+	
+	/**
+	 * Variable referencing the protection of a monster.
+	 */
+	private int protection = 0;
+	
+	/**
 	 * Set the protection of a monster to a given amount of protection.
 	 * 
 	 * @param	protection
@@ -54,14 +74,6 @@ public class Monster extends Character {
 	 */
 	private void setProtection(int protection) {
 		this.protection = protection;
-	}
-	
-	/**
-	 * Return the damage of this monster.
-	 * @return	Return the damage of this monster.
-	 */
-	public int getDamage() {
-		return this.damage;
 	}
 	
 	
@@ -73,6 +85,10 @@ public class Monster extends Character {
 	public int getProtection() {
 		return this.protection;
 	}
+	
+	/***********************
+	 * Other Methods
+	 ***********************/
 	
 	/**
 	 * Return a boolean whether the monster wants to take this item
