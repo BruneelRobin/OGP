@@ -8,45 +8,51 @@ package MindCraft;
  */
 public class Weapon extends Item {
 	
-	/**
-	 * TODO: implementeren
-	 * 
-	 * @param identification
-	 * @param weight
-	 * @param value
-	 * @param holder
-	 * @param parentBackpack
-	 */
-	public Weapon(long identification, float weight, int value, Character holder, Backpack parentBackpack) {
-		super(identification, weight, value, holder, parentBackpack);
-	}
-	
 	/***********************
 	 * Constructors
 	 ***********************/
+	
+	/**
+	 * TODO: implementeren
+	 * 
+	 * @param	identification
+	 * @param	weight
+	 * @param	value
+	 * @param	holder
+	 * @param 	parentBackpack
+	 */
+	public Weapon(int damage, float weight, int value, Character holder, Backpack parentBackpack) {
+		super(weight, value, holder, parentBackpack);
+		//if (!isValidDamage(damage)) {
+		//	assert false; // preconditie
+		//}
+		
+		setDamage(damage); //nominaal dus condities OK
+	}
 	
 	
 	
 	/**************************************
 	 * Identification - total programming
 	 **************************************/
-	private final long identification = generateIdentification();
 	
-	/**
-	 * 
-	 */
-	public boolean isValidIdentification(long identification) {
-		return false;
-		
+	@Override
+	protected long generateIdentification() {
+		return 0;
 	}
 	
 	/**
 	 * 
+	 * @param 	identification
+	 * 			The identification to check
+	 * @return	Return true when this item can have the given identification number
+	 * 			Return false when this item can't have the given identification number
+	 * 			| result = ...
 	 */
-	protected long generateIdentification() {
-		//random long nummer (floor maxvaluelong) maal zes
-		return 0L;
-		}
+	@Override
+	public boolean canHaveAsIdentification(long identification) {
+		return false;
+	}
 	
 	
 	
@@ -69,12 +75,14 @@ public class Weapon extends Item {
 	private static int MIN_DAMAGE = 1;
 	
 	/**
-	 * Checks whether the given damage is a valid damage
-	 * @returns true if the given damage is divisible by seven, greater than 1 and smaller than 100
-	 * @returns false if the given damage is not valid
+	 * Checks whether the given damage is valid
+	 * @param	damage
+	 * 			The damage to check
+	 * @return 	True if the given damage is divisible by seven, greater than 1 and smaller than 100
+	 * @return 	False if the given damage is not valid
 	 */
 	public static boolean isValidDamage(int damage) {
-		
+		return false;
 	}
 	
 	/**

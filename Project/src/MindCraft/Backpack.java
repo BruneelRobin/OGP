@@ -11,7 +11,7 @@ import be.kuleuven.cs.som.annotate.Basic;
  * @version 1.0 - 2019
  *
  */
-public class Backpack {
+public class Backpack extends Item implements Container {
 	
 	private static int backpackCount = 0;
 	
@@ -21,11 +21,14 @@ public class Backpack {
 	
 	/**
 	 * Creates a backpack
+	 * 
+	 * @pre		The given capacity is valid
+	 * 			| isValidCapacity(capacity)
 	 */
-	public Backpack () {
+	public Backpack (float capacity, float weight, int value, Character holder, Backpack parentBackpack) {
+		super(weight, value, holder, parentBackpack);
 		
-		
-		
+		setCapacity(capacity);
 		backpackCount ++;
 	}
 	
@@ -34,24 +37,24 @@ public class Backpack {
 	/**************************************
 	 * Identification - total programming
 	 **************************************/
-	private final long identification = generateIdentification();
 	
-	
-	/**
-	 * 
-	 */
-	public boolean isValidIdentification(long identification) {
-		return false;
-		
+	@Override
+	protected long generateIdentification() {
+		return 0;
 	}
 	
 	/**
 	 * 
+	 * @param 	identification
+	 * 			The identification to check
+	 * @return	Return true when this item can have the given identification number
+	 * 			Return false when this item can't have the given identification number
+	 * 			| result = ...
 	 */
-	protected long generateIdentification() {
-		//binomiaal met backpackCount
-		return 0L;
-		}
+	@Override
+	public boolean canHaveAsIdentification(long identification) {
+		return false;
+	}
 	
 
 	
@@ -82,6 +85,18 @@ public class Backpack {
 	 */
 	private void setCapacity(float capacity) {
 		this.capacity = capacity;
+	}
+	
+	/**
+	 * Return true when the given capacity is valid
+	 * @param 	capacity
+	 * 			The capacity to check
+	 * @return	Return true when the given capacity is valid
+	 * 			Return false when the given capacity is invalid
+	 * 			| result == ...
+	 */
+	public static boolean isValidCapacity (float capacity) {
+		return false;
 	}
 	
 	/**********************************

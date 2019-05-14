@@ -8,7 +8,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @version 1.0 - 2019
  *
  */
-public class Purse extends Item {
+public class Purse extends Item implements Container {
 	
 	/***********************
 	 * Constructors
@@ -16,9 +16,12 @@ public class Purse extends Item {
 	
 	/**
 	 * Creates a purse
+	 * @pre		The given capacity is valid
+	 * 			| isValidCapacity (capacity)
 	 */
-	public Purse () {
-		
+	public Purse (int capacity, float weight, int value, Character holder, Backpack parentBackpack) {
+		super(weight, value, holder, parentBackpack);
+		setCapacity(capacity);
 	}
 	
 	
@@ -26,23 +29,24 @@ public class Purse extends Item {
 	/**************************************
 	 * Identification - total programming
 	 **************************************/
-	private final long identification = generateIdentification();
 	
-	/**
-	 * 
-	 */
-	public boolean isValidIdentification(long identification) {
-		return false;
-		
+	@Override
+	protected long generateIdentification() {
+		return 0;
 	}
 	
 	/**
 	 * 
+	 * @param 	identification
+	 * 			The identification to check
+	 * @return	Return true when this item can have the given identification number
+	 * 			Return false when this item can't have the given identification number
+	 * 			| result = ...
 	 */
-	protected long generateIdentification() {
-		//groot geheel getal(mag negatief)
-		return 0L;
-		}
+	@Override
+	public boolean canHaveAsIdentification(long identification) {
+		return false;
+	}
 	
 
 	
@@ -71,6 +75,18 @@ public class Purse extends Item {
 	@Raw
 	private void setCapacity(int capacity) {
 		this.capacity = capacity;
+	}
+	
+	/**
+	 * Return true when the given capacity is valid
+	 * @param 	capacity
+	 * 			The capacity to check
+	 * @return	Return true when the given capacity is valid
+	 * 			Return false when the given capacity is invalid
+	 * 			| result == ...
+	 */
+	public static boolean isValidCapacity (int capacity) {
+		return false;
 	}
 	
 	/***********************

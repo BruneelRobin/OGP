@@ -1,5 +1,6 @@
 package MindCraft;
 
+import be.kuleuven.cs.som.annotate.*;
 
 /**
  * A class of items
@@ -13,46 +14,92 @@ public abstract class Item {
 	 * Constructors
 	 ***********************/
 	
-	/**
-	 * Creates a raw item
-	 * @post The value of this is set to -1
-	 * 		 | new.getValue() == -1
-	 */
-	@Model @Raw
-	protected Item() {
-		
-
-			}
+	// TODO:	* nieuwe naam voor holder, want niet altijd gedefiniëerd (ofwel in bp ofwel in anchor)
+	//			* subklasses aanpassen
 	
 	/**
-	 * 
-	 * 
-	 * 
-	 * 
+	 * Creates a new item
 	 */
 	@Model
-	protected void initialize(long identification, float weight, int value, Character holder, Backpack parentBackpack) {
+	protected Item(float weight, int value) {
 		
-		setIdentification(identification);
-		setWeight(weight);
+		//if (canInitialize(weight, value, holder, parentBackpack))
+		// CHECKERS
+		
+		this.identification = generateIdentification();
+		
+		if (isValidWeight(weight)) {
+			this.weight = weight;
+		} else {
+			this.weight = getDefaultWeight();
+		}
+		
 		setValue(value);
-		setHolder(holder);
-		setParentBackpack(parentBackpack);
+		//setHolder(holder);
+		//setParentBackpack(parentBackpack);
+		//parentBackpack.addItem(this);
+		
 		
 	}
+	
+	/**
+	 * Creates a new item
+	 */
+	@Model
+	protected Item(float weight, int value, Backpack parentBackpack) {
+		
+		this(weight, value);
+		setParentBackpack(parentBackpack);
+		parentBackpack.addItem(this);
+		
+		
+	}
+	
+	/**
+	 * Creates a new item
+	 */
+	@Model
+	protected Item(float weight, int value, Character holder) {
+		
+		this(weight, value);
+		setHolder(holder);
+		//setParentBackpack(parentBackpack);
+		//parentBackpack.addItem(this);
+		
+		
+	}
+	
+	/*protected void initialize (int value, Character holder, Backpack parentBackpack) {
+	}*/
 	
 	/*************************************
 	 * Identification - total programming
 	 *************************************/
 	
+	private final long identification;
 	
 	/**
-	 * Returns the item's identification
-	 * @Return Returns the item's identification
+	 * Return the item's identification
+	 * @return Return the item's identification
 	 */
-	public abstract long getIdentification();
+	public long getIdentification() {
+		return this.identification;
+	}
 	
-
+	/**
+	 * Return a valid id for this item
+	 * @return	Return a valid id for this item
+	 */
+	protected abstract long generateIdentification();
+	
+	/**
+	 * 
+	 * @param 	identification
+	 * 			The identification to check
+	 * @return	Return true when this item can have the given identification number
+	 * 			Return false when this item can't have the given identification number
+	 */
+	public abstract boolean canHaveAsIdentification(long identification);
 
 	
 	
@@ -70,14 +117,22 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Sets the item's weight to the given weight
-	 * @param weight
-	 * 		  The new value of the weight
-	 * @post  The weight is set to the given weight
-	 * 		  | new.getWeight() == weight
+	 * Return true when the given weight is valid
+	 * @param 	weight
+	 * 			the weight to check
+	 * @return	Return true when the given weight is valid
+	 * 			Return false when the given weight is invalid
 	 */
-	private void setWeight(float weight) {
-		this.weight = weight;
+	public boolean isValidWeight(float weight) {
+		return false;
+	}
+	
+	/**
+	 * Return the default weight
+	 * @return	Return the default weight
+	 */
+	public float getDefaultWeight () {
+		return 100;
 	}
 	
 	
@@ -86,7 +141,7 @@ public abstract class Item {
 	/***********************
 	 * Value
 	 ***********************/
-	private int value = -1;
+	private int value;
 	
 	/**
 	 * Returns the item's value 
