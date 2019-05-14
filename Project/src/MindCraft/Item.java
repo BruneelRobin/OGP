@@ -14,48 +14,46 @@ public abstract class Item {
 	 ***********************/
 	
 	/**
-	 * Creates an item
+	 * Creates a raw item
+	 * @post The value of this is set to -1
+	 * 		 | new.getValue() == -1
 	 */
-	public Item(long identification, float weight, int value, Character holder, Backpack parentBackpack) {
+	@Model @Raw
+	protected Item() {
 		
+
+			}
+	
+	/**
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+	@Model
+	protected void initialize(long identification, float weight, int value, Character holder, Backpack parentBackpack) {
+		
+		setIdentification(identification);
+		setWeight(weight);
+		setValue(value);
+		setHolder(holder);
+		setParentBackpack(parentBackpack);
 		
 	}
-	
 	
 	/*************************************
 	 * Identification - total programming
 	 *************************************/
-	private long identification;
+	
 	
 	/**
 	 * Returns the item's identification
 	 * @Return Returns the item's identification
 	 */
-	public long getIdentification() {
-		return this.identification;
-	}
+	public abstract long getIdentification();
 	
 
-	/**
-	 * Sets the item's identification to the given identification
-	 * @param identification
-	 * 		  the new identification
-	 * @post  The item's new identification is the given identification
-	 * 		  | new.getIdentification() == identification
-	 */
-	private void setIdentification(long identification) {
-		this.identification = identification;
-	}
-	
-	/**
-	 * Returns whether or not the given identification is valid
-	 * @return true when the identification is valid
-	 * @return false when the identification is not valid
-	 * 
-	 */
-	public static boolean isValidIdentification(long identification) {
-		return false;
-	}
+
 	
 	
 	/*****************************

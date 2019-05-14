@@ -14,6 +14,33 @@ public class Weapon extends Item {
 	
 	
 	
+	/**************************************
+	 * Identification - total programming
+	 **************************************/
+	private final long identification = generateIdentification();
+	
+	/**
+	 * 
+	 */
+	public boolean isValidIdentification(long identification) {
+		return false;
+		
+	}
+	
+	/**
+	 * 
+	 */
+	protected long generateIdentification() {
+		//random long nummer (floor maxvaluelong) maal zes
+		return 0L;
+		}
+	
+	
+	
+	
+	
+	
+	
 	/********************************
 	 * Damage - nominal programming
 	 ********************************/
@@ -90,6 +117,10 @@ public class Weapon extends Item {
 	public void downgrade(int amount) {
 		
 	}
+	
+	
+	
+	
 	
 	
 	

@@ -21,6 +21,31 @@ public class Purse extends Item {
 		
 	}
 	
+	
+	
+	/**************************************
+	 * Identification - total programming
+	 **************************************/
+	private final long identification = generateIdentification();
+	
+	/**
+	 * 
+	 */
+	public boolean isValidIdentification(long identification) {
+		return false;
+		
+	}
+	
+	/**
+	 * 
+	 */
+	protected long generateIdentification() {
+		//groot geheel getal(mag negatief)
+		return 0L;
+		}
+	
+
+	
 	/*******************************
 	 * Capacity - total programming
 	 *******************************/

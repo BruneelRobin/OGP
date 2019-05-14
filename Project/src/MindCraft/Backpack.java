@@ -13,6 +13,8 @@ import be.kuleuven.cs.som.annotate.Basic;
  */
 public class Backpack {
 	
+	private static int backpackCount = 0;
+	
 	/***********************
 	 * Constructors
 	 ***********************/
@@ -22,7 +24,39 @@ public class Backpack {
 	 */
 	public Backpack () {
 		
+		
+		
+		backpackCount ++;
 	}
+	
+	
+	
+	/**************************************
+	 * Identification - total programming
+	 **************************************/
+	private final long identification = generateIdentification();
+	
+	
+	/**
+	 * 
+	 */
+	public boolean isValidIdentification(long identification) {
+		return false;
+		
+	}
+	
+	/**
+	 * 
+	 */
+	protected long generateIdentification() {
+		//binomiaal met backpackCount
+		return 0L;
+		}
+	
+
+	
+	
+	
 	
 	/*******************************
 	 * Capacity - total programming

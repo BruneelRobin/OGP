@@ -28,8 +28,8 @@ public class Armor extends Item {
 	 * Returns the armor's protection
 	 * @return Returns the armor's protection
 	 */
-public float getProtection() {
-	return  ;
+	public float getProtection() {
+		return  ;
 
 }
 
@@ -60,6 +60,26 @@ private void setProtection(int protection) {
 	public void repair(int amount) {
 		
 	}
+	
+
+	
+	
+	/**************************************
+	 * Identification - total programming
+	 **************************************/
+	private final long identification;
+
+	
+	/**
+	 * 
+	 */
+	@Override
+	public boolean canHaveAsIdentification(long identification) {
+		return false;
+		
+	}
+	
+
 	
 	
 	

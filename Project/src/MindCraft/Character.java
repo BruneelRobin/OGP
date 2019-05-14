@@ -39,7 +39,14 @@ public abstract class Character {
 	 * 			Throws this exception when the given name is not valid
 	 * 			| !isValidName(name)
 	 */
-	public Character(String name, int hitpoints) throws IllegalArgumentException {
+	@Model
+	protected Character(String name, int hitpoints) throws IllegalArgumentException {
+		
+		if (!isValidName(name)) {
+			throw new IllegalArgumentException("Invalid name!");
+		}
+		setName(name);
+		setHitpoints(hitpoints);
 		
 	}
 	
