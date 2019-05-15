@@ -49,4 +49,24 @@ public class MathHelper {
 		long number = min+((long)(r.nextDouble()*(max-min)));
 		return number;
 	}
+	
+	/**
+	 * Return the value clamped between the min and max
+	 * @param	value
+	 * 			The value to clamp
+	 * @param	min
+	 * 			The minimum value
+	 * @param	max
+	 * 			The maximum value
+	 * @return	Return the minimum value when value is smaller than min, the maximum value when value is
+	 * 			higher than max and value otherwise.
+	 */
+	public static int clamp (int value, int min, int max) {
+		if (value < min) {
+			return min;
+		} else if (value > max) {
+			return max;
+		}
+		return value;
+	}
 }
