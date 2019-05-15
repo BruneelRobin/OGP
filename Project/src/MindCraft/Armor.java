@@ -85,15 +85,26 @@ public class Armor extends Item {
 	private final int fullProtection;
 	private int currentProtection;
 	
+	/**
+	 * Returns the fullprotection of an armor
+	 * @return Returns the fullprotection of an armor
+	 * 		   | result == this.fullProtection
+	 */
+	public int getFullProtection() {
+		return this.fullProtection;
+	}
+	
 	
 	/**
-	 * Returns the armor's protection
-	 * @return Returns the armor's protection
+	 * Returns the armor's current protection
+	 * @return Returns the armor's current protection
 	 */
-	public float getProtection() {
-		return 0f;
+	public int getProtection() {
+		return this.currentProtection;
 
 	}
+	
+	
 
 	/**
 	 * Sets the protection to the given protection
@@ -133,6 +144,46 @@ public class Armor extends Item {
 	public void repair(int amount) {
 		
 	}
+	
+	
+	
+	/***********************
+	 * Value
+	 ***********************/
+	
+	private final int MAX_VALUE = 1000;
+	private final int MIN_VALUE = 0;
+	
+	
+	/**
+	 * Returns the value of the armor.
+	 * @return return the value as its function: highest possible value of the armor times
+	 * 		   the current protection percentage of the armor. 
+	 * 		   | result == this.getValue()*(this.getProtection()/this.getFullProtection())
+	 */
+	@Override
+	public int getValue() { 
+		return this.getValue()*(this.getProtection()/this.getFullProtection());
+	
+	}
+	
+	
+	
+	/**
+	 * Returns whether or not the given value is valid
+	 * @param value
+	 * 		  the integer checked for its validity
+	 * @return returns true if the given value is an even number that lies between the minimum and maximum value
+	 * 		   | (value >= MIN_VALUE && value <= MAX_VALUE && value%2 == 0)
+	 * @return returns false if the given value is not even and/or does not lie between the minimum and maximum.
+	 * 
+	 */
+	@Override
+	public boolean canHaveAsValue(int value) {
+		return ((value >= MIN_VALUE) && (value <= MAX_VALUE) && (value%2 == 0));
+		
+		}
+	
 	
 	
 	

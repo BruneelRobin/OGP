@@ -2,8 +2,9 @@ package MindCraft;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
-import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.*;
 
 /**
  * A class of backpacks
@@ -41,7 +42,7 @@ public class Backpack extends Item implements Container {
 	/**
 	 * Return a valid identification number for this class
 	 * @return	Return a valid identification number for this class which equals the sum of all binomial
-	 * 			coefficiënts in the nth row with n the backpack count after creating this class.
+	 * 			coefficients in the nth row with n the backpack count after creating this class.
 	 * 			| result == 2^(backpackCount+1)
 	 */
 	@Override
@@ -113,7 +114,7 @@ public class Backpack extends Item implements Container {
 	 * @invar Each item references back to this backpack (bidirection relation)
 	 *        | item.getParentBackpack() == this
 	 */	
-	HashMap<Long, ArrayList> content = new HashMap<Long, ArrayList>();
+	private final HashMap<Long, HashSet<Item>> content = new HashMap<Long, HashSet<Item>>();
 	
 	/**
 	 * Set the value at the given key to the given arraylist
@@ -122,8 +123,8 @@ public class Backpack extends Item implements Container {
 	 * @param 	list
 	 * 			the value used in the dictionary
 	 */
-	private void setContent (long id, ArrayList list) {
-		
+	private void setContent (long id, HashSet<Item> list) {
+		this.content.put(id, list);
 	}
 	
 	/**
@@ -132,8 +133,8 @@ public class Backpack extends Item implements Container {
 	 * 			The key of the dictionary
 	 * @return	Return the list at the given id
 	 */
-	private ArrayList getListAt (long id) {
-		return null;
+	private HashSet<Item> getListAt (long id) {
+		return this.content.get(id);
 	}
 	
 	/**
@@ -144,7 +145,21 @@ public class Backpack extends Item implements Container {
 	 * 			Return false when the current backpack doesn't contain this item
 	 */
 	public boolean containsItem(Item item) {
-		return false;
+		if (!containsId(item.getIdentification()) || !this.getListAt(item.getIdentification()).contains(item)) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Return true when the current backpack contains an item with this identification
+	 * @param 	identification
+	 * 			The identification to be checked
+	 * @return	Return true when the current backpack contains an item with this id
+	 * 			Return false when the current backpack doesn't contain an item with this id
+	 */
+	private boolean containsId (long identification) {
+		return this.content.containsKey(identification);
 	}
 	
 	/**
@@ -155,18 +170,49 @@ public class Backpack extends Item implements Container {
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when the given item is not found in this backpack
 	 */
-	public void removeItem(Item item) throws IllegalArgumentException {
-		
+	protected void removeItem(Item item) throws IllegalArgumentException {
+		if (!containsItem(item)) {
+			throw new IllegalArgumentException ("The given item does not exist in this backpack");
+		} else {
+			HashSet<Item> list = getListAt(item.getIdentification());
+			list.remove(item);
+		}
 	}
 	
 	/**
 	 * Checks whether this backpack can have an item
 	 * @param 	item
 	 * 			The item to check
-	 * @return	Return true when this backpack can have this item
-	 * 			Return false when this backpack can't have this item
+	 * @return	Return false when the item is held by another non dead character than the holder of this backpack
+	 * 			Return false when the given item is a direct or indirect parent backpack of this backpack
+	 * 			Return true otherwise.
+	 * 			
 	 */
 	public boolean canHaveAsItem (Item item) {
+		if (item.getHolder() != null && item.getHolder() != this.getHolder() && item.getHolder().isDead() == false) {
+			return false;
+		} else if (item instanceof Backpack && this.isDirectOrIndirectSubBackpackOf((Backpack)item)) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Return true when the given backpack is a direct or indirect parent backpack of this backpack
+	 * @param 	backpack
+	 * 			the parent backpack to check
+	 * @return	Return true when the given backpack is a direct or indirect parent backpack of this backpack
+	 * 			Return false when the given backpack is not a direct or indirect parent backpack of this backpack
+	 */
+	public boolean isDirectOrIndirectSubBackpackOf (Backpack backpack) {
+		Backpack parent = this.getParentBackpack();
+		while (parent != null) {
+			if (backpack == parent) {
+				return true;
+			}
+			parent = parent.getParentBackpack();
+		}
+		
 		return false;
 	}
 	
@@ -179,9 +225,40 @@ public class Backpack extends Item implements Container {
 	 * 			Throws this error when an item can't be added to this backpack
 	 * 			| !canHaveAsItem(item)
 	 */
-	public void addItem(Item item) throws IllegalArgumentException {
+	@Raw
+	protected void addItem(Item item) throws IllegalArgumentException {
+		if (!canHaveAsItem(item)) {
+			throw new IllegalArgumentException("This item is not valid");
+		}
 		
+		if (!containsId(item.getIdentification())) {
+			HashSet<Item> newList = new HashSet<Item>();
+			newList.add(item);
+			setContent(item.getIdentification(), newList);
+		} else {
+			HashSet<Item> list = getListAt(item.getIdentification());
+			list.add(item);
+		}
 	}
+	
+	/*************************
+	 * Value
+	 *************************/
+	private final int MAX_VALUE = 500;
+	private final int MIN_VALUE = 0;
+	
+	/**
+	 * Change the 
+	 * @param amount
+	 */
+	public void changeValue(int amount) {
+		this.setValue(MathHelper.clamp(this.getValue() + amount, MIN_VALUE, MAX_VALUE));
+	}
+	
+	
+	
+	
+	
 	
 	/*************************
 	 * Other methods

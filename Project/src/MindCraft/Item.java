@@ -90,11 +90,12 @@ public abstract class Item {
 	 * Return true when the given weight is valid
 	 * @param 	weight
 	 * 			the weight to check
-	 * @return	Return true when the given weight is valid
+	 * @return	Return true when the given weight is valid, thus positive.
 	 * 			Return false when the given weight is invalid
 	 */
 	public boolean isValidWeight(float weight) {
-		return false;
+		
+		return (weight >= 0);
 	}
 	
 	/**
@@ -112,6 +113,8 @@ public abstract class Item {
 	 * Value
 	 ***********************/
 	private int value;
+	private abstract final int MAX_VALUE;
+	private abstract final int MIN_VALUE;
 	
 	/**
 	 * Returns the item's value 
@@ -128,8 +131,21 @@ public abstract class Item {
 	 * @post  The value is set to the given value
 	 * 		  | new.getValue() == value
 	 */
-	private void setValue(int value) {
+	protected void setValue(int value) {
 		this.value = value;
+	}
+	
+	/**
+	 * Returns whether or not the given value is valid
+	 * @param value
+	 * 		  the integer checked for its validity
+	 * @return returns true if the given value lies between the minimum and maximum value.
+	 * 		   | (value >= MIN_VALUE && value <= MAX_VALUE)
+	 * @return returns false if the given value does not lie between the minimum and maximum.
+	 * 
+	 */
+	public boolean canHaveAsValue(int value) {
+		return (value >= MIN_VALUE && value <= MAX_VALUE);
 	}
 	
 	
@@ -185,6 +201,20 @@ public abstract class Item {
 		this.parentBackpack = backpack;
 	}
 	
+	/**
+	 * 
+	 */
+	public void moveTo (Backpack backpack) throws IllegalArgumentException {
+		if (!backpack.canHaveAsItem(this)) {
+			throw new IllegalArgumentException ("Invalid backpack to move to");
+		}
+		
+		drop(); // break all previous associations
+		
+		backpack.addItem(this);
+		setParentBackpack(backpack);
+	}
+	
 	
 	/***********************
 	 * Other Methods
@@ -192,19 +222,38 @@ public abstract class Item {
 	
 	/**
 	 * Drops the item to the ground
-	 * @effect The holder of the item is set to null(= on the ground).
-	 * 		   Since this is a bidirectional relation, the item is also removed from the holder.
-	 * 		   |this.setHolder(null)
-	 * 		   |this.getHolder.removeItemFromHolder(this)
+	 * @effect 	When this item is anchored, the holder of the item is set to null(= on the ground).
+	 * 		   	Since this is a bidirectional relation, the item is also removed from the holder.
+	 * 			|this.getAnchor().removeItemFromHolder(this)
+	 * 		   	|this.setAnchor(null)
+	 * @effect 	When this item is in a backpack, the parent backpack of this item is set to null
+	 * 			and since this is a bidirectional, the item is also removed from the backpack.
+	 * 			|this.getParentBackpack().removeItem(this)
+	 * 		   	|this.setParentBackpack(null)
 	 * 	
 	 */
 	public void drop() {
-		
+		if (this.getAnchor() != null) {
+			this.getAnchor().removeItemFromHolder(this);
+			this.setAnchor(null);
+		} else if (this.getParentBackpack() != null) {
+			this.getParentBackpack().removeItem(this);
+			this.setParentBackpack(null);
+		}
 	}
 	
+	/**
+	 * Return the holder of this item
+	 * @return	Return the character associated when equipped on an anchor, does this method recursively
+	 * 			when this item is in a backpack. If a backpack doesn't have a holder this method returns null.
+	 */
 	public Character getHolder() {
-		if (getHolder() != null) {
-			
+		if (getAnchor() != null) {
+			return getAnchor();
+		} else if (getParentBackpack() != null) {
+			return getParentBackpack().getHolder();
+		} else {
+			return null;
 		}
 	}
 	

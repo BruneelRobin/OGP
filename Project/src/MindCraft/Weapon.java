@@ -27,7 +27,28 @@ public class Weapon extends Item {
 		//	assert false; // preconditie
 		//}
 		
+		
 		setDamage(damage); //nominaal dus condities OK
+		this.hasGivenValue = true;
+	}
+	
+	/**
+	 * TODO: implementeren
+	 * 
+	 * @param	identification
+	 * @param	weight
+	 * @param	holder
+	 * @param 	parentBackpack
+	 */
+	public Weapon(int damage, float weight) {
+		super(weight, 0);
+		//if (!isValidDamage(damage)) {
+		//	assert false; // preconditie
+		//}
+		
+		
+		setDamage(damage); //nominaal dus condities OK
+		this.hasGivenValue = false;
 	}
 	
 	
@@ -36,12 +57,22 @@ public class Weapon extends Item {
 	 * Identification - total programming
 	 **************************************/
 	
+	/**
+	 * Generates a valid identification.
+	 * 
+	 * @return Returns a unique, positive long, divisible by 6.
+	 * 		   
+	 */
 	@Override
 	protected long generateIdentification() {
 		long flooredMax = Long.MAX_VALUE/6;
-		long candidate = 
+		long generatedNumber = MathHelper.getRandomLongBetweenRange(0, flooredMax);
+		long candidate = generatedNumber*6;
+		if(!canHaveAsIdentification(candidate)) {
+			assert false;
+		}
 		
-		return 0;
+		return candidate;
 	}
 	
 	/**
@@ -49,10 +80,10 @@ public class Weapon extends Item {
 	 * @param 	identification
 	 * 			The identification to check
 	 * @return	Return true when the given identification number is positive, divisible by 6 and unique.
-	 * 			Uniqueness is always considered true, the chance of colliding is not zero, but neglectable (6.5*10^(-19)).
 	 * 			| result == ((identification > -1) && (identification%6 == 0))
 	 * 			
 	 * @return	Return false when the given identification is not positive and/or not divisible by 6
+	 * @note Uniqueness is always considered true, the chance of colliding is not zero, but neglectable (6.5*10^(-19)).
 	 * 			
 	 */
 	@Override
@@ -144,6 +175,33 @@ public class Weapon extends Item {
 	 */
 	public void downgrade(int amount) {
 		
+	}
+	
+	
+	
+	/***********************
+	 * Value
+	 ***********************/
+	
+	private final int MAX_VALUE = 200;
+	private final int MIN_VALUE = 0;
+	private static final int VALUE_FACTOR = 2;
+	private final boolean hasGivenValue;
+	
+	/**
+	 * Returns the value of the weapon.
+	 * @return if a value was given in the constructor, return that value
+	 * 		   | result == super.getValue()
+	 * @return if no value was given in the constructor, return the value as its function: damage of the weapon times
+	 * 		   the defined value factor. Clamp the result to make sure it lies between the MIN_VALUE and MAX_VALUE.
+	 * 		   | result == this.getDamage()*VALUE_FACTOR
+	 */
+	@Override
+	public int getValue() {
+		if(hasGivenValue == false) {
+		return MathHelper.clamp(this.getDamage()*VALUE_FACTOR, MIN_VALUE, MAX_VALUE); 
+		}
+		return super.getValue();
 	}
 	
 	

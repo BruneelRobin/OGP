@@ -133,7 +133,7 @@ public abstract class Character {
 	 * @post	The character's hitpoints are set to the given hitpoints.
 	 * 			| new.getHitpoints() == hitpoints
 	 */
-	private void setHitpoints(int hitpoints) {
+	protected void setHitpoints(int hitpoints) {
 		this.hitpoints = hitpoints;
 	}
 	
@@ -153,14 +153,17 @@ public abstract class Character {
 	 * 			| new.getHitpoints() == this.getHitpoints() - hitpoints
 	 * @post	when the character takes damage, isFighting is set to true
 	 * 			| new.isFighting() == true
+	 * @pre		The given amount of hitpoints is valid
+	 * 			| hitpoints > 0
 	 */
 	public void takeDamage(int hitpoints) {
-		if (this.hitpoints <= hitpoints) {
-			this.hitpoints = 0;
-			this.setDead(true)
-		} else {
-			this.hitpoints = this.hitpoints - hitpoints;
+		int newValue = getHitpoints()-hitpoints;
+		if (newValue <= 0) {
+			newValue = 0;
 		}
+		
+		setFighting (true);
+		setHitpoints(newValue);
 	}
 	
 	/**
@@ -170,7 +173,7 @@ public abstract class Character {
 	 * @post	Sets the current fighting state to the given state
 	 * 			| new.isFighting() == isFighting
 	 */
-	private void setFighting(boolean isFighting) {
+	protected void setFighting(boolean isFighting) {
 		this.isFighting = isFighting;
 	}
 	
@@ -291,7 +294,7 @@ public abstract class Character {
 	 *        | for (HashMap.Entry<Integer,Item> entry : anchors.entrySet())
 	 *        | 	entry.getValue().getHolder() == this
 	 */	
-	HashMap<Integer, Item> anchors = new HashMap<Integer, Item>();
+	private final HashMap<Integer, Item> anchors = new HashMap<Integer, Item>();
 	
 	/**
 	 * Set the item at the given anchorId

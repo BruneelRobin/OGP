@@ -19,8 +19,8 @@ public class Purse extends Item implements Container {
 	 * @pre		The given capacity is valid
 	 * 			| isValidCapacity (capacity)
 	 */
-	public Purse (int capacity, float weight, int value) {
-		super(weight, value);
+	public Purse (int capacity, float weight) {
+		super(weight, 0);
 		setCapacity(capacity);
 	}
 	
@@ -30,25 +30,19 @@ public class Purse extends Item implements Container {
 	 * Identification - total programming
 	 **************************************/
 	
-	@Override
-	protected long generateIdentification() {
-		return 0;
-	}
+	
 	
 	/**
-	 * 
-	 * @param 	identification
-	 * 			The identification to check
-	 * @return	Return true when this item can have the given identification number
-	 * 			Return false when this item can't have the given identification number
-	 * 			| result = ...
+	 * Generates a valid identification for a purse.
+	 * @return returns a unique long
+	 * 		   The uniqueness of the generated long is always considered true
+	 * 		   The chance of colliding is not zero, but neglectable (5.4*10^(-20))
 	 */
 	@Override
-	public boolean canHaveAsIdentification(long identification) {
-		return false;
+	protected long generateIdentification() {
+		long candidate = MathHelper.getRandomLongBetweenRange(Long.MIN_VALUE, Long.MAX_VALUE);
+		return candidate;
 	}
-	
-
 	
 	/*******************************
 	 * Capacity - total programming
@@ -123,8 +117,9 @@ public class Purse extends Item implements Container {
 	 * 			| new.getContent() == 0
 	 */
 	@Raw
-	public void makeTorn() {
+	private void makeTorn() {
 		setTorn(true);
+		this.setContent(0);
 	}
 	
 	/**********************************
@@ -158,15 +153,50 @@ public class Purse extends Item implements Container {
 	 * Adds the given amount
 	 * @param 	amount
 	 * 			The amount to add
-	 * @post	The new content is increased with the given amount
+	 * @post	The new content is increased with the given amount (when amount is > 0)
 	 * 			| this.getContent() == this.getContent() + amount
 	 * @effect	When the new content is higher than the allowed capacity this purse is torn
 	 * 			| makeTorn()
 	 * @throws	TornException
 	 * 			throws this error when you try to add ducates to a torn purse
 	 */
-	public void add (int amount) throws TornException {
+	public void add (int amount) throws TornException, IllegalArgumentException {
+		if (isTorn()) {
+			throw new TornException(this);
+		}
 		
+		int newAmount = getContent() + amount;
+		if (newAmount > getContent() && newAmount <= getCapacity()) {
+			setContent(getContent() + amount);
+		} else if (newAmount > getCapacity()) {
+			makeTorn();
+		} else {
+			// overflow of negative amount
+			throw new IllegalArgumentException ("Illegal amount given");
+		}
+	}
+	
+	/**
+	 * Adds the given amount
+	 * @param 	amount
+	 * 			The amount to remove
+	 * @post	The new content is decreased with the given amount (when amount is > 0 and the new amount > 0)
+	 * 			| this.getContent() == this.getContent() - amount
+	 * @throws	TornException
+	 * 			throws this error when you try to remove ducates from a torn purse
+	 */
+	public void remove (int amount) throws TornException, IllegalArgumentException {
+		if (isTorn()) {
+			throw new TornException(this);
+		}
+		
+		int newAmount = getContent() - amount;
+		if (newAmount < getContent() && newAmount > 0) {
+			setContent(newAmount);
+		} else {
+			// overflow of negative amount
+			throw new IllegalArgumentException ("Illegal amount given");
+		}
 	}
 	
 	/**
@@ -180,10 +210,19 @@ public class Purse extends Item implements Container {
 	 * @effect	When the new content is higher than the allowed capacity this purse is torn
 	 * 			| makeTorn()
 	 * @throws	TornException
-	 * 			throws this error when you try to add ducates to a torn purse
+	 * 			throws this error when you try to add or take ducates from a torn purse
 	 */
 	public void add (Purse purse) throws TornException {
-		
+		if (!purse.isTorn() && !this.isTorn()) {
+			int c = purse.getContent();
+			
+			purse.remove(c);
+			this.add(c);
+		} else if (purse.isTorn()) {
+			throw new TornException(purse);
+		} else {
+			throw new TornException(this);
+		}
 	}
 	
 	/***********************
@@ -202,11 +241,11 @@ public class Purse extends Item implements Container {
 	
 	/**
 	 * Return the total weight of this purse
-	 * @return	Return the total weight of this purse
-	 * 			| result == this.getContent() * DUCATE_WEIGHT
+	 * @return	Return the total weight this purse: weight of the purse combined with weiht of its content.
+	 * 			| result == (this.getContent() * DUCATE_WEIGHT) + this.getWeight()
 	 */
 	public float getTotalWeight() {
-		return 0;
+		return ((float)(this.getContent())*DUCATE_WEIGHT + this.getWeight());
 	}
 	
 	/**
