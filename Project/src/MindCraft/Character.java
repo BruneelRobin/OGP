@@ -119,7 +119,7 @@ public abstract class Character {
 	 * @return	Return false when the character can't have the amount of hitpoints
 	 */
 	public boolean canHaveAsHitpoints(int hitpoints) {
-		return hitpoints >= 0 && (isFighting() || isPrime(hitpoints));
+		return hitpoints >= 0 && (isFighting() || MathHelper.isPrime(hitpoints));
 	}
 	
 	/**
@@ -131,7 +131,7 @@ public abstract class Character {
 	 * @post	The character's hitpoints are set to the given hitpoints.
 	 * 			| new.getHitpoints() == hitpoints
 	 */
-	private void setHitpoints(int hitpoints) {
+	protected void setHitpoints(int hitpoints) {
 		this.hitpoints = hitpoints;
 	}
 	
@@ -151,9 +151,17 @@ public abstract class Character {
 	 * 			| new.getHitpoints() == this.getHitpoints() - hitpoints
 	 * @post	when the character takes damage, isFighting is set to true
 	 * 			| new.isFighting() == true
+	 * @pre		The given amount of hitpoints is valid
+	 * 			| hitpoints > 0
 	 */
 	public void takeDamage(int hitpoints) {
+		int newValue = getHitpoints()-hitpoints;
+		if (newValue <= 0) {
+			newValue = 0;
+		}
 		
+		setFighting (true);
+		setHitpoints(newValue);
 	}
 	
 	/**
@@ -163,7 +171,7 @@ public abstract class Character {
 	 * @post	Sets the current fighting state to the given state
 	 * 			| new.isFighting() == isFighting
 	 */
-	private void setFighting(boolean isFighting) {
+	protected void setFighting(boolean isFighting) {
 		this.isFighting = isFighting;
 	}
 	

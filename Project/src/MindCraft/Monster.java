@@ -106,6 +106,24 @@ public class Monster extends Character {
 	 */
 	@Override
 	public void hit(Character character) {
+		int rnd = (int)MathHelper.getRandomLongBetweenRange(0, 100);
 		
+		if (rnd < getHitpoints()) {
+			rnd = getHitpoints();
+		}
+		
+		if (rnd >= character.getProtection()) {
+			int damage = getDamage();
+			
+			character.takeDamage(damage);
+			
+			if (character.isDead()) {
+				setFighting(false);
+				int newHealth = MathHelper.getLowerPrime(getHitpoints(), 0);
+				setHitpoints(newHealth);
+				
+				collectTreasures(character);
+			}
+		}
 	}
 }
