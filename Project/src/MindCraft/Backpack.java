@@ -42,7 +42,7 @@ public class Backpack extends Item implements Container {
 	/**
 	 * Return a valid identification number for this class
 	 * @return	Return a valid identification number for this class which equals the sum of all binomial
-	 * 			coefficiënts in the nth row with n the backpack count after creating this class.
+	 * 			coefficients in the nth row with n the backpack count after creating this class.
 	 * 			| result == 2^(backpackCount+1)
 	 */
 	@Override
@@ -239,6 +239,25 @@ public class Backpack extends Item implements Container {
 			list.add(item);
 		}
 	}
+	
+	/*************************
+	 * Value
+	 *************************/
+	private final int MAX_VALUE = 500;
+	private final int MIN_VALUE = 0;
+	
+	/**
+	 * Change the 
+	 * @param amount
+	 */
+	public void changeValue(int amount) {
+		this.setValue(MathHelper.clamp(this.getValue() + amount, MIN_VALUE, MAX_VALUE));
+	}
+	
+	
+	
+	
+	
 	
 	/*************************
 	 * Other methods
