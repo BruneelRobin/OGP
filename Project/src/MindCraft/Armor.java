@@ -1,7 +1,6 @@
 package MindCraft;
 
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * A class of armors.
