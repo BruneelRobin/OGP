@@ -14,7 +14,8 @@ public abstract class Item {
 	 * Constructors
 	 ***********************/
 	
-	// TODO:	* nieuwe naam voor holder, want niet altijd gedefiniëerd (ofwel in bp ofwel in anchor)
+	// TODO:	* holden en parentBackpack weg uit constructor want zorgt voor problemen met validatie
+	//			* nieuwe naam voor holder, want niet altijd gedefiniëerd (ofwel in bp ofwel in anchor)
 	//			* subklasses aanpassen
 	
 	/**
