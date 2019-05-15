@@ -253,8 +253,12 @@ public class Backpack extends Item implements Container {
 	private final int MIN_VALUE = 0;
 	
 	/**
-	 * Change the 
+	 * Change the own value of a backpack
 	 * @param amount
+	 * 		  The amount of change, positive if an increase is wished for, negative if the value should be decreased.
+	 * @post the value of the backpack is set to the sum of the old value and the given amount.
+	 * 		 The result is then clamped, to make sure it lies between the MIN_VALUE and MAX_VALUE.
+	 *       | new.getValue() == MathHelper.clamp(old.getValue() + amount, MIN_VALUE, MAX_VALUE)
 	 */
 	public void changeValue(int amount) {
 		this.setValue(MathHelper.clamp(this.getValue() + amount, MIN_VALUE, MAX_VALUE));

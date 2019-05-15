@@ -159,9 +159,8 @@ public class Weapon extends Item {
 	 * 
 	 */
 	public void upgrade(int amount) {
-		
-		
-	}
+		this.setDamage(this.getDamage() + amount);
+		}
 	
 	
 	/**
@@ -174,6 +173,7 @@ public class Weapon extends Item {
 	 * 
 	 */
 	public void downgrade(int amount) {
+		this.setDamage(this.getDamage() - amount);
 		
 	}
 	
