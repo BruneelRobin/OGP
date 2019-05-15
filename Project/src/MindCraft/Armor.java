@@ -1,5 +1,8 @@
 package MindCraft;
 
+import java.util.HashSet;
+import java.util.List;
+
 /**
  * A class of armors.
  * 
@@ -26,20 +29,36 @@ public class Armor extends Item {
 	 * 			| isValidProtection(fullProtection) && protection <= fullProtection
 	 */
 	
-	protected Armor(int protection, int fullProtection, float weight, int value) {
-		super(weight, value);
+	protected Armor(long identification, int protection, int fullProtection, float weight, int value) {
+		super(identification, weight, value);
+		
+		if (!canHaveAsIdentification(identification)) {
+			identification = 
+		}
 		
 		this.currentProtection = protection;
 		this.fullProtection = fullProtection;
+		ids.add(getIdentification());
 	}
 	
 	/**************************************
 	 * Identification - total programming
 	 **************************************/
 	
+	/**
+	 * 
+	 */
 	@Override
 	protected long generateIdentification() {
-		return 0;
+		long min = 3L;
+		long max = Long.MAX_VALUE;
+		long candidate = MathHelper.getRandomLongBetweenRange(min, max);
+		
+		if (!canHaveAsIdentification (candidate)) {
+			return generateIdentification();
+		} else {
+			return candidate;
+		}
 	}
 	
 	/**
@@ -48,14 +67,14 @@ public class Armor extends Item {
 	 * 			The identification to check
 	 * @return	Return true when this item can have the given identification number
 	 * 			Return false when this item can't have the given identification number
-	 * 			| result = ...
+	 * 			| result == MathHelper.isPrime(identification) && ids.contains(identification) == false
 	 */
 	@Override
 	public boolean canHaveAsIdentification(long identification) {
-		return false;
+		return MathHelper.isPrime(identification) && ids.contains(identification) == false;
 	}
 
-
+	private final HashSet<Long> ids = new HashSet<Long>();
 
 
 	/***********************

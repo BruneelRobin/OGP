@@ -391,37 +391,4 @@ public abstract class Character {
 	 * 			Returns false when the character doesn't want to take this item
 	 */
 	public abstract boolean wantsToTakeItem(Item item);
-	
-	/**
-	 * Return the closest prime number between the given boundaries
-	 * @param 	number
-	 * 			The number to find the closest prime for
-	 * @param 	min
-	 * 			The minimum boundary
-	 * @param 	max
-	 * 			The maximum boundary
-	 * @return	Return the closest prime number between the given boundaries
-	 */
-	private static int getClosestPrime(int number, int min, int max) {
-		return 2;
-	}
-	
-	/**
-	 * Return whether the given number is a prime number
-	 * @param 	number
-	 * 			The number to check
-	 * @return	Return true when the given number is a prime number
-	 * @return	Return false otherwise
-	 */
-	private static boolean isPrime(int number) 
-	{
-	        if (number == 2) 
-	            return true;
-	        if (number < 2 || number % 2 == 0) 
-	            return false;
-	        for (int i = 3; i * i <= number; i += 2)
-	            if (number % i == 0) 
-	                return false;
-	        return true;
-	}
 }
