@@ -170,6 +170,7 @@ public class Backpack extends Item implements Container {
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when the given item is not found in this backpack
 	 */
+	@Raw
 	protected void removeItem(Item item) throws IllegalArgumentException {
 		if (!containsItem(item)) {
 			throw new IllegalArgumentException ("The given item does not exist in this backpack");
@@ -185,6 +186,8 @@ public class Backpack extends Item implements Container {
 	 * 			The item to check
 	 * @return	Return false when the item is held by another non dead character than the holder of this backpack
 	 * 			Return false when the given item is a direct or indirect parent backpack of this backpack
+	 * 			Return false when the weight of the backpack with this item is higher than the capacity 
+	 * 			of this backpack.
 	 * 			Return true otherwise.
 	 * 			
 	 */
@@ -192,6 +195,8 @@ public class Backpack extends Item implements Container {
 		if (item.getHolder() != null && item.getHolder() != this.getHolder() && item.getHolder().isDead() == false) {
 			return false;
 		} else if (item instanceof Backpack && this.isDirectOrIndirectSubBackpackOf((Backpack)item)) {
+			return false;
+		} else if (this.getTotalWeight() + item.getWeight() > this.getCapacity()) {
 			return false;
 		}
 		return true;

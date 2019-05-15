@@ -36,7 +36,17 @@ public class Hero extends Character {
 		
 	}
 	
+	/********************************
+	 * Name - defensive programming
+	 ********************************/
 	
+	/**
+	 * Checks if a hero can have the given name as name
+	 */
+	@Override
+	public boolean canHaveAsName(String name) {
+		return false;
+	}
 	
 	
 	/*******************************
@@ -63,8 +73,7 @@ public class Hero extends Character {
 	 */
 	private void setStrength(float strength) {
 		this.strength = strength;
-		
-		}
+	}
 	
 	
 	/***********************
@@ -77,7 +86,6 @@ public class Hero extends Character {
 	 */
 	public float getCapacity() {
 		return 20*this.getStrength();
-		
 	}
 	
 	
@@ -152,13 +160,6 @@ public class Hero extends Character {
 	@Override
 	public int getProtection() {
 		return 0;
-	}
-	
-	/**
-	 * Checks if a hero can have the given name as name
-	 */
-	public static boolean isValidName(String name) {
-		return false;
 	}
 	
 

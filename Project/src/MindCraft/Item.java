@@ -174,8 +174,24 @@ public abstract class Item {
 		this.anchor = anchor;
 	}
 	
-	
-	
+	/**
+	 * Binds a character to this anchor
+	 * @param 	anchor
+	 * 			The character to set as anchor
+	 * @post	Binds a character to this anchor, when this item is in a backpack it will be removed
+	 * 			| getParentBackpack() == null && getAnchor() == anchor
+	 */
+	@Raw
+	protected void bindAnchor (Character anchor) {
+		//if (anchor == getAnchor() || getAnchor() == null) {
+			if (getParentBackpack() != null) {
+				getParentBackpack().removeItem(this);
+				setParentBackpack(null);
+			}
+			setAnchor(anchor);
+		//}
+		
+	}
 	
 	/***********************
 	 * ParentBackpack
