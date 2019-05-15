@@ -35,21 +35,6 @@ public class Purse extends Item implements Container {
 		return 0;
 	}
 	
-	/**
-	 * 
-	 * @param 	identification
-	 * 			The identification to check
-	 * @return	Return true when this item can have the given identification number
-	 * 			Return false when this item can't have the given identification number
-	 * 			| result = ...
-	 */
-	@Override
-	public boolean canHaveAsIdentification(long identification) {
-		return false;
-	}
-	
-
-	
 	/*******************************
 	 * Capacity - total programming
 	 *******************************/
