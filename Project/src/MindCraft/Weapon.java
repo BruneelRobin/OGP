@@ -36,12 +36,22 @@ public class Weapon extends Item {
 	 * Identification - total programming
 	 **************************************/
 	
+	/**
+	 * Generates a valid identification.
+	 * 
+	 * @return Returns a unique, positive long, divisible by 6.
+	 * 		   
+	 */
 	@Override
 	protected long generateIdentification() {
 		long flooredMax = Long.MAX_VALUE/6;
-		long candidate = 
+		long generatedNumber = MathHelper.getRandomLongBetweenRange(0, flooredMax);
+		long candidate = generatedNumber*6;
+		if(!canHaveAsIdentification(candidate)) {
+			assert false;
+		}
 		
-		return 0;
+		return candidate;
 	}
 	
 	/**
@@ -147,6 +157,13 @@ public class Weapon extends Item {
 	}
 	
 	
+	
+	/***********************
+	 * Value
+	 ***********************/
+	
+	private static final int MAX_VALUE = 200;
+	private static final int MIN_VALUE = 0;
 	
 	
 	

@@ -99,11 +99,12 @@ public abstract class Item {
 	 * Return true when the given weight is valid
 	 * @param 	weight
 	 * 			the weight to check
-	 * @return	Return true when the given weight is valid
+	 * @return	Return true when the given weight is valid, thus positive.
 	 * 			Return false when the given weight is invalid
 	 */
 	public boolean isValidWeight(float weight) {
-		return false;
+		
+		return (weight >= 0);
 	}
 	
 	/**
@@ -121,6 +122,8 @@ public abstract class Item {
 	 * Value
 	 ***********************/
 	private int value;
+	private static final int MAX_VALUE = 1000;
+	private static final int MIN_VALUE = 0;
 	
 	/**
 	 * Returns the item's value 
@@ -139,6 +142,19 @@ public abstract class Item {
 	 */
 	private void setValue(int value) {
 		this.value = value;
+	}
+	
+	/**
+	 * Returns whether or not the given value is valid
+	 * @param value
+	 * 		  the integer checked for its validity
+	 * @return returns true if the given value lies between the minimum and maximum value.
+	 * 		   | (value >= MIN_VALUE && value <= MAX_VALUE)
+	 * @return returns false if the given value does not lie between the minimum and maximum.
+	 * 
+	 */
+	public boolean isValiValue(int value) {
+		return (value >= MIN_VALUE && value <= MAX_VALUE);
 	}
 	
 	

@@ -19,8 +19,8 @@ public class Purse extends Item implements Container {
 	 * @pre		The given capacity is valid
 	 * 			| isValidCapacity (capacity)
 	 */
-	public Purse (int capacity, float weight, int value) {
-		super(weight, value);
+	public Purse (int capacity, float weight) {
+		super(weight, 0);
 		setCapacity(capacity);
 	}
 	
@@ -30,9 +30,18 @@ public class Purse extends Item implements Container {
 	 * Identification - total programming
 	 **************************************/
 	
+	
+	
+	/**
+	 * Generates a valid identification for a purse.
+	 * @return returns a unique long
+	 * 		   The uniqueness of the generated long is always considered true
+	 * 		   The chance of colliding is not zero, but neglectable (5.4*10^(-20))
+	 */
 	@Override
 	protected long generateIdentification() {
-		return 0;
+		long candidate = MathHelper.getRandomLongBetweenRange(Long.MIN_VALUE, Long.MAX_VALUE);
+		return candidate;
 	}
 	
 	/**
@@ -45,7 +54,7 @@ public class Purse extends Item implements Container {
 	 */
 	@Override
 	public boolean canHaveAsIdentification(long identification) {
-		return false;
+		return true;
 	}
 	
 
@@ -125,6 +134,7 @@ public class Purse extends Item implements Container {
 	@Raw
 	public void makeTorn() {
 		setTorn(true);
+		this.setContent(0);
 	}
 	
 	/**********************************
@@ -202,11 +212,11 @@ public class Purse extends Item implements Container {
 	
 	/**
 	 * Return the total weight of this purse
-	 * @return	Return the total weight of this purse
-	 * 			| result == this.getContent() * DUCATE_WEIGHT
+	 * @return	Return the total weight this purse: weight of the purse combined with weiht of its content.
+	 * 			| result == (this.getContent() * DUCATE_WEIGHT) + this.getWeight()
 	 */
 	public float getTotalWeight() {
-		return 0;
+		return ((float)(this.getContent())*DUCATE_WEIGHT + this.getWeight());
 	}
 	
 	/**
