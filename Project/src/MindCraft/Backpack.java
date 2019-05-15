@@ -183,13 +183,13 @@ public class Backpack extends Item implements Container {
 	 * Checks whether this backpack can have an item
 	 * @param 	item
 	 * 			The item to check
-	 * @return	Return false when the item is held by another character than the holder of this backpack
+	 * @return	Return false when the item is held by another non dead character than the holder of this backpack
 	 * 			Return false when the given item is a direct or indirect parent backpack of this backpack
 	 * 			Return true otherwise.
 	 * 			
 	 */
 	public boolean canHaveAsItem (Item item) {
-		if (item.getHolder() != null && item.getHolder() != this.getHolder()) {
+		if (item.getHolder() != null && item.getHolder() != this.getHolder() && item.getHolder().isDead() == false) {
 			return false;
 		} else if (item instanceof Backpack && this.isDirectOrIndirectSubBackpackOf((Backpack)item)) {
 			return false;
