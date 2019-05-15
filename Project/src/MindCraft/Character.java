@@ -3,6 +3,7 @@ package MindCraft;
 import java.util.Map;
 
 import be.kuleuven.cs.som.annotate.*;
+import sun.security.jca.GetInstance.Instance;
 
 import java.util.HashMap;
 
@@ -60,10 +61,10 @@ public abstract class Character {
 	 * Return true when the name is valid
 	 * @return	Return true when the name starts with a capital
 	 * 			and only contains letters, spaces and apostrophes
-	 * 			| 
+	 * 			| name != null && name.matches("[A-Z][a-z' ]+")
 	 */
 	public static boolean isValidName(String name) {
-		return false;
+		return (name != null && name.matches("[A-Z][A-Za-z' ]*"));;
 	}
 	
 	/**
@@ -72,14 +73,11 @@ public abstract class Character {
 	 * @param 	name
 	 * 			the new name
 	 * @post	The name is set to the given name
-	 * 			| new.getName() == name
-	 * @throws	IllegalArgumentException
-	 * 			Throws this error when the given name is not valid
-	 * 			| !isValidName(name)	
+	 * 			| new.getName() == name	
 	 */
 	@Raw
 	private void setName(String name) {
-		
+		this.name = name;
 	}
 	
 	/**
@@ -93,7 +91,10 @@ public abstract class Character {
 	 * 			| !isValidName(name)
 	 */
 	public void changeName(String name) {
-		
+		if !name.isValidName {
+			throw new IllegalArgumentException("Invalid name!")
+		}
+		this.name = name;
 	}
 	
 	/**
@@ -109,6 +110,7 @@ public abstract class Character {
 	 *************************************/
 	private int hitpoints;
 	private boolean isFighting = false;
+	private boolean isDead = false;
 	private int maxHitpoints;
 	
 	/**
@@ -119,7 +121,7 @@ public abstract class Character {
 	 * @return	Return false when the character can't have the amount of hitpoints
 	 */
 	public boolean canHaveAsHitpoints(int hitpoints) {
-		return hitpoints >= 0 && (isFighting() || isPrime(hitpoints));
+		return hitpoints >= 0 && (isFighting() || MathHelper.isPrime(hitpoints));
 	}
 	
 	/**
@@ -153,7 +155,12 @@ public abstract class Character {
 	 * 			| new.isFighting() == true
 	 */
 	public void takeDamage(int hitpoints) {
-		
+		if (this.hitpoints <= hitpoints) {
+			this.hitpoints = 0;
+			this.setDead(true)
+		} else {
+			this.hitpoints = this.hitpoints - hitpoints;
+		}
 	}
 	
 	/**
@@ -176,14 +183,33 @@ public abstract class Character {
 	}
 	
 	/**
+	 * Set the life state of this character.
+	 * @param 	isDead
+	 * 			The new state of isDead.
+	 * @post	Set the new life state to the given state.
+	 * 			| new.isDead() == isDead
+	 */
+	private void setDead(boolean isDead) {
+		this.isDead = isDead;
+	}
+	
+	/**
+	 * Return the current life state of this character.
+	 * @return	Return the current life state of this character.
+	 */
+	public boolean isDead() {
+		return this.isDead;
+	}
+	
+	/**
 	 * Returns whether the player can have the maximum amount of hitpoints
 	 * @param 	hitpoints
 	 * 			the maximum amount of hitpoints to check
 	 * @return	Return true when the character can have the maximum amount of hitpoints
 	 * @return	Return false when the character can't have the maximum amount of hitpoints
 	 */
-	public boolean canHaveAsMaxHitpoints(int hitpoints) {
-		return hitpoints >= 0 && isPrime(hitpoints);
+	public static boolean isValidMaxHitpoints(int hitpoints) {
+		return hitpoints >= 0 && MathHelper.isPrime(hitpoints);
 	}
 	
 	/**
@@ -219,7 +245,7 @@ public abstract class Character {
 	 * 			| new.getMaxHitpoints() == this.getMaxHitpoints() + hitpoints
 	 */
 	public void increaseMaxHitpoints (int hitpoints) {
-		
+		this.maxHitpoints = this.maxHitpoints + hitpoints;
 	}
 	
 	/**
@@ -234,7 +260,7 @@ public abstract class Character {
 	 * 			Then the current value of hitpoints is set to the maximum amount of hitpoints.
 	 */
 	public void lowerMaxHitpoints (int hitpoints) {
-		
+		this.maxHitpoints = this.maxHitpoints - hitpoints;
 	}
 	
 	/***********************
@@ -275,7 +301,7 @@ public abstract class Character {
 	 * 			The item to set at the given anchorId
 	 */
 	private void setAnchorAt(int anchorId, Item item) {
-		
+		this.anchors.put(anchorId, item);
 	}
 	
 	/**
@@ -285,7 +311,7 @@ public abstract class Character {
 	 * @return	Return the item at the given anchorId
 	 */
 	public Item getAnchorAt (int anchorId) {
-		return null;
+		return this.anchors.get(anchorId);
 	}
 	
 	/**
@@ -295,8 +321,12 @@ public abstract class Character {
 	 * @return	Return true when the given item can be equipped
 	 * 			| ...
 	 */
-	public boolean canEquipItem(Item item) {
-		return false;
+	public boolean canEquipItem(int anchorId, Item item) {
+		if ((item.getHolder() == this || item.getHolder() == null) && this.getAnchorAt(anchorId) == null){
+			return true
+		} else {
+			return false
+		}
 	}
 	
 	/**
@@ -311,14 +341,35 @@ public abstract class Character {
 	 * 			| canEquipItem(item)
 	 */
 	public void equip(int anchorId, Item item) {
-		
+		if this.canEquipItem(item) {
+			if (this.getAnchorAt(anchorId) != null) {
+				this.unequip(anchorId);
+			}
+		this.setAnchorAt(anchorId, item)
+		}
 	}
 	
 	/**
-	 * Unequip item on the given slot
-	 * @post	Unequip the item on the given slot and tries to put it in a backpack when possible otherwise drops it on the ground
+	 * Unequip item on the given slot.
+	 * @post	Unequip the item on the given slot and tries to put it in a backpack
+	 * 			when possible otherwise drops it on the ground.
 	 */
 	public void unequip(int anchorId) {
+		
+		for (Map.Entry<int, Item> entry : this.anchors.entrySet()) {
+		    int key = entry.getKey();
+		    Item value = entry.getValue();
+		    Item item = this.getItemAt(anchorId)
+		    		
+		    if (value instanceof Backpack && key != anchorId) {
+		    	Backpack backpack = (Backpack) value;
+		    	
+				if (backpack.getTotalWeight() + item.getWeight <= backpack.getCapacity()) {
+					item.moveTo(backpack);
+					return;
+				}
+			}
+		} item.drop();
 		
 	}
 	
@@ -329,7 +380,14 @@ public abstract class Character {
 	 * @post	Searches and removes the given item from its anchor
 	 */
 	protected void removeItemFromHolder(Item item) {
-		
+		for (Map.Entry<int, Item> entry : this.anchors.entrySet()) {
+		    int key = entry.getKey();
+		    Item value = entry.getValue();
+		    if (value == item) {
+		    	this.setAnchorAt(key,null);
+		    	return;
+		    }
+		}
 	}
 	
 	/**
