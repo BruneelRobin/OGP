@@ -38,22 +38,22 @@ public class Backpack extends Item implements Container {
 	 * Identification - total programming
 	 **************************************/
 	
-	@Override
-	protected long generateIdentification() {
-		return 0;
-	}
-	
 	/**
-	 * 
-	 * @param 	identification
-	 * 			The identification to check
-	 * @return	Return true when this item can have the given identification number
-	 * 			Return false when this item can't have the given identification number
-	 * 			| result = ...
+	 * Return a valid identification number for this class
+	 * @return	Return a valid identification number for this class which equals the sum of all binomial
+	 * 			coefficiënts in the nth row with n the backpack count after creating this class.
+	 * 			| result == 2^(backpackCount+1)
 	 */
 	@Override
-	public boolean canHaveAsIdentification(long identification) {
-		return false;
+	protected long generateIdentification() {
+		long n = backpackCount+1;
+		/*long prev = 1L;
+		long result = prev;
+		for (int i = 1; i<n; i++) {
+			result += (i-n)/(i+1)*prev;
+		}
+		return result;*/
+		return 2^n;
 	}
 	
 

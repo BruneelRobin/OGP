@@ -32,8 +32,8 @@ public class Armor extends Item {
 	protected Armor(long identification, int protection, int fullProtection, float weight, int value) {
 		super(identification, weight, value);
 		
-		if (!canHaveAsIdentification(identification)) {
-			identification = 
+		if (!isValidIdentification(identification)) {
+			setIdentification(generateIdentification());
 		}
 		
 		this.currentProtection = protection;
@@ -46,7 +46,8 @@ public class Armor extends Item {
 	 **************************************/
 	
 	/**
-	 * 
+	 * Return a valid identification number for this class
+	 * @return	Return a random valid identification number for this class
 	 */
 	@Override
 	protected long generateIdentification() {
@@ -54,7 +55,7 @@ public class Armor extends Item {
 		long max = Long.MAX_VALUE;
 		long candidate = MathHelper.getRandomLongBetweenRange(min, max);
 		
-		if (!canHaveAsIdentification (candidate)) {
+		if (!isValidIdentification (candidate)) {
 			return generateIdentification();
 		} else {
 			return candidate;
@@ -69,12 +70,11 @@ public class Armor extends Item {
 	 * 			Return false when this item can't have the given identification number
 	 * 			| result == MathHelper.isPrime(identification) && ids.contains(identification) == false
 	 */
-	@Override
-	public boolean canHaveAsIdentification(long identification) {
+	public static boolean isValidIdentification(long identification) {
 		return MathHelper.isPrime(identification) && ids.contains(identification) == false;
 	}
 
-	private final HashSet<Long> ids = new HashSet<Long>();
+	private static final HashSet<Long> ids = new HashSet<Long>();
 
 
 	/***********************
