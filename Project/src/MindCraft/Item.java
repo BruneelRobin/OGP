@@ -23,12 +23,7 @@ public abstract class Item {
 	 */
 	@Model
 	protected Item(float weight, int value) {
-		
-		//if (canInitialize(weight, value, holder, parentBackpack))
-		// CHECKERS
-		
 		this.identification = generateIdentification();
-		
 		if (isValidWeight(weight)) {
 			this.weight = weight;
 		} else {
@@ -36,38 +31,17 @@ public abstract class Item {
 		}
 		
 		setValue(value);
-		//setHolder(holder);
-		//setParentBackpack(parentBackpack);
-		//parentBackpack.addItem(this);
-		
-		
 	}
 	
-	/**
-	 * Creates a new item
-	 */
-	@Model
-	protected Item(float weight, int value, Backpack parentBackpack) {
+	protected Item(long identification, float weight, int value) {
+		this.identification = identification;
+		if (isValidWeight(weight)) {
+			this.weight = weight;
+		} else {
+			this.weight = getDefaultWeight();
+		}
 		
-		this(weight, value);
-		setParentBackpack(parentBackpack);
-		parentBackpack.addItem(this);
-		
-		
-	}
-	
-	/**
-	 * Creates a new item
-	 */
-	@Model
-	protected Item(float weight, int value, Character holder) {
-		
-		this(weight, value);
-		setHolder(holder);
-		//setParentBackpack(parentBackpack);
-		//parentBackpack.addItem(this);
-		
-		
+		setValue(value);
 	}
 	
 	/*protected void initialize (int value, Character holder, Backpack parentBackpack) {
@@ -166,27 +140,27 @@ public abstract class Item {
 	
 	
 	/***********************
-	 * Holder
+	 * Anchor
 	 ***********************/
-	private Character holder;
+	private Character anchor;
 	
 	/**
-	 * Returns the item's holder
-	 * @return Returns the item's holder
+	 * Returns the item's anchor
+	 * @return Returns the item's anchor
 	 */
-	public Character getHolder() {
-		return this.holder;
+	public Character getAnchor() {
+		return this.anchor;
 	}
 	
 	/**
-	 * Sets the item's holder to the given holder
-	 * @param holder
-	 * 		  The new holder
-	 * @post  The holder is set to the given holder
-	 * 		  | new.getHolder() == holder
+	 * Sets the item's anchor to the given anchor
+	 * @param anchor
+	 * 		  The new anchor
+	 * @post  The anchor is set to the given anchor
+	 * 		  | new.getAnchor() == anchor
 	 */
-	private void setHolder(Character holder) {
-		this.holder = holder;
+	private void setAnchor(Character anchor) {
+		this.anchor = anchor;
 	}
 	
 	
