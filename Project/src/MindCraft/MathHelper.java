@@ -4,17 +4,26 @@ import java.util.Random;
 
 public class MathHelper {
 	/**
-	 * Return the closest prime number between the given boundaries
+	 * Return a prime lower than the given value and higher than the min value
 	 * @param 	number
 	 * 			The number to find the closest prime for
 	 * @param 	min
 	 * 			The minimum boundary
-	 * @param 	max
-	 * 			The maximum boundary
-	 * @return	Return the closest prime number between the given boundaries
+	 * @return	Return a prime lower than the given value and higher than the min value
 	 */
-	public static int getClosestPrime(long number, long min, long max) {
-		return 2;
+	public static int getLowerPrime(int number, int min) {
+		if (number % 2 == 0) {
+			number -= 1;
+		}
+		
+		while (number > min && !isPrime(number)) {
+			number -= 2;
+		}
+		
+		if (number <= min)
+			return min; // no primes found
+		else
+			return number; // number is a prime
 	}
 	
 	/**

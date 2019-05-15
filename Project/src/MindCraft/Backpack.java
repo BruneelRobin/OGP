@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.*;
 
 /**
  * A class of backpacks
@@ -170,7 +170,7 @@ public class Backpack extends Item implements Container {
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when the given item is not found in this backpack
 	 */
-	public void removeItem(Item item) throws IllegalArgumentException {
+	protected void removeItem(Item item) throws IllegalArgumentException {
 		if (!containsItem(item)) {
 			throw new IllegalArgumentException ("The given item does not exist in this backpack");
 		} else {
@@ -225,7 +225,8 @@ public class Backpack extends Item implements Container {
 	 * 			Throws this error when an item can't be added to this backpack
 	 * 			| !canHaveAsItem(item)
 	 */
-	public void addItem(Item item) throws IllegalArgumentException {
+	@Raw
+	protected void addItem(Item item) throws IllegalArgumentException {
 		if (!canHaveAsItem(item)) {
 			throw new IllegalArgumentException("This item is not valid");
 		}

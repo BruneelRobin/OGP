@@ -99,28 +99,52 @@ public class Hero extends Character {
 	}
 	
 	/**
+	 * 
+	 */
+	public int getDamage() {
+		return 0;
+	}
+	
+	/**
 	 * Makes the character hit the given character
-	 * @post	The given character loses hitpoints.
-	 * 			|
+	 * @post	A random number between 0 and 100 is generated, when this number is higher than the 
+	 * 			character's protection, the character takes the damage of this hero. When this number is
+	 * 			lower than the character's protection, nothing happens.
+	 * 			| character.takeDamage(this.getDamage())
 	 * 
 	 */
 	public void hit(Character character) {
+		int rnd = (int)MathHelper.getRandomLongBetweenRange(0, 100);
 		
+		if (rnd >= character.getProtection()) {
+			int damage = getDamage();
+			
+			character.takeDamage(damage);
+			
+			if (character.isDead()) {
+				heal();
+				setFighting(false);
+				collectTreasures(character);
+			}
+		}
 		
 	}
 	
 	/**
 	 * Heals the hero by adding hitpoints
-	 * @post The hitpoints 
-	 * 
+	 * @post	The hero's new hp is a random prime number between its current health and its max health.
+	 * 			| MathHelper.isPrime(getHitpoints())
 	 */
-	//(maxHP-currentHP)*(random0-1) 
-	//om priem te zijn, checken waar dichtste priem is via +2 en -2, dan nog eens checken
 	public void heal() {
+		int newHitpoints;
+		do {
+			newHitpoints = (int)MathHelper.getRandomLongBetweenRange(getHitpoints(), getMaxHitpoints());
+		} while (!MathHelper.isPrime(newHitpoints));
 		
+		setHitpoints(newHitpoints);
 	}
 	
-	private int defaultProtection = 10;
+	private final int defaultProtection = 10;
 	/**
 	 * Return the protection of the hero
 	 * @return	Return the protection of the hero based on default protection value and armor
