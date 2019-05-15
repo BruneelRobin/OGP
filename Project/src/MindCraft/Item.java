@@ -113,8 +113,8 @@ public abstract class Item {
 	 * Value
 	 ***********************/
 	private int value;
-	private static final int MAX_VALUE = 1000;
-	private static final int MIN_VALUE = 0;
+	private abstract final int MAX_VALUE;
+	private abstract final int MIN_VALUE;
 	
 	/**
 	 * Returns the item's value 
@@ -144,7 +144,7 @@ public abstract class Item {
 	 * @return returns false if the given value does not lie between the minimum and maximum.
 	 * 
 	 */
-	public boolean isValiValue(int value) {
+	public boolean canHaveAsValue(int value) {
 		return (value >= MIN_VALUE && value <= MAX_VALUE);
 	}
 	

@@ -140,7 +140,26 @@ public class Armor extends Item {
 	 * Value
 	 ***********************/
 	
+	private final int MAX_VALUE = 1000;
+	private final int MIN_VALUE = 0;
 	
+	
+	
+	
+	/**
+	 * Returns whether or not the given value is valid
+	 * @param value
+	 * 		  the integer checked for its validity
+	 * @return returns true if the given value is an even number that lies between the minimum and maximum value
+	 * 		   | (value >= MIN_VALUE && value <= MAX_VALUE && value%2 == 0)
+	 * @return returns false if the given value is not even and/or does not lie between the minimum and maximum.
+	 * 
+	 */
+	@Override
+	public boolean canHaveAsValue(int value) {
+		return ((value >= MIN_VALUE) && (value <= MAX_VALUE) && (value%2 == 0));
+		
+		}
 	
 	
 	

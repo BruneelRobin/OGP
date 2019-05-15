@@ -42,7 +42,7 @@ public class Backpack extends Item implements Container {
 	/**
 	 * Return a valid identification number for this class
 	 * @return	Return a valid identification number for this class which equals the sum of all binomial
-	 * 			coefficiënts in the nth row with n the backpack count after creating this class.
+	 * 			coefficients in the nth row with n the backpack count after creating this class.
 	 * 			| result == 2^(backpackCount+1)
 	 */
 	@Override
