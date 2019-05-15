@@ -131,7 +131,7 @@ public abstract class Item {
 	 * @post  The value is set to the given value
 	 * 		  | new.getValue() == value
 	 */
-	private void setValue(int value) {
+	protected void setValue(int value) {
 		this.value = value;
 	}
 	

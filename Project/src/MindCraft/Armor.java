@@ -85,15 +85,26 @@ public class Armor extends Item {
 	private final int fullProtection;
 	private int currentProtection;
 	
+	/**
+	 * Returns the fullprotection of an armor
+	 * @return Returns the fullprotection of an armor
+	 * 		   | result == this.fullProtection
+	 */
+	public int getFullProtection() {
+		return this.fullProtection;
+	}
+	
 	
 	/**
-	 * Returns the armor's protection
-	 * @return Returns the armor's protection
+	 * Returns the armor's current protection
+	 * @return Returns the armor's current protection
 	 */
-	public float getProtection() {
-		return 0f;
+	public int getProtection() {
+		return this.currentProtection;
 
 	}
+	
+	
 
 	/**
 	 * Sets the protection to the given protection
@@ -143,6 +154,18 @@ public class Armor extends Item {
 	private final int MAX_VALUE = 1000;
 	private final int MIN_VALUE = 0;
 	
+	
+	/**
+	 * Returns the value of the armor.
+	 * @return return the value as its function: highest possible value of the armor times
+	 * 		   the current protection percentage of the armor. 
+	 * 		   | result == this.getValue()*(this.getProtection()/this.getFullProtection())
+	 */
+	@Override
+	public int getValue() { 
+		return this.getValue()*(this.getProtection()/this.getFullProtection());
+	
+	}
 	
 	
 	

@@ -193,13 +193,13 @@ public class Weapon extends Item {
 	 * @return if a value was given in the constructor, return that value
 	 * 		   | result == super.getValue()
 	 * @return if no value was given in the constructor, return the value as its function: damage of the weapon times
-	 * 		   the defined value factor.
+	 * 		   the defined value factor. Clamp the result to make sure it lies between the MIN_VALUE and MAX_VALUE.
 	 * 		   | result == this.getDamage()*VALUE_FACTOR
 	 */
 	@Override
 	public int getValue() {
 		if(hasGivenValue == false) {
-		return this.getDamage()*VALUE_FACTOR;
+		return MathHelper.clamp(this.getDamage()*VALUE_FACTOR, MIN_VALUE, MAX_VALUE); 
 		}
 		return super.getValue();
 	}
