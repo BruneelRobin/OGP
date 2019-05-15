@@ -201,6 +201,20 @@ public abstract class Item {
 		this.parentBackpack = backpack;
 	}
 	
+	/**
+	 * 
+	 */
+	public void moveTo (Backpack backpack) throws IllegalArgumentException {
+		if (!backpack.canHaveAsItem(this)) {
+			throw new IllegalArgumentException ("Invalid backpack to move to");
+		}
+		
+		drop(); // break all previous associations
+		
+		backpack.addItem(this);
+		setParentBackpack(backpack);
+	}
+	
 	
 	/***********************
 	 * Other Methods
@@ -222,7 +236,7 @@ public abstract class Item {
 		if (this.getAnchor() != null) {
 			this.getAnchor().removeItemFromHolder(this);
 			this.setAnchor(null);
-		} else {
+		} else if (this.getParentBackpack() != null) {
 			this.getParentBackpack().removeItem(this);
 			this.setParentBackpack(null);
 		}
