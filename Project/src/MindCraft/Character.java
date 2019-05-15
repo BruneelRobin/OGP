@@ -64,7 +64,7 @@ public abstract class Character {
 	 * 			| name != null && name.matches("[A-Z][a-z' ]+")
 	 */
 	public static boolean isValidName(String name) {
-		return (name != null && name.matches("[A-Z][A-Za-z' ]*"));;
+		return (name != null && name.matches("[A-Z][A-Za-z' ]*"));
 	}
 	
 	/**
@@ -91,8 +91,8 @@ public abstract class Character {
 	 * 			| !isValidName(name)
 	 */
 	public void changeName(String name) {
-		if !name.isValidName {
-			throw new IllegalArgumentException("Invalid name!")
+		if (!isValidName(name)) {
+			throw new IllegalArgumentException("Invalid name!");
 		}
 		this.name = name;
 	}
@@ -110,7 +110,6 @@ public abstract class Character {
 	 *************************************/
 	private int hitpoints;
 	private boolean isFighting = false;
-	private boolean isDead = false;
 	private int maxHitpoints;
 	
 	/**
@@ -185,23 +184,14 @@ public abstract class Character {
 		return this.isFighting;
 	}
 	
-	/**
-	 * Set the life state of this character.
-	 * @param 	isDead
-	 * 			The new state of isDead.
-	 * @post	Set the new life state to the given state.
-	 * 			| new.isDead() == isDead
-	 */
-	private void setDead(boolean isDead) {
-		this.isDead = isDead;
-	}
 	
 	/**
 	 * Return the current life state of this character.
 	 * @return	Return the current life state of this character.
+	 * 			| getHitpoints == 0
 	 */
 	public boolean isDead() {
-		return this.isDead;
+		return getHitpoints() == 0;
 	}
 	
 	/**
@@ -326,9 +316,9 @@ public abstract class Character {
 	 */
 	public boolean canEquipItem(int anchorId, Item item) {
 		if ((item.getHolder() == this || item.getHolder() == null) && this.getAnchorAt(anchorId) == null){
-			return true
+			return true;
 		} else {
-			return false
+			return false;
 		}
 	}
 	
@@ -344,11 +334,11 @@ public abstract class Character {
 	 * 			| canEquipItem(item)
 	 */
 	public void equip(int anchorId, Item item) {
-		if this.canEquipItem(item) {
+		if (this.canEquipItem(anchorId, item)) {
 			if (this.getAnchorAt(anchorId) != null) {
 				this.unequip(anchorId);
 			}
-		this.setAnchorAt(anchorId, item)
+			this.setAnchorAt(anchorId, item);
 		}
 	}
 	
@@ -359,21 +349,22 @@ public abstract class Character {
 	 */
 	public void unequip(int anchorId) {
 		
-		for (Map.Entry<int, Item> entry : this.anchors.entrySet()) {
+		Item item = this.getAnchorAt(anchorId);
+		
+		for (Map.Entry<Integer, Item> entry : this.anchors.entrySet()) {
 		    int key = entry.getKey();
 		    Item value = entry.getValue();
-		    Item item = this.getItemAt(anchorId)
 		    		
 		    if (value instanceof Backpack && key != anchorId) {
 		    	Backpack backpack = (Backpack) value;
 		    	
-				if (backpack.getTotalWeight() + item.getWeight <= backpack.getCapacity()) {
+				if (backpack.getTotalWeight() + item.getWeight() <= backpack.getCapacity()) {
 					item.moveTo(backpack);
 					return;
 				}
 			}
-		} item.drop();
-		
+		} 
+		item.drop();
 	}
 	
 	/**
@@ -383,7 +374,7 @@ public abstract class Character {
 	 * @post	Searches and removes the given item from its anchor
 	 */
 	protected void removeItemFromHolder(Item item) {
-		for (Map.Entry<int, Item> entry : this.anchors.entrySet()) {
+		for (Map.Entry<Integer, Item> entry : this.anchors.entrySet()) {
 		    int key = entry.getKey();
 		    Item value = entry.getValue();
 		    if (value == item) {
