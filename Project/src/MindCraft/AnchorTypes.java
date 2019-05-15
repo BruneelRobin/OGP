@@ -1,5 +1,7 @@
 package MindCraft;
 
+import be.kuleuven.cs.som.annotate.Value;
+
 /**
  * 	An enumeration of anchor types.
  *  In its current definition, the class only distinguishes between

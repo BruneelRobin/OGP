@@ -21,8 +21,8 @@ public class Weapon extends Item {
 	 * @param	holder
 	 * @param 	parentBackpack
 	 */
-	public Weapon(int damage, float weight, int value, Character holder, Backpack parentBackpack) {
-		super(weight, value, holder, parentBackpack);
+	public Weapon(int damage, float weight, int value) {
+		super(weight, value);
 		//if (!isValidDamage(damage)) {
 		//	assert false; // preconditie
 		//}

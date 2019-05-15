@@ -26,8 +26,8 @@ public class Armor extends Item {
 	 * 			| isValidProtection(fullProtection) && protection <= fullProtection
 	 */
 	
-	protected Armor(int protection, int fullProtection, float weight, int value, Character holder, Backpack parentBackpack) {
-		super(weight, value, holder, parentBackpack);
+	protected Armor(int protection, int fullProtection, float weight, int value) {
+		super(weight, value);
 		
 		this.currentProtection = protection;
 		this.fullProtection = fullProtection;

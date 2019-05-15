@@ -207,6 +207,12 @@ public abstract class Item {
 		
 	}
 	
+	public Character getHolder() {
+		if (getHolder() != null) {
+			
+		}
+	}
+	
 	
 	
 	

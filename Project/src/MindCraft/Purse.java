@@ -19,8 +19,8 @@ public class Purse extends Item implements Container {
 	 * @pre		The given capacity is valid
 	 * 			| isValidCapacity (capacity)
 	 */
-	public Purse (int capacity, float weight, int value, Character holder, Backpack parentBackpack) {
-		super(weight, value, holder, parentBackpack);
+	public Purse (int capacity, float weight, int value) {
+		super(weight, value);
 		setCapacity(capacity);
 	}
 	
