@@ -38,20 +38,27 @@ public class Weapon extends Item {
 	
 	@Override
 	protected long generateIdentification() {
+		long flooredMax = Long.MAX_VALUE/6;
+		long candidate = 
+		
 		return 0;
 	}
 	
 	/**
-	 * 
+	 * Returns whether or not the given identification is a valid one.
 	 * @param 	identification
 	 * 			The identification to check
-	 * @return	Return true when this item can have the given identification number
-	 * 			Return false when this item can't have the given identification number
-	 * 			| result = ...
+	 * @return	Return true when the given identification number is positive, divisible by 6 and unique.
+	 * 			Uniqueness is always considered true, the chance of colliding is not zero, but neglectable (6.5*10^(-19)).
+	 * 			| result == ((identification > -1) && (identification%6 == 0))
+	 * 			
+	 * @return	Return false when the given identification is not positive and/or not divisible by 6
+	 * 			
 	 */
 	@Override
 	public boolean canHaveAsIdentification(long identification) {
-		return false;
+		return ((identification > -1) && (identification%6 == 0));
+
 	}
 	
 	
