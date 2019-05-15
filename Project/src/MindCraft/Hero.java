@@ -32,7 +32,7 @@ public class Hero extends Character {
 	public Hero(String name, int hitpoints, float strength) throws IllegalArgumentException {
 		super(name, hitpoints);
 		
-		this.setStrength(strength);
+		setStrength(strength);
 		
 	}
 	
