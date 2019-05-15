@@ -265,7 +265,7 @@ public abstract class Character {
 	 *        | for (HashMap.Entry<Integer,Item> entry : anchors.entrySet())
 	 *        | 	entry.getValue().getHolder() == this
 	 */	
-	HashMap<Integer, Item> anchors = new HashMap<Integer, Item>();
+	private final HashMap<Integer, Item> anchors = new HashMap<Integer, Item>();
 	
 	/**
 	 * Set the item at the given anchorId

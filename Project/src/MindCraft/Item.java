@@ -70,15 +70,6 @@ public abstract class Item {
 	 * @return	Return a valid id for this item
 	 */
 	protected abstract long generateIdentification();
-	
-	/**
-	 * 
-	 * @param 	identification
-	 * 			The identification to check
-	 * @return	Return true when this item can have the given identification number
-	 * 			Return false when this item can't have the given identification number
-	 */
-	public abstract boolean canHaveAsIdentification(long identification);
 
 	
 	
@@ -217,19 +208,38 @@ public abstract class Item {
 	
 	/**
 	 * Drops the item to the ground
-	 * @effect The holder of the item is set to null(= on the ground).
-	 * 		   Since this is a bidirectional relation, the item is also removed from the holder.
-	 * 		   |this.setHolder(null)
-	 * 		   |this.getHolder.removeItemFromHolder(this)
+	 * @effect 	When this item is anchored, the holder of the item is set to null(= on the ground).
+	 * 		   	Since this is a bidirectional relation, the item is also removed from the holder.
+	 * 			|this.getAnchor().removeItemFromHolder(this)
+	 * 		   	|this.setAnchor(null)
+	 * @effect 	When this item is in a backpack, the parent backpack of this item is set to null
+	 * 			and since this is a bidirectional, the item is also removed from the backpack.
+	 * 			|this.getParentBackpack().removeItem(this)
+	 * 		   	|this.setParentBackpack(null)
 	 * 	
 	 */
 	public void drop() {
-		
+		if (this.getAnchor() != null) {
+			this.getAnchor().removeItemFromHolder(this);
+			this.setAnchor(null);
+		} else {
+			this.getParentBackpack().removeItem(this);
+			this.setParentBackpack(null);
+		}
 	}
 	
+	/**
+	 * Return the holder of this item
+	 * @return	Return the character associated when equipped on an anchor, does this method recursively
+	 * 			when this item is in a backpack. If a backpack doesn't have a holder this method returns null.
+	 */
 	public Character getHolder() {
-		if (getHolder() != null) {
-			
+		if (getAnchor() != null) {
+			return getAnchor();
+		} else if (getParentBackpack() != null) {
+			return getParentBackpack().getHolder();
+		} else {
+			return null;
 		}
 	}
 	
