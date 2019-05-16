@@ -43,14 +43,14 @@ public abstract class Character {
 	 * 			| !isValidName(name)
 	 */
 	@Model
-	protected Character(String name, int hitpoints) throws IllegalArgumentException {
+	protected Character(String name, int hitpoints, int numberOfAnchors) throws IllegalArgumentException {
 		
 		if (!canHaveAsName(name)) {
 			throw new IllegalArgumentException("Invalid name!");
 		}
 		setName(name);
 		setHitpoints(hitpoints);
-		
+		this.numberOfAnchors = numberOfAnchors;
 	}
 	
 	/********************************
@@ -317,7 +317,7 @@ public abstract class Character {
 	 * 			| ...
 	 */
 	public boolean canEquipItem(int anchorId, Item item) {
-		if ((item.getHolder() == this || item.getHolder() == null) && this.getAnchorAt(anchorId) == null){
+		if ((item.getHolder() == this || (item.getHolder() == null && canPickUpItem(item)))){
 			return true;
 		} else {
 			return false;
@@ -412,7 +412,7 @@ public abstract class Character {
 	 * Picks an item up from a dead body or from the ground
 	 * @param	item
 	 * 			The item to be picked up
-	 * @pre		The character must be able te pick up the item.
+	 * @pre		The character must be able to pick up the item.
 	 * 			| canPickItem(item)
 	 * @post	Picks an item up from a dead body or from the ground.
 	 */
@@ -426,6 +426,17 @@ public abstract class Character {
 	 */
 	public Set<Entry<Integer, Item>> getAnchorEntrySet () {
 		return this.anchors.entrySet();
+	}
+	
+	private final int numberOfAnchors;
+	
+	/**
+	 * Return the number of anchors of this character
+	 * @return	Return the number of anchors of this character
+	 */
+	@Immutable
+	public int getNumberOfAnchors() {
+		return this.numberOfAnchors;
 	}
 	
 	

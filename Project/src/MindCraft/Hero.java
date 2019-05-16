@@ -30,7 +30,7 @@ public class Hero extends Character {
 	 * 			| !isValidName(name)
 	 */
 	public Hero(String name, int hitpoints, float strength) throws IllegalArgumentException {
-		super(name, hitpoints);
+		super(name, hitpoints, AnchorTypes.values().length); // length of anchortypes
 		
 		setStrength(strength);
 		
@@ -162,5 +162,32 @@ public class Hero extends Character {
 		return 0;
 	}
 	
+	/**
+	 * Equips an item in the given anchor
+	 * @param 	anchorType
+	 * 			The anchor to equip an item in
+	 * @param 	item
+	 * 			The item to equip
+	 * @effect	Equips an item in the given anchor
+	 * 			| equip(anchorType.getAnchorId())
+	 * @note	This method has been overloaded in order to use our enumerator
+	 */
+	public void equip(AnchorTypes anchorType, Item item) {
+		int anchorId = anchorType.getAnchorId();
+		equip(anchorId, item);
+	}
+	
+	/**
+	 * Unequips an item in the given anchor
+	 * @param 	anchorType
+	 * 			The anchor to unequip an item from
+	 * @effect	Unequips an item in the given anchor
+	 * 			| unequip(anchorType.getAnchorId())
+	 * @note	This method has been overloaded in order to use our enumerator
+	 */
+	public void unequip(AnchorTypes anchorType) {
+		int anchorId = anchorType.getAnchorId();
+		unequip(anchorId);
+	}
 
 }

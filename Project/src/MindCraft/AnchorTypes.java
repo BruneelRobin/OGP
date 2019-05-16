@@ -22,13 +22,13 @@ import be.kuleuven.cs.som.annotate.Value;
 	BODY("Body", 4, false);
 	
 	private final String name;
-	private final int slotId;
+	private final int anchorId;
 	private final boolean holdsPurse;
 	
 	
-	 private AnchorTypes(String name, int slotId, boolean holdsPurse) {
+	 private AnchorTypes(String name, int anchorId, boolean holdsPurse) {
 		this.name = name;
-		this.slotId = slotId;
+		this.anchorId = anchorId;
 		this.holdsPurse = holdsPurse;
 	}
 	
@@ -46,8 +46,8 @@ import be.kuleuven.cs.som.annotate.Value;
 	 * Returns the character's strength
 	 * @return Returns the character's strength
 	 */
-	 public int getSlotId() {
-		 return this.slotId;
+	 public int getAnchorId() {
+		 return this.anchorId;
 	 	}
 
 		
