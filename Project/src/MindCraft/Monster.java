@@ -1,5 +1,18 @@
 package MindCraft;
 
+
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.HashSet;
+
+import be.kuleuven.cs.som.annotate.*;
+import sun.security.jca.GetInstance.Instance;
+
+import java.util.HashMap;
+
+import java.util.Iterator;
+
 /**
  * A class of monsters.
  * 
@@ -36,16 +49,39 @@ public class Monster extends Character {
 	 * 			Throws this exception when the given name is not valid.
 	 */
 	
-	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity, ) throws IllegalArgumentException {
+	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity, HashSet<Item> itemset) throws IllegalArgumentException {
 		super(name, hitpoints, numberOfAnchors);
 		setDamage(damage);
 		setProtection(protection);
 		
-		float totalWeight = getTotalWeight();
+		Iterator<Item> i = itemset.iterator();
+		float totalWeight = 0;
+	     while(i.hasNext()){
+	    	Item item = i.next();
+	    	if (item instanceof Weapon || item instanceof Armor) {
+	    		totalWeight = totalWeight + item.getWeight();
+	    	} else if (item instanceof Backpack) {
+	    		Backpack backpack = (Backpack) item;
+	    		totalWeight = totalWeight + backpack.getTotalWeight();
+	    	} else if (item instanceof Purse) {
+	    		Purse purse = (Purse) item;
+	    		totalWeight = totalWeight +  purse.getTotalWeight();
+	    	}
+	     }
+		
 		if (capacity >= totalWeight) {
 			this.capacity = capacity;
-		} else
+		} else {
 			this.capacity = totalWeight;
+	     }
+		
+		Iterator<Item> it = itemset.iterator();
+		int anchorId = 0;
+	     while(it.hasNext()){
+	        this.equip(anchorId, it.next());
+	        anchorId ++;
+	     }
+	
 	}
 
 	

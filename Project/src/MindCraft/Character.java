@@ -4,10 +4,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+
 import be.kuleuven.cs.som.annotate.*;
 import sun.security.jca.GetInstance.Instance;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * A class of characters.
@@ -295,7 +297,7 @@ public abstract class Character {
 	 * @param 	item
 	 * 			The item to set at the given anchorId
 	 */
-	private void setAnchorAt(int anchorId, Item item) {
+	private void setItemAt(int anchorId, Item item) {
 		this.anchors.put(anchorId, item);
 	}
 	
@@ -305,7 +307,7 @@ public abstract class Character {
 	 * 			The anchorId of the item
 	 * @return	Return the item at the given anchorId
 	 */
-	public Item getAnchorAt (int anchorId) {
+	public Item getItemAt (int anchorId) {
 		return this.anchors.get(anchorId);
 	}
 	
@@ -342,10 +344,10 @@ public abstract class Character {
 	 */
 	public void equip(int anchorId, Item item) {
 		if (this.canEquipItem(anchorId, item)) {
-			if (this.getAnchorAt(anchorId) != null) {
+			if (this.getItemAt(anchorId) != null) {
 				this.unequip(anchorId);
 			}
-			this.setAnchorAt(anchorId, item);
+			this.setItemAt(anchorId, item);
 			item.bindAnchor(this);
 		}
 	}
@@ -361,7 +363,7 @@ public abstract class Character {
 	 */
 	public void unequip(int anchorId) {
 		
-		Item item = this.getAnchorAt(anchorId);
+		Item item = this.getItemAt(anchorId);
 		
 		for (Map.Entry<Integer, Item> entry : this.anchors.entrySet()) {
 		    int key = entry.getKey();
@@ -391,7 +393,7 @@ public abstract class Character {
 		    int key = entry.getKey();
 		    Item value = entry.getValue();
 		    if (value == item) {
-		    	this.setAnchorAt(key,null);
+		    	this.setItemAt(key,null);
 		    	return;
 		    }
 		}
@@ -405,18 +407,58 @@ public abstract class Character {
 	 * 			| ...
 	 */
 	public boolean canPickUpItem(Item item) {
+		float totalWeightItem;
+		if(item instanceof Container) {
+			totalWeightItem = ((Container)(item)).getTotalWeight();
+			
+			}
+		else {
+			totalWeightItem = item.getWeight();
+		}
+		if(item.getHolder() != null && !item.getHolder().isDead()) {
+			return false;
+		}
+		else if(this.getCapacity() < this.getTotalWeight() + totalWeightItem) {
+			return false;
+			
+			}
 		return true;
+			
 	}
 	
 	/**
 	 * Picks an item up from a dead body or from the ground
 	 * @param	item
 	 * 			The item to be picked up
-	 * @pre		The character must be able to pick up the item.
-	 * 			| canPickUpItem(item)
-	 * @post	Picks an item up from a dead body or from the ground.
+	 * @post	If this item can not be picked up, nothings happens
+	 * 			| !canPickUpItem(item)
+	 * @effect	Otherwise all anchors are checked, if an empty anchor is found and the item can be equipped
+	 * 			the item equipped there.
+	 * 			| this.equip(anchorId, item)
+	 * @effect	If there are no available anchors and there is an anchored backpack that can take this item,
+	 * 			then the item will be put in that backpack.
+	 * 			| item.moveTo(backpack)
+	 * 			
 	 */
 	public void pickUp(Item item) {
+		if(canPickUpItem(item)) {
+			Set <Backpack> backpacks = new HashSet <Backpack>();
+			for(int anchorId; anchorId < this.getNumberOfAnchors(); anchorId ++) {
+				Item itemAt = this.getAnchorAt(anchorId);
+				if(itemAt instanceof Backpack) {
+					backpacks.add((Backpack)(itemAt));
+				}
+				if(itemAt == null && this.canEquipItem(anchorId, item)) {
+					this.equip(anchorId, item);
+					return;
+				}
+			}
+			for(Backpack backpack : backpacks) {
+				if(backpack.canHaveAsItem(item)) {
+					item.moveTo(backpack);
+				}
+			}
+		}
 		
 	}
 	
