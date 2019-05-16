@@ -27,21 +27,23 @@ public abstract class Character {
 	 ***********************/
 	
 	/**
-	 * Creates a character
+	 * Create a character with a given name, amount of hitpoints
+	 * and a number of anchors.
 	 * @param	name
 	 * 			The name of the new character
 	 * @param	hitpoints
 	 * 			The max amount of hitpoints
-	 * @pre		The given amount of maximum hitpoints must be valid
+	 * @pre		The given amount of maximum hitpoints must be valid.
 	 * 			| canHaveAsMaxHitpoints(hitpoints)
-	 * @post	Creates a character with the given name
+	 * @post	The name of this character is set to the given name.
 	 * 			| new.getName() == name
-	 * @post	Creates a character with the given hitpoints
+	 * @post	The amount of hitpoints of this character is set to the given hitpoints.
 	 * 			| new.getHitpoints() == hitpoints
-	 * @post	Creates a character with the maximum amount of hitpoints
-	 * 			| new.getMaximumHitpoints() == hitpoints
+	 * @post	The maximum amount of hitpoints of this character is set to the given hitpoints.
+	 * 			| new.getMaxHitpoints() == hitpoints
+	 * @post	The number of anchors of this character is set to the given number of anchors.
 	 * @throws	IllegalArgumentException
-	 * 			Throws this exception when the given name is not valid
+	 * 			Throws this exception when the given name is not valid.
 	 * 			| !isValidName(name)
 	 */
 	@Model
@@ -52,6 +54,7 @@ public abstract class Character {
 		}
 		setName(name);
 		setHitpoints(hitpoints);
+		setMaxHitpoints(hitpoints);
 		this.numberOfAnchors = numberOfAnchors;
 	}
 	
@@ -270,6 +273,16 @@ public abstract class Character {
 	 */
 	public abstract int getProtection();
 	
+	/***********************
+	 * Damage
+	 ***********************/
+	
+	/**
+	 * Return the damage of the character
+	 * @return	Return the damage of the current character
+	 */
+	public abstract int getDamage();
+	
 	
 	/***********************
 	 * Anchors
@@ -319,6 +332,10 @@ public abstract class Character {
 	 * 			| ...
 	 */
 	public boolean canEquipItem(int anchorId, Item item) {
+		if (anchorId < 0 || anchorId >= getNumberOfAnchors()) {
+			return false;
+		}
+		
 		if ((item.getHolder() == this || (item.getHolder() == null && canPickUpItem(item)))){
 			return true;
 		} else {

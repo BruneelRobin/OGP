@@ -1,5 +1,8 @@
 package MindCraft;
 
+import java.util.Set;
+import java.util.Map.Entry;
+
 /**
  * A class of Heroes. 
  * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
@@ -14,16 +17,17 @@ public class Hero extends Character {
 	 ***********************/
 	
 	/**
-	 * 
-	 * @param name
-	 * @param hitpoints
-	 * @param strength
-	 * 
-	 * @post	Creates a hero with the given name
-	 * 			| new.getName() == name
-	 * @post	Creates a hero with the given hitpoints
-	 * 			| new.getHitpoints() == hitpoints
-	 * @post	Creates a hero with the given strength
+	 * Create a hero with a given name, amount of hitpoints and strength.
+	 * @param 	name
+	 * 			The name of this hero.
+	 * @param 	hitpoints
+	 * 			The amount of hitpoints of this hero.
+	 * @param 	strength
+	 * 			The strength of this hero.
+	 * @effect	The new hero is set as a character with a given name, amount of hitpoints
+	 * 			and a default number of anchors.
+	 * 			|super(name, hitpoints, AnchorTypes.values().length)
+	 * @post	The strength of this hero is set to the given strength
 	 * 			| new.getStrength() == strength
 	 * @throws	IllegalArgumentException
 	 * 			Throws this exception when the given name is not valid
@@ -125,13 +129,6 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * 
-	 */
-	public int getDamage() {
-		return 0;
-	}
-	
-	/**
 	 * Makes the character hit the given character
 	 * @post	A random number between 0 and 100 is generated, when this number is higher than the 
 	 * 			character's protection, the character takes the damage of this hero. When this number is
@@ -172,7 +169,17 @@ public class Hero extends Character {
 	
 
 	
+	/**
+	 * Return the damage of the hero
+	 * @return	Return the damage of the hero
+	 */
+	public int getDamage() {
+		return 0;
+	}
 	
+	/**
+	 * 
+	 */
 	@Override
 	public boolean canPickUpItem(Item item) {
 		if(!super.canPickUpItem(item)){
@@ -183,6 +190,24 @@ public class Hero extends Character {
 			
 		}
 		return true;
+	}
+	
+	/**
+	 * Return true when the given item can be equipped
+	 * @param 	item
+	 * 			the item to be checked
+	 * @return	Return true when the given item can be equipped
+	 * 			| ...
+	 */
+	@Override
+	public boolean canEquipItem(int anchorId, Item item) {
+		if (super.canEquipItem(anchorId, item)) {
+			if ()
+		} else {
+			return false;
+		}
+	}
+		
 	/**
 	 * Equips an item in the given anchor
 	 * @param 	anchorType
@@ -210,8 +235,22 @@ public class Hero extends Character {
 		int anchorId = anchorType.getAnchorId();
 		unequip(anchorId);
 	}
-
-	}
 	
-
+	/**
+	 * Return the amount of armor's equipped by this character
+	 * @return	Return the amount of armor's equipped by this character also looks inside anchored backpacks
+	 */
+	public int getArmorCount () {
+		int armorCount = 0;
+		
+		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
+			Item item = entry.getValue();
+			if (item instanceof Armor) { //iterate over all items on dead body and pickup all items you want
+				armorCount += 1;
+			} else if (item instanceof Backpack) {
+				armorCount += ((Backpack)item).getArmorCount();
+			}
+		}
+		return armorCount;
+	}
 }
