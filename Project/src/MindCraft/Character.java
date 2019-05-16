@@ -387,7 +387,7 @@ public abstract class Character {
 	 */
 	@Raw
 	protected void removeItemFromHolder(Item item) {
-		for (Map.Entry<Integer, Item> entry : this.anchors.entrySet()) {
+		for (Entry<Integer, Item> entry : this.anchors.entrySet()) {
 		    int key = entry.getKey();
 		    Item value = entry.getValue();
 		    if (value == item) {
@@ -420,8 +420,12 @@ public abstract class Character {
 		
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public Set<Entry<Integer, Item>> getAnchorEntrySet () {
-		return anchors.entrySet();
+		return this.anchors.entrySet();
 	}
 	
 	

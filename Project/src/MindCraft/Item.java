@@ -57,6 +57,7 @@ public abstract class Item {
 	 * Return the item's identification
 	 * @return Return the item's identification
 	 */
+	@Immutable
 	public long getIdentification() {
 		return this.identification;
 	}
