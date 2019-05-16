@@ -13,7 +13,7 @@ import be.kuleuven.cs.som.annotate.Value;
  * @version	1.0 - 2019
  */
 @Value
- public enum AnchorTypes {
+ public enum AnchorType {
 	
 	RIGHT_HAND("Right hand", 0, false),
 	LEFT_HAND("Left hand", 1, false),
@@ -26,7 +26,7 @@ import be.kuleuven.cs.som.annotate.Value;
 	private final boolean holdsPurse;
 	
 	
-	 private AnchorTypes(String name, int anchorId, boolean holdsPurse) {
+	 private AnchorType(String name, int anchorId, boolean holdsPurse) {
 		this.name = name;
 		this.anchorId = anchorId;
 		this.holdsPurse = holdsPurse;
@@ -57,7 +57,22 @@ import be.kuleuven.cs.som.annotate.Value;
 	 */
 	 public boolean holdsPurse() {
 		 return this.holdsPurse;
-	 	}
+	 }
+	 
+	 /**
+	  * Return the anchorType associated with this id
+	  * @param 	anchorId
+	  * 		The id of the type
+	  * @return	Return the AnchorType associated with the given id
+	  */
+	 public static AnchorType getTypeFromId (int anchorId) {
+		 for (AnchorType value : AnchorType.values()) {
+			 if (value.getAnchorId() == anchorId) {
+				 return value;
+			 }
+		 }
+		 return null;
+	 }
 	 
 	 
 	

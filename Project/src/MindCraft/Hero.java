@@ -112,13 +112,6 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * 
-	 */
-	public int getDamage() {
-		return 0;
-	}
-	
-	/**
 	 * Makes the character hit the given character
 	 * @post	A random number between 0 and 100 is generated, when this number is higher than the 
 	 * 			character's protection, the character takes the damage of this hero. When this number is
@@ -167,7 +160,17 @@ public class Hero extends Character {
 		return 0;
 	}
 	
+	/**
+	 * Return the damage of the hero
+	 * @return	Return the damage of the hero
+	 */
+	public int getDamage() {
+		return 0;
+	}
 	
+	/**
+	 * 
+	 */
 	@Override
 	public boolean canPickUpItem(Item item) {
 		if(!super.canPickUpItem(item)){
@@ -178,6 +181,22 @@ public class Hero extends Character {
 			
 		}
 		return true;
+	}
+	
+	/**
+	 * Return true when the given item can be equipped
+	 * @param 	item
+	 * 			the item to be checked
+	 * @return	Return true when the given item can be equipped
+	 * 			| ...
+	 */
+	@Override
+	public boolean canEquipItem(int anchorId, Item item) {
+		if (super.canEquipItem(anchorId, item)) {
+			if ()
+		} else {
+			return false;
+		}
 	}
 		
 	/**

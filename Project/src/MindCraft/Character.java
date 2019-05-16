@@ -270,6 +270,16 @@ public abstract class Character {
 	 */
 	public abstract int getProtection();
 	
+	/***********************
+	 * Damage
+	 ***********************/
+	
+	/**
+	 * Return the damage of the character
+	 * @return	Return the damage of the current character
+	 */
+	public abstract int getDamage();
+	
 	
 	/***********************
 	 * Anchors
@@ -319,6 +329,10 @@ public abstract class Character {
 	 * 			| ...
 	 */
 	public boolean canEquipItem(int anchorId, Item item) {
+		if (anchorId < 0 || anchorId >= getNumberOfAnchors()) {
+			return false;
+		}
+		
 		if ((item.getHolder() == this || (item.getHolder() == null && canPickUpItem(item)))){
 			return true;
 		} else {
