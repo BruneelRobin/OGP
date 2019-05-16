@@ -178,6 +178,8 @@ public class Hero extends Character {
 			
 		}
 		return true;
+	}
+		
 	/**
 	 * Equips an item in the given anchor
 	 * @param 	anchorType
