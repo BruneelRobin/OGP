@@ -17,28 +17,26 @@ public class Armor extends Item {
 	 ***********************/
 	
 	/**
-	 * 
-	 * @param protection
-	 * @param fullProtection
-	 * @param weight
-	 * @param value
-	 * @param holder
-	 * @param parentBackpack
-	 * @pre		The given full protection is valid
-	 * 			| isValidProtection (fullProtection)
-	 * @pre		The given protection is valid
-	 * 			| isValidProtection(fullProtection) && protection <= fullProtection
+	 * Create armor with given identification, pro
+	 * @param	identification
+	 * 			The identification of this armor.
+	 * @param 	protection
+	 * 			The full protection and current protection of this armor.
+	 * @param 	weight
+	 * 			The weight of this armor.
+	 * @param 	value
+	 * 			The value of this armor.
+	 * @pre		The given protection must be valid.
+	 * 			| isValidProtection(fullProtection)
+	 * @effect	The armor is set as an item with given identification, weight and value.
+	 * 			| super(identification, weight, value)
+	 * @post	
 	 */
 	
-	protected Armor(long identification, int protection, int fullProtection, float weight, int value) {
+	protected Armor(long identification, int protection, float weight, int value) {
 		super(identification, weight, value);
-		
-		if (!isValidIdentification(identification)) {
-			setIdentification(generateIdentification());
-		}
-		
 		this.currentProtection = protection;
-		this.fullProtection = fullProtection;
+		this.fullProtection = protection;
 		ids.add(getIdentification());
 	}
 	
@@ -178,6 +176,7 @@ public class Armor extends Item {
 	
 	private final int MAX_VALUE = 1000;
 	private final int MIN_VALUE = 0;
+	private final boolean hasGivenValue;
 	
 	
 	/**

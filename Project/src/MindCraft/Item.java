@@ -14,12 +14,23 @@ public abstract class Item {
 	 * Constructors
 	 ***********************/
 	
-	// TODO:	* holden en parentBackpack weg uit constructor want zorgt voor problemen met validatie
-	//			* nieuwe naam voor holder, want niet altijd gedefiniëerd (ofwel in bp ofwel in anchor)
-	//			* subklasses aanpassen
 	
 	/**
-	 * Creates a new item
+	 * Create an item with given weight and value.
+	 * @param 	weight
+	 * 			The weight of this item.
+	 * @param 	value
+	 * 			The value of this item.
+	 * 
+	 * @post	The identification is set to a generated identification.
+	 * 			| new.getIdentification() == generateIdentification()
+	 * @post	The weight is set to the given weight.
+	 * 			If the given weight is not valid, a default weight is set.
+	 * 			| new.getWeight() == weight
+	 * @post	The weight is valid after construction.
+	 * 			| new.isValidWeight
+	 * @post	The value of this item is set to the given value.
+	 * 			| setValue(value)
 	 */
 	@Model
 	protected Item(float weight, int value) {
@@ -33,6 +44,28 @@ public abstract class Item {
 		setValue(value);
 	}
 	
+	/**
+	 * Create an item with given identification, weight and value.
+	 * @param 	identification
+	 * 			The identification of this item.
+	 * @param 	weight
+	 * 			The weight of this item.
+	 * @param 	value
+	 * 			The value of this item.
+	 * @post	The identification is set to the given identification
+	 * 			| new.getIdentification() == identification
+	 * @post	The weight is set to the given weight.
+	 * 			If the given weight is not valid, a default weight is set.
+	 * 			| new.getWeight() == weight
+	 * @post	The weight is valid after construction.
+	 * 			| new.isValidWeight
+	 * @post	The value of this item is set to the given value.
+	 * 			| setValue(value)
+	 * 
+	 * @note	For the class Armor, the identification needs to be given. For now this
+	 * 			is the only class that uses this constructor.
+	 */
+	@Model
 	protected Item(long identification, float weight, int value) {
 		setIdentification(identification);
 		if (isValidWeight(weight)) {
@@ -43,9 +76,6 @@ public abstract class Item {
 		
 		setValue(value);
 	}
-	
-	/*protected void initialize (int value, Character holder, Backpack parentBackpack) {
-	}*/
 	
 	/*************************************
 	 * Identification - total programming
@@ -154,25 +184,25 @@ public abstract class Item {
 	/***********************
 	 * Anchor
 	 ***********************/
-	private Character anchor;
+	private Character character;
 	
 	/**
-	 * Returns the item's anchor
-	 * @return Returns the item's anchor
+	 * Returns the item's character
+	 * @return Returns the item's character
 	 */
-	public Character getAnchor() {
-		return this.anchor;
+	public Character getCharacter() {
+		return this.character;
 	}
 	
 	/**
-	 * Sets the item's anchor to the given anchor
-	 * @param anchor
-	 * 		  The new anchor
-	 * @post  The anchor is set to the given anchor
-	 * 		  | new.getAnchor() == anchor
+	 * Sets the item's character to the given character
+	 * @param character
+	 * 		  The new character
+	 * @post  The character is set to the given character
+	 * 		  | new.getCharacter() == anchor
 	 */
-	private void setAnchor(Character anchor) {
-		this.anchor = anchor;
+	private void setCharacter(Character character) {
+		this.character = character;
 	}
 	
 	/**
@@ -183,13 +213,13 @@ public abstract class Item {
 	 * 			| getParentBackpack() == null && getAnchor() == anchor
 	 */
 	@Raw
-	protected void bindAnchor (Character anchor) {
-		//if (anchor == getAnchor() || getAnchor() == null) {
+	protected void bindCharacter (Character character) {
+		//if (character == getCharacter() || getCharacter() == null) {
 			if (getParentBackpack() != null) {
 				getParentBackpack().removeItem(this);
 				setParentBackpack(null);
 			}
-			setAnchor(anchor);
+			setCharacter(character);
 		//}
 		
 	}
