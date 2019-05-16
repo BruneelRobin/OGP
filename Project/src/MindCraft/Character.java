@@ -325,7 +325,7 @@ public abstract class Character {
 	}
 	
 	/**
-	 * Equip item on the given slot
+	 * Equip item from own inventory or from ground, on the given slot
 	 * @param	anchorId
 	 * 			The id of the anchor to be set
 	 * @param	item
@@ -404,7 +404,7 @@ public abstract class Character {
 	 * @return	Returns true when the holder of the item is null or dead
 	 * 			| ...
 	 */
-	public boolean canPickItem(Item item) {
+	public boolean canPickUpItem(Item item) {
 		return true;
 	}
 	
