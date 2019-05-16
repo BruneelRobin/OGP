@@ -23,7 +23,7 @@ public abstract class Item {
 	 */
 	@Model
 	protected Item(float weight, int value) {
-		setIdentification(generateIdentification());
+		this.identification = generateIdentification();
 		if (isValidWeight(weight)) {
 			this.weight = weight;
 		} else {
@@ -34,7 +34,12 @@ public abstract class Item {
 	}
 	
 	protected Item(long identification, float weight, int value) {
-		setIdentification(identification);
+		if (!canHaveAsIdentification(identification)) {
+			this.identification = generateIdentification();
+		} else {
+			this.identification = identification;
+		}
+		
 		if (isValidWeight(weight)) {
 			this.weight = weight;
 		} else {
@@ -51,7 +56,7 @@ public abstract class Item {
 	 * Identification - total programming
 	 *************************************/
 	
-	private long identification;
+	private final long identification;
 	
 	/**
 	 * Return the item's identification
@@ -62,9 +67,15 @@ public abstract class Item {
 		return this.identification;
 	}
 	
-	protected void setIdentification (long identification) {
-		this.identification = identification;
-	}
+	//protected void setIdentification (long identification) {
+	//	this.identification = identification;
+	//}
+	
+	/**
+	 * Return true when this class can have this id as identification
+	 * @return	Return true when this class can have this id as identification
+	 */
+	public abstract boolean canHaveAsIdentification(long identification);
 	
 	/**
 	 * Return a valid id for this item

@@ -56,7 +56,7 @@ public class Armor extends Item {
 		long max = Long.MAX_VALUE;
 		long candidate = MathHelper.getRandomLongBetweenRange(min, max);
 		
-		if (!isValidIdentification (candidate)) {
+		if (!canHaveAsIdentification (candidate)) {
 			return generateIdentification();
 		} else {
 			return candidate;
@@ -71,7 +71,8 @@ public class Armor extends Item {
 	 * 			Return false when this item can't have the given identification number
 	 * 			| result == MathHelper.isPrime(identification) && ids.contains(identification) == false
 	 */
-	public static boolean isValidIdentification(long identification) {
+	@Override
+	public boolean canHaveAsIdentification(long identification) {
 		return MathHelper.isPrime(identification) && ids.contains(identification) == false;
 	}
 
