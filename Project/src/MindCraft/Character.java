@@ -45,14 +45,14 @@ public abstract class Character {
 	 * 			| !isValidName(name)
 	 */
 	@Model
-	protected Character(String name, int hitpoints) throws IllegalArgumentException {
+	protected Character(String name, int hitpoints, int numberOfAnchors) throws IllegalArgumentException {
 		
 		if (!canHaveAsName(name)) {
 			throw new IllegalArgumentException("Invalid name!");
 		}
 		setName(name);
 		setHitpoints(hitpoints);
-		
+		this.numberOfAnchors = numberOfAnchors;
 	}
 	
 	/********************************
@@ -319,7 +319,7 @@ public abstract class Character {
 	 * 			| ...
 	 */
 	public boolean canEquipItem(int anchorId, Item item) {
-		if ((item.getHolder() == this || item.getHolder() == null) && this.getAnchorAt(anchorId) == null){
+		if ((item.getHolder() == this || (item.getHolder() == null && canPickUpItem(item)))){
 			return true;
 		} else {
 			return false;
@@ -470,6 +470,26 @@ public abstract class Character {
 		return this.anchors.entrySet();
 	}
 	
+	private final int numberOfAnchors;
+	
+	/**
+	 * Return the number of anchors of this character
+	 * @return	Return the number of anchors of this character
+	 */
+	@Immutable
+	public int getNumberOfAnchors() {
+		return this.numberOfAnchors;
+	}
+	
+	/***********************
+	 * Capacity
+	 ***********************/
+	
+	/**
+	 * Return the character's capacity
+	 * @return Return the character's capacity
+	 */
+	public abstract float getCapacity();
 	
 	
 	/***********************

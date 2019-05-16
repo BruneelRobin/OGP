@@ -2,6 +2,8 @@ package MindCraft;
 
 import java.util.HashSet;
 
+import be.kuleuven.cs.som.annotate.*;
+
 /**
  * A class of armors.
  * 
