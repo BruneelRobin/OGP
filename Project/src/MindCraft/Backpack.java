@@ -57,6 +57,19 @@ public class Backpack extends Item implements Container {
 		return 2^n;
 	}
 	
+	/**
+	 * 
+	 * @param 	identification
+	 * 			The identification to check
+	 * @return	Return true when this item can have the given identification number
+	 * 			Return false when this item can't have the given identification number
+	 * 			| result == identification == generateIdentification()
+	 */
+	@Override
+	public boolean canHaveAsIdentification(long identification) {
+		return identification == generateIdentification();
+	}
+	
 
 	
 	
