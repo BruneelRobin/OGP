@@ -103,10 +103,13 @@ public class Hero extends Character {
 	/**
 	 * Return the protection of the hero
 	 * @return	Return the protection of the hero based on default protection value and armor
+	 * 			| result == DEFAULT_PROTECTION + ((Armor)(this.getItemAt(AnchorType.BODY.getAnchorId()))).getProtection()
 	 */
 	@Override
 	public int getProtection() {
-		return(DEFAULT_PROTECTION + AnchorType.BODY.getAnchorId());
+		int anchorIdOfBody = AnchorType.BODY.getAnchorId();
+		Armor armorOfHero = (Armor)(this.getItemAt(anchorIdOfBody));
+		return(DEFAULT_PROTECTION + armorOfHero.getProtection());
 		
 	}
 	
@@ -137,9 +140,9 @@ public class Hero extends Character {
 	 * 
 	 */
 	public void hit(Character character) {
-		int rnd = (int)MathHelper.getRandomLongBetweenRange(0, 100);
+		int randomNumber = (int)MathHelper.getRandomLongBetweenRange(0, 100);
 		
-		if (rnd >= character.getProtection()) {
+		if (randomNumber >= character.getProtection()) {
 			int damage = getDamage();
 			
 			character.takeDamage(damage);
@@ -171,11 +174,24 @@ public class Hero extends Character {
 	
 	/**
 	 * Return the damage of the hero
-	 * @return	Return the damage of the hero
+	 * @return	Return the damage of the hero as the sum of his weapons and strength minus ten and divided by two.
+	 * 			When this result is negative, zero is returned.
+	 * 			| result = (int)((float)(AnchorType.RIGHT_HAND.getAnchorId() + AnchorType.LEFT_HAND.getAnchorId() + this.getStrength() -10)/2)
+	 * 			
 	 */
+	@Override
 	public int getDamage() {
+		int anchorIdOfRightHand = AnchorType.RIGHT_HAND.getAnchorId();
+		int anchorIdOfLeftHand = AnchorType.LEFT_HAND.getAnchorId();
+		float strengthOfHero = this.getStrength();
+		float sum = (float)(anchorIdOfRightHand + anchorIdOfLeftHand + strengthOfHero -10);
+		int result = (int)(sum/2);
+		if(result < 0) {
 		return 0;
-	}
+		}
+		return result;
+		
+		}
 	
 	/**
 	 * 
