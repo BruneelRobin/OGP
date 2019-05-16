@@ -14,16 +14,17 @@ public class Hero extends Character {
 	 ***********************/
 	
 	/**
-	 * 
-	 * @param name
-	 * @param hitpoints
-	 * @param strength
-	 * 
-	 * @post	Creates a hero with the given name
-	 * 			| new.getName() == name
-	 * @post	Creates a hero with the given hitpoints
-	 * 			| new.getHitpoints() == hitpoints
-	 * @post	Creates a hero with the given strength
+	 * Create a hero with a given name, amount of hitpoints and strength.
+	 * @param 	name
+	 * 			The name of this hero.
+	 * @param 	hitpoints
+	 * 			The amount of hitpoints of this hero.
+	 * @param 	strength
+	 * 			The strength of this hero.
+	 * @effect	The new hero is set as a character with a given name, amount of hitpoints
+	 * 			and a default number of anchors.
+	 * 			|super(name, hitpoints, AnchorTypes.values().length)
+	 * @post	The strength of this hero is set to the given strength
 	 * 			| new.getStrength() == strength
 	 * @throws	IllegalArgumentException
 	 * 			Throws this exception when the given name is not valid

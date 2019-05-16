@@ -27,13 +27,28 @@ public class Monster extends Character {
 	 ***********************/
 	
 	/**
-	 * Create a monster.
-	 * @post	Create a monster with the given name.
-	 * @post	Create a monster with the given hitpoints.
+	 * Create a monster with a given name, amount of hitpoints, damage, protection,
+	 * number of anchors and capacity.
+	 * @param 	name
+	 *			The name of this monster.
+	 * @param 	hitpoints
+	 * 			The maximum amount of hitpoints of this monster.
+	 * @param 	damage
+	 * 			The damage of this monster.
+	 * @param 	protection
+	 * 			The protection of this monster.
+	 * @param 	numberOfAnchors
+	 * 			The number of anchors of this monster.
+	 * @param 	capacity
+	 * 			The carry capacity of this monster.
+	 * @effect	The new monster is set as a character with a given name, amount of hitpoints
+	 * 			and a number of anchors.
+	 * @post	The damage of this monster is set to the given damage.
+	 * @post	The number of anchors of this monster is set to the given number of anchors.
+	 * @post	The capacity of this monster is set to the given capacity.
 	 * @throws	IllegalArgumentException
 	 * 			Throws this exception when the given name is not valid.
 	 */
-	
 	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity) throws IllegalArgumentException {
 		super(name, hitpoints, numberOfAnchors);
 		setDamage(damage);
@@ -42,13 +57,32 @@ public class Monster extends Character {
 	}
 	
 	/**
-	 * Create a monster.
-	 * @post	Create a monster with the given name.
-	 * @post	Create a monster with the given hitpoints.
+	 * Create a monster with a given name, amount of hitpoints, damage, protection,
+	 * number of anchors and capacity.
+	 * @param 	name
+	 *			The name of this monster.
+	 * @param 	hitpoints
+	 * 			The maximum amount of hitpoints of this monster.
+	 * @param 	damage
+	 * 			The damage of this monster.
+	 * @param 	protection
+	 * 			The protection of this monster.
+	 * @param 	numberOfAnchors
+	 * 			The number of anchors of this monster.
+	 * @param 	capacity
+	 * 			The carry capacity of this monster.
+	 * @param	itemset	
+	 * 			The given set of items for this monster to carry.
+	 * @effect	The new monster is set as a character with a given name, amount of hitpoints
+	 * 			and a number of anchors.
+	 * @post	The damage of this monster is set to the given damage.
+	 * @post	The number of anchors of this monster is set to the given number of anchors.
+	 * @post	The capacity of this monster is set to the given capacity, if the capacity 
+	 * 			can handle the total weight of the given itemset. If not the capacity is set
+	 * 			to the total weight of the given itemset.
 	 * @throws	IllegalArgumentException
 	 * 			Throws this exception when the given name is not valid.
 	 */
-	
 	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity, HashSet<Item> itemset) throws IllegalArgumentException {
 		super(name, hitpoints, numberOfAnchors);
 		setDamage(damage);
