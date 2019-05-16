@@ -72,8 +72,8 @@ public class Hero extends Character {
 	 ***********************/
 	
 	/**
-	 * Returns the hero's capacity
-	 * @return Returns the hero's capacity
+	 * Return the hero's capacity
+	 * @return Return the hero's capacity
 	 */
 	public float getCapacity() {
 		return 20*this.getStrength();

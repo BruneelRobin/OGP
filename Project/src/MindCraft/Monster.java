@@ -87,6 +87,21 @@ public class Monster extends Character {
 	}
 	
 	/***********************
+	 * Capacity
+	 ***********************/
+	
+	private final float capacity;
+	
+	/**
+	 * Return the monster's capacity
+	 * @return Return the monster's capacity
+	 */
+	public float getCapacity() {
+		return this.capacity;
+		
+	}
+	
+	/***********************
 	 * Other Methods
 	 ***********************/
 	

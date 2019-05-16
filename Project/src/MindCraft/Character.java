@@ -415,6 +415,15 @@ public abstract class Character {
 		return 0;
 	}
 	
+	/***********************
+	 * Capacity
+	 ***********************/
+	
+	/**
+	 * Return the character's capacity
+	 * @return Return the character's capacity
+	 */
+	public abstract float getCapacity();
 	
 	
 	/***********************
