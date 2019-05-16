@@ -290,4 +290,23 @@ public class Backpack extends Item implements Container {
 	public int getTotalValue() {
 		return 0;
 	}
+	
+	/**
+	 * Return the amount of armor's in this backpack
+	 * @return	Return the amount of armor's in this backpack also looks inside anchored backpacks
+	 */
+	public int getArmorCount () {
+		int armorCount = 0;
+		for (HashSet<Item> set : this.content.values()) {
+			for (Item item : set) {
+				if (item instanceof Armor) {
+					armorCount += 1;
+				} else if (item instanceof Backpack) {
+					armorCount += ((Backpack)item).getArmorCount();
+				}
+			}
+		}
+		
+		return armorCount;
+	}
 }
