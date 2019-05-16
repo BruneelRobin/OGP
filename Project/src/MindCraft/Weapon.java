@@ -15,41 +15,47 @@ public class Weapon extends Item {
 	 ***********************/
 	
 	/**
-	 * TODO: implementeren
+	 * Create a weapon with given damage, weight and value.
 	 * 
 	 * @param	identification
+	 * 			The identification of this weapon.
 	 * @param	weight
+	 * 			The weight of this weapon.
 	 * @param	value
-	 * @param	holder
-	 * @param 	parentBackpack
+	 * 			The value of this weapon.
+	 * @pre		The given damage must be valid.
+	 * 			| isValidDamage(damage)
+	 * @effect	The new weapon is set as an item with given weight and value.
+	 * 			| super(weight, value)
+	 * @post	The damage is set to the given damage.
+	 * 			| setDamage(damage)
+	 * @post	The value has a given value.
+	 * 			| new.hasGivenValue
 	 */
 	public Weapon(int damage, float weight, int value) {
 		super(weight, value);
-		//if (!isValidDamage(damage)) {
-		//	assert false; // preconditie
-		//}
-		
-		
-		setDamage(damage); //nominaal dus condities OK
+		setDamage(damage);
 		this.hasGivenValue = true;
 	}
 	
 	/**
-	 * TODO: implementeren
-	 * 
+	 * Create a weapon with given damage and value.
 	 * @param	identification
+	 * 			The identification of this weapon.
 	 * @param	weight
-	 * @param	holder
-	 * @param 	parentBackpack
+	 * 			The weight of this weapon.
+	 * @pre		The given damage must be valid.
+	 * 			| isValidDamage(damage)
+	 * @effect	The new weapon is set as an item with given weight and 0 value.
+	 * 			| super(weight, 0)
+	 * @post	The damage is set to the given damage.
+	 * 			| setDamage(damage)
+	 * @post	The value has no given value.
+	 * 			| !new.hasGivenValue
 	 */
 	public Weapon(int damage, float weight) {
 		super(weight, 0);
-		//if (!isValidDamage(damage)) {
-		//	assert false; // preconditie
-		//}
-		
-		
-		setDamage(damage); //nominaal dus condities OK
+		setDamage(damage);
 		this.hasGivenValue = false;
 	}
 	
