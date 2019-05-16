@@ -80,6 +80,8 @@ public class Hero extends Character {
 	 * Capacity
 	 ***********************/
 	
+	private static final int MAX_ARMOR_COUNT = 2;
+	
 	/**
 	 * Returns the hero's capacity
 	 * @return Returns the hero's capacity
@@ -152,7 +154,7 @@ public class Hero extends Character {
 		setHitpoints(newHitpoints);
 	}
 	
-	private final int defaultProtection = 10;
+	private static final int DEFAULT_PROTECTION = 10;
 	/**
 	 * Return the protection of the hero
 	 * @return	Return the protection of the hero based on default protection value and armor
@@ -160,6 +162,20 @@ public class Hero extends Character {
 	@Override
 	public int getProtection() {
 		return 0;
+	}
+	
+	
+	@Override
+	public boolean canPickUpItem(Item item) {
+		if(!super.canPickUpItem(item)){
+			return false;
+		}
+		else if(item instanceof Armor && this.getArmorCount() >= MAX_ARMOR_COUNT){
+			return false;
+			
+		}
+		return true;
+
 	}
 	
 

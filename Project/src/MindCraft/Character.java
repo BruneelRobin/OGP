@@ -4,10 +4,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+
 import be.kuleuven.cs.som.annotate.*;
 import sun.security.jca.GetInstance.Instance;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * A class of characters.
@@ -405,18 +407,58 @@ public abstract class Character {
 	 * 			| ...
 	 */
 	public boolean canPickUpItem(Item item) {
+		float totalWeightItem;
+		if(item instanceof Container) {
+			totalWeightItem = ((Container)(item)).getTotalWeight();
+			
+			}
+		else {
+			totalWeightItem = item.getWeight();
+		}
+		if(item.getHolder() != null && !item.getHolder().isDead()) {
+			return false;
+		}
+		else if(this.getCapacity() < this.getTotalWeight() + totalWeightItem) {
+			return false;
+			
+			}
 		return true;
+			
 	}
 	
 	/**
 	 * Picks an item up from a dead body or from the ground
 	 * @param	item
 	 * 			The item to be picked up
-	 * @pre		The character must be able te pick up the item.
-	 * 			| canPickItem(item)
-	 * @post	Picks an item up from a dead body or from the ground.
+	 * @post	If this item can not be picked up, nothings happens
+	 * 			| !canPickUpItem(item)
+	 * @effect	Otherwise all anchors are checked, if an empty anchor is found and the item can be equipped
+	 * 			the item equipped there.
+	 * 			| this.equip(anchorId, item)
+	 * @effect	If there are no available anchors and there is an anchored backpack that can take this item,
+	 * 			then the item will be put in that backpack.
+	 * 			| item.moveTo(backpack)
+	 * 			
 	 */
 	public void pickUp(Item item) {
+		if(canPickUpItem(item)) {
+			Set <Backpack> backpacks = new HashSet <Backpack>();
+			for(int anchorId; anchorId < this.getNumberOfAnchors(); anchorId ++) {
+				Item itemAt = this.getAnchorAt(anchorId);
+				if(itemAt instanceof Backpack) {
+					backpacks.add((Backpack)(itemAt));
+				}
+				if(itemAt == null && this.canEquipItem(anchorId, item)) {
+					this.equip(anchorId, item);
+					return;
+				}
+			}
+			for(Backpack backpack : backpacks) {
+				if(backpack.canHaveAsItem(item)) {
+					item.moveTo(backpack);
+				}
+			}
+		}
 		
 	}
 	
