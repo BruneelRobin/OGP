@@ -114,8 +114,8 @@ public abstract class Item {
 	 * Value
 	 ***********************/
 	private int value;
-	private abstract final int MAX_VALUE;
-	private abstract final int MIN_VALUE;
+	protected abstract final int MAX_VALUE;
+	protected abstract final int MIN_VALUE;
 	
 	/**
 	 * Returns the item's value 
