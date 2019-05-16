@@ -44,6 +44,19 @@ public class Purse extends Item implements Container {
 		return candidate;
 	}
 	
+	/**
+	 * 
+	 * @param 	identification
+	 * 			The identification to check
+	 * @return	Return true when this item can have the given identification number
+	 * 			Return false when this item can't have the given identification number
+	 * 			| result == true
+	 */
+	@Override
+	public boolean canHaveAsIdentification(long identification) {
+		return true;
+	}
+	
 	/*******************************
 	 * Capacity - total programming
 	 *******************************/
@@ -246,6 +259,24 @@ public class Purse extends Item implements Container {
 	 */
 	public float getTotalWeight() {
 		return ((float)(this.getContent())*DUCATE_WEIGHT + this.getWeight());
+	}
+	
+	/**
+	 * Return the maximum value for this item
+	 * @return	Return the maximum value for this item
+	 */
+	@Immutable@Override
+	public int getMaxValue () {
+		return 0;
+	}
+	
+	/**
+	 * Return the minimum value for this item
+	 * @return	Return the minimum value for this item
+	 */
+	@Immutable@Override
+	public int getMinValue () {
+		return 0;
 	}
 	
 	/**

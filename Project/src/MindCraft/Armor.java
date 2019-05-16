@@ -17,28 +17,26 @@ public class Armor extends Item {
 	 ***********************/
 	
 	/**
-	 * 
-	 * @param protection
-	 * @param fullProtection
-	 * @param weight
-	 * @param value
-	 * @param holder
-	 * @param parentBackpack
-	 * @pre		The given full protection is valid
-	 * 			| isValidProtection (fullProtection)
-	 * @pre		The given protection is valid
-	 * 			| isValidProtection(fullProtection) && protection <= fullProtection
+	 * Create armor with given identification, pro
+	 * @param	identification
+	 * 			The identification of this armor.
+	 * @param 	protection
+	 * 			The full protection and current protection of this armor.
+	 * @param 	weight
+	 * 			The weight of this armor.
+	 * @param 	value
+	 * 			The value of this armor.
+	 * @pre		The given protection must be valid.
+	 * 			| isValidProtection(fullProtection)
+	 * @effect	The armor is set as an item with given identification, weight and value.
+	 * 			| super(identification, weight, value)
+	 * @post	
 	 */
 	
-	protected Armor(long identification, int protection, int fullProtection, float weight, int value) {
+	protected Armor(long identification, int protection, float weight, int value) {
 		super(identification, weight, value);
-		
-		if (!isValidIdentification(identification)) {
-			setIdentification(generateIdentification());
-		}
-		
 		this.currentProtection = protection;
-		this.fullProtection = fullProtection;
+		this.fullProtection = protection;
 		ids.add(getIdentification());
 	}
 	
@@ -56,7 +54,7 @@ public class Armor extends Item {
 		long max = Long.MAX_VALUE;
 		long candidate = MathHelper.getRandomLongBetweenRange(min, max);
 		
-		if (!isValidIdentification (candidate)) {
+		if (!canHaveAsIdentification (candidate)) {
 			return generateIdentification();
 		} else {
 			return candidate;
@@ -71,7 +69,8 @@ public class Armor extends Item {
 	 * 			Return false when this item can't have the given identification number
 	 * 			| result == MathHelper.isPrime(identification) && ids.contains(identification) == false
 	 */
-	public static boolean isValidIdentification(long identification) {
+	@Override
+	public boolean canHaveAsIdentification(long identification) {
 		return MathHelper.isPrime(identification) && ids.contains(identification) == false;
 	}
 
@@ -176,8 +175,23 @@ public class Armor extends Item {
 	 * Value
 	 ***********************/
 	
-	private final int MAX_VALUE = 1000;
-	private final int MIN_VALUE = 0;
+	/**
+	 * Return the maximum value for this item
+	 * @return	Return the maximum value for this item
+	 */
+	@Immutable@Override
+	public int getMaxValue () {
+		return 1000;
+	}
+	
+	/**
+	 * Return the minimum value for this item
+	 * @return	Return the minimum value for this item
+	 */
+	@Immutable@Override
+	public int getMinValue () {
+		return 0;
+	}
 	
 	
 	/**
@@ -215,12 +229,5 @@ public class Armor extends Item {
 	/***********************
 	 * Other Methods
 	 ***********************/
-	
-
-
-	/**
-	 * Class variable referencing the maximum value of any armor.
-	 */
-	private static int MAX_VALUE = 1000;
 	
 }

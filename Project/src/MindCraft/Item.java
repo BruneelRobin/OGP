@@ -14,16 +14,27 @@ public abstract class Item {
 	 * Constructors
 	 ***********************/
 	
-	// TODO:	* holden en parentBackpack weg uit constructor want zorgt voor problemen met validatie
-	//			* nieuwe naam voor holder, want niet altijd gedefiniëerd (ofwel in bp ofwel in anchor)
-	//			* subklasses aanpassen
 	
 	/**
-	 * Creates a new item
+	 * Create an item with given weight and value.
+	 * @param 	weight
+	 * 			The weight of this item.
+	 * @param 	value
+	 * 			The value of this item.
+	 * 
+	 * @post	The identification is set to a generated identification.
+	 * 			| new.getIdentification() == generateIdentification()
+	 * @post	The weight is set to the given weight.
+	 * 			If the given weight is not valid, a default weight is set.
+	 * 			| new.getWeight() == weight
+	 * @post	The weight is valid after construction.
+	 * 			| new.isValidWeight
+	 * @post	The value of this item is set to the given value.
+	 * 			| setValue(value)
 	 */
 	@Model
 	protected Item(float weight, int value) {
-		setIdentification(generateIdentification());
+		this.identification = generateIdentification();
 		if (isValidWeight(weight)) {
 			this.weight = weight;
 		} else {
@@ -33,8 +44,35 @@ public abstract class Item {
 		setValue(value);
 	}
 	
+	/**
+	 * Create an item with given identification, weight and value.
+	 * @param 	identification
+	 * 			The identification of this item.
+	 * @param 	weight
+	 * 			The weight of this item.
+	 * @param 	value
+	 * 			The value of this item.
+	 * @post	The identification is set to the given identification
+	 * 			| new.getIdentification() == identification
+	 * @post	The weight is set to the given weight.
+	 * 			If the given weight is not valid, a default weight is set.
+	 * 			| new.getWeight() == weight
+	 * @post	The weight is valid after construction.
+	 * 			| new.isValidWeight
+	 * @post	The value of this item is set to the given value.
+	 * 			| setValue(value)
+	 * 
+	 * @note	For the class Armor, the identification needs to be given. For now this
+	 * 			is the only class that uses this constructor.
+	 */
+	@Model
 	protected Item(long identification, float weight, int value) {
-		setIdentification(identification);
+		if (!canHaveAsIdentification(identification)) {
+			this.identification = generateIdentification();
+		} else {
+			this.identification = identification;
+		}
+		
 		if (isValidWeight(weight)) {
 			this.weight = weight;
 		} else {
@@ -43,15 +81,12 @@ public abstract class Item {
 		
 		setValue(value);
 	}
-	
-	/*protected void initialize (int value, Character holder, Backpack parentBackpack) {
-	}*/
 	
 	/*************************************
 	 * Identification - total programming
 	 *************************************/
 	
-	private long identification;
+	private final long identification;
 	
 	/**
 	 * Return the item's identification
@@ -62,9 +97,15 @@ public abstract class Item {
 		return this.identification;
 	}
 	
-	protected void setIdentification (long identification) {
-		this.identification = identification;
-	}
+	//protected void setIdentification (long identification) {
+	//	this.identification = identification;
+	//}
+	
+	/**
+	 * Return true when this class can have this id as identification
+	 * @return	Return true when this class can have this id as identification
+	 */
+	public abstract boolean canHaveAsIdentification(long identification);
 	
 	/**
 	 * Return a valid id for this item
@@ -114,8 +155,20 @@ public abstract class Item {
 	 * Value
 	 ***********************/
 	private int value;
-	private abstract final int MAX_VALUE;
-	private abstract final int MIN_VALUE;
+	
+	/**
+	 * Return the maximum value for this item
+	 * @return	Return the maximum value for this item
+	 */
+	@Immutable
+	public abstract int getMaxValue ();
+	
+	/**
+	 * Return the minimum value for this item
+	 * @return	Return the minimum value for this item
+	 */
+	@Immutable
+	public abstract int getMinValue ();
 	
 	/**
 	 * Returns the item's value 
@@ -146,7 +199,7 @@ public abstract class Item {
 	 * 
 	 */
 	public boolean canHaveAsValue(int value) {
-		return (value >= MIN_VALUE && value <= MAX_VALUE);
+		return (value >= getMinValue() && value <= getMaxValue());
 	}
 	
 	
@@ -154,25 +207,25 @@ public abstract class Item {
 	/***********************
 	 * Anchor
 	 ***********************/
-	private Character anchor;
+	private Character character;
 	
 	/**
-	 * Returns the item's anchor
-	 * @return Returns the item's anchor
+	 * Returns the item's character
+	 * @return Returns the item's character
 	 */
-	public Character getAnchor() {
-		return this.anchor;
+	public Character getCharacter() {
+		return this.character;
 	}
 	
 	/**
-	 * Sets the item's anchor to the given anchor
-	 * @param anchor
-	 * 		  The new anchor
-	 * @post  The anchor is set to the given anchor
-	 * 		  | new.getAnchor() == anchor
+	 * Sets the item's character to the given character
+	 * @param character
+	 * 		  The new character
+	 * @post  The character is set to the given character
+	 * 		  | new.getCharacter() == anchor
 	 */
-	private void setAnchor(Character anchor) {
-		this.anchor = anchor;
+	private void setCharacter(Character character) {
+		this.character = character;
 	}
 	
 	/**
@@ -183,13 +236,13 @@ public abstract class Item {
 	 * 			| getParentBackpack() == null && getAnchor() == anchor
 	 */
 	@Raw
-	protected void bindAnchor (Character anchor) {
-		//if (anchor == getAnchor() || getAnchor() == null) {
+	protected void bindCharacter (Character character) {
+		//if (character == getCharacter() || getCharacter() == null) {
 			if (getParentBackpack() != null) {
 				getParentBackpack().removeItem(this);
 				setParentBackpack(null);
 			}
-			setAnchor(anchor);
+			setCharacter(character);
 		//}
 		
 	}

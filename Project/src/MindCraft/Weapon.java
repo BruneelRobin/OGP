@@ -1,5 +1,7 @@
 package MindCraft;
 
+import be.kuleuven.cs.som.annotate.*;
+
 /**
  * A class of weapons.
  * 
@@ -13,41 +15,47 @@ public class Weapon extends Item {
 	 ***********************/
 	
 	/**
-	 * TODO: implementeren
+	 * Create a weapon with given damage, weight and value.
 	 * 
 	 * @param	identification
+	 * 			The identification of this weapon.
 	 * @param	weight
+	 * 			The weight of this weapon.
 	 * @param	value
-	 * @param	holder
-	 * @param 	parentBackpack
+	 * 			The value of this weapon.
+	 * @pre		The given damage must be valid.
+	 * 			| isValidDamage(damage)
+	 * @effect	The new weapon is set as an item with given weight and value.
+	 * 			| super(weight, value)
+	 * @post	The damage is set to the given damage.
+	 * 			| setDamage(damage)
+	 * @post	The value has a given value.
+	 * 			| new.hasGivenValue
 	 */
 	public Weapon(int damage, float weight, int value) {
 		super(weight, value);
-		//if (!isValidDamage(damage)) {
-		//	assert false; // preconditie
-		//}
-		
-		
-		setDamage(damage); //nominaal dus condities OK
+		setDamage(damage);
 		this.hasGivenValue = true;
 	}
 	
 	/**
-	 * TODO: implementeren
-	 * 
+	 * Create a weapon with given damage and value.
 	 * @param	identification
+	 * 			The identification of this weapon.
 	 * @param	weight
-	 * @param	holder
-	 * @param 	parentBackpack
+	 * 			The weight of this weapon.
+	 * @pre		The given damage must be valid.
+	 * 			| isValidDamage(damage)
+	 * @effect	The new weapon is set as an item with given weight and 0 value.
+	 * 			| super(weight, 0)
+	 * @post	The damage is set to the given damage.
+	 * 			| setDamage(damage)
+	 * @post	The value has no given value.
+	 * 			| !new.hasGivenValue
 	 */
 	public Weapon(int damage, float weight) {
 		super(weight, 0);
-		//if (!isValidDamage(damage)) {
-		//	assert false; // preconditie
-		//}
-		
-		
-		setDamage(damage); //nominaal dus condities OK
+		setDamage(damage);
 		this.hasGivenValue = false;
 	}
 	
@@ -183,8 +191,24 @@ public class Weapon extends Item {
 	 * Value
 	 ***********************/
 	
-	private final int MAX_VALUE = 200;
-	private final int MIN_VALUE = 0;
+	/**
+	 * Return the maximum value for this item
+	 * @return	Return the maximum value for this item
+	 */
+	@Immutable@Override
+	public int getMaxValue () {
+		return 200;
+	}
+	
+	/**
+	 * Return the minimum value for this item
+	 * @return	Return the minimum value for this item
+	 */
+	@Immutable@Override
+	public int getMinValue () {
+		return 0;
+	}
+	
 	private static final int VALUE_FACTOR = 2;
 	private final boolean hasGivenValue;
 	
@@ -199,7 +223,7 @@ public class Weapon extends Item {
 	@Override
 	public int getValue() {
 		if(hasGivenValue == false) {
-		return MathHelper.clamp(this.getDamage()*VALUE_FACTOR, MIN_VALUE, MAX_VALUE); 
+		return MathHelper.clamp(this.getDamage()*VALUE_FACTOR, getMinValue(), getMaxValue()); 
 		}
 		return super.getValue();
 	}
