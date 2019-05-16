@@ -297,7 +297,7 @@ public abstract class Character {
 	 * @param 	item
 	 * 			The item to set at the given anchorId
 	 */
-	private void setAnchorAt(int anchorId, Item item) {
+	private void setItemAt(int anchorId, Item item) {
 		this.anchors.put(anchorId, item);
 	}
 	
@@ -307,7 +307,7 @@ public abstract class Character {
 	 * 			The anchorId of the item
 	 * @return	Return the item at the given anchorId
 	 */
-	public Item getAnchorAt (int anchorId) {
+	public Item getItemAt (int anchorId) {
 		return this.anchors.get(anchorId);
 	}
 	
@@ -344,10 +344,10 @@ public abstract class Character {
 	 */
 	public void equip(int anchorId, Item item) {
 		if (this.canEquipItem(anchorId, item)) {
-			if (this.getAnchorAt(anchorId) != null) {
+			if (this.getItemAt(anchorId) != null) {
 				this.unequip(anchorId);
 			}
-			this.setAnchorAt(anchorId, item);
+			this.setItemAt(anchorId, item);
 			item.bindAnchor(this);
 		}
 	}
@@ -363,7 +363,7 @@ public abstract class Character {
 	 */
 	public void unequip(int anchorId) {
 		
-		Item item = this.getAnchorAt(anchorId);
+		Item item = this.getItemAt(anchorId);
 		
 		for (Map.Entry<Integer, Item> entry : this.anchors.entrySet()) {
 		    int key = entry.getKey();
@@ -393,7 +393,7 @@ public abstract class Character {
 		    int key = entry.getKey();
 		    Item value = entry.getValue();
 		    if (value == item) {
-		    	this.setAnchorAt(key,null);
+		    	this.setItemAt(key,null);
 		    	return;
 		    }
 		}
