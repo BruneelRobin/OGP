@@ -249,6 +249,24 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
+	 * Return the maximum value for this item
+	 * @return	Return the maximum value for this item
+	 */
+	@Immutable@Override
+	public int getMaxValue () {
+		return 0;
+	}
+	
+	/**
+	 * Return the minimum value for this item
+	 * @return	Return the minimum value for this item
+	 */
+	@Immutable@Override
+	public int getMinValue () {
+		return 0;
+	}
+	
+	/**
 	 * Return the total value of this purse
 	 * @return	Return the total value of this purse in ducates
 	 * 			| result == this.getContent()
