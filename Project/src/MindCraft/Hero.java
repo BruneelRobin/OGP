@@ -90,6 +90,22 @@ public class Hero extends Character {
 		return 20*this.getStrength();
 	}
 	
+	/*******************************
+	 * Protection
+	 *******************************/
+	
+	private static final int DEFAULT_PROTECTION = 10;
+	
+	/**
+	 * Return the protection of the hero
+	 * @return	Return the protection of the hero based on default protection value and armor
+	 */
+	@Override
+	public int getProtection() {
+		return(DEFAULT_PROTECTION + AnchorType.BODY.getAnchorId());
+		
+	}
+	
 	
 	
 	/***********************
@@ -154,15 +170,7 @@ public class Hero extends Character {
 		setHitpoints(newHitpoints);
 	}
 	
-	private static final int DEFAULT_PROTECTION = 10;
-	/**
-	 * Return the protection of the hero
-	 * @return	Return the protection of the hero based on default protection value and armor
-	 */
-	@Override
-	public int getProtection() {
-		return 0;
-	}
+
 	
 	
 	@Override
