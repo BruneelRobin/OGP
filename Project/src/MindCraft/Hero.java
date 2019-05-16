@@ -1,5 +1,8 @@
 package MindCraft;
 
+import java.util.Set;
+import java.util.Map.Entry;
+
 /**
  * A class of Heroes. 
  * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
@@ -189,5 +192,22 @@ public class Hero extends Character {
 		int anchorId = anchorType.getAnchorId();
 		unequip(anchorId);
 	}
-
+	
+	/**
+	 * Return the amount of armor's equipped by this character
+	 * @return	Return the amount of armor's equipped by this character also looks inside anchored backpacks
+	 */
+	public int getArmorCount () {
+		int armorCount = 0;
+		
+		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
+			Item item = entry.getValue();
+			if (item instanceof Armor) { //iterate over all items on dead body and pickup all items you want
+				armorCount += 1;
+			} else if (item instanceof Backpack) {
+				armorCount += ((Backpack)item).getArmorCount();
+			}
+		}
+		return armorCount;
+	}
 }

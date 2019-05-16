@@ -413,7 +413,7 @@ public abstract class Character {
 	 * @param	item
 	 * 			The item to be picked up
 	 * @pre		The character must be able to pick up the item.
-	 * 			| canPickItem(item)
+	 * 			| canPickUpItem(item)
 	 * @post	Picks an item up from a dead body or from the ground.
 	 */
 	public void pickUp(Item item) {
