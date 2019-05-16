@@ -174,9 +174,23 @@ public class Armor extends Item {
 	 * Value
 	 ***********************/
 	
-	private final int MAX_VALUE = 1000;
-	private final int MIN_VALUE = 0;
-	private final boolean hasGivenValue;
+	/**
+	 * Return the maximum value for this item
+	 * @return	Return the maximum value for this item
+	 */
+	@Immutable@Override
+	public int getMaxValue () {
+		return 1000;
+	}
+	
+	/**
+	 * Return the minimum value for this item
+	 * @return	Return the minimum value for this item
+	 */
+	@Immutable@Override
+	public int getMinValue () {
+		return 0;
+	}
 	
 	
 	/**
@@ -214,12 +228,5 @@ public class Armor extends Item {
 	/***********************
 	 * Other Methods
 	 ***********************/
-	
-
-
-	/**
-	 * Class variable referencing the maximum value of any armor.
-	 */
-	private static int MAX_VALUE = 1000;
 	
 }

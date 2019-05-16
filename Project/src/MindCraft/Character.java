@@ -6,7 +6,6 @@ import java.util.Set;
 
 
 import be.kuleuven.cs.som.annotate.*;
-import sun.security.jca.GetInstance.Instance;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -273,6 +272,16 @@ public abstract class Character {
 	 */
 	public abstract int getProtection();
 	
+	/***********************
+	 * Damage
+	 ***********************/
+	
+	/**
+	 * Return the damage of the character
+	 * @return	Return the damage of the current character
+	 */
+	public abstract int getDamage();
+	
 	
 	/***********************
 	 * Anchors
@@ -318,10 +327,18 @@ public abstract class Character {
 	 * Return true when the given item can be equipped
 	 * @param 	item
 	 * 			the item to be checked
-	 * @return	Return true when the given item can be equipped
-	 * 			| ...
+	 * @return	Return false when the anchor id is lower than 0 and higher than the maximum anchors allowed
+	 * 			Return true when the item is owned by this player or the item is on the ground and able to
+	 * 			be picked up.
+	 * 			Return false otherwise
+	 * 			| result == (anchorId >= 0 && anchorId < getNumberOfAnchors()) && (item.getHolder == this
+	 * 			|			|| (item.getHolder() == null && canPickUpItem(item)))
 	 */
 	public boolean canEquipItem(int anchorId, Item item) {
+		if (anchorId < 0 || anchorId >= getNumberOfAnchors()) {
+			return false;
+		}
+		
 		if ((item.getHolder() == this || (item.getHolder() == null && canPickUpItem(item)))){
 			return true;
 		} else {
@@ -406,22 +423,27 @@ public abstract class Character {
 	 * Checks whether an item can be picked up
 	 * @param 	item
 	 * 			The item to be picked up
-	 * @return	Returns true when the holder of the item is null or dead
-	 * 			| ...
+	 * @return	Return false when the holder of the item is not null and not dead
+	 * 			Return false when the new weight of this character will exceed the capacity of this character
+	 * 			Return true otherwise
+	 * 			| result == !(item.getHolder() != null && !item.getHolder().isDead()) && 
+	 * 						!(this.getCapacity() < this.getTotalWeight() + totalWeightOfItem)
 	 */
 	public boolean canPickUpItem(Item item) {
-		float totalWeightItem;
+		float totalWeightOfItem;
 		if(item instanceof Container) {
-			totalWeightItem = ((Container)(item)).getTotalWeight();
+			totalWeightOfItem = ((Container)(item)).getTotalWeight();
 			
 			}
 		else {
-			totalWeightItem = item.getWeight();
+			totalWeightOfItem = item.getWeight();
 		}
+		
+		
 		if(item.getHolder() != null && !item.getHolder().isDead()) {
 			return false;
 		}
-		else if(this.getCapacity() < this.getTotalWeight() + totalWeightItem) {
+		else if(this.getCapacity() < this.getTotalWeight() + totalWeightOfItem) {
 			return false;
 			
 			}
@@ -446,8 +468,8 @@ public abstract class Character {
 	public void pickUp(Item item) {
 		if(canPickUpItem(item)) {
 			Set <Backpack> backpacks = new HashSet <Backpack>();
-			for(int anchorId; anchorId < this.getNumberOfAnchors(); anchorId ++) {
-				Item itemAt = this.getAnchorAt(anchorId);
+			for(int anchorId = 0; anchorId < this.getNumberOfAnchors(); anchorId ++) {
+				Item itemAt = this.getItemAt(anchorId);
 				if(itemAt instanceof Backpack) {
 					backpacks.add((Backpack)(itemAt));
 				}

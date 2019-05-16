@@ -1,5 +1,7 @@
 package MindCraft;
 
+import be.kuleuven.cs.som.annotate.*;
+
 /**
  * A class of weapons.
  * 
@@ -189,8 +191,24 @@ public class Weapon extends Item {
 	 * Value
 	 ***********************/
 	
-	private final int MAX_VALUE = 200;
-	private final int MIN_VALUE = 0;
+	/**
+	 * Return the maximum value for this item
+	 * @return	Return the maximum value for this item
+	 */
+	@Immutable@Override
+	public int getMaxValue () {
+		return 200;
+	}
+	
+	/**
+	 * Return the minimum value for this item
+	 * @return	Return the minimum value for this item
+	 */
+	@Immutable@Override
+	public int getMinValue () {
+		return 0;
+	}
+	
 	private static final int VALUE_FACTOR = 2;
 	private final boolean hasGivenValue;
 	
@@ -205,7 +223,7 @@ public class Weapon extends Item {
 	@Override
 	public int getValue() {
 		if(hasGivenValue == false) {
-		return MathHelper.clamp(this.getDamage()*VALUE_FACTOR, MIN_VALUE, MAX_VALUE); 
+		return MathHelper.clamp(this.getDamage()*VALUE_FACTOR, getMinValue(), getMaxValue()); 
 		}
 		return super.getValue();
 	}

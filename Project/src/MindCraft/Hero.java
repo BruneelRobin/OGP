@@ -34,7 +34,7 @@ public class Hero extends Character {
 	 * 			| !isValidName(name)
 	 */
 	public Hero(String name, int hitpoints, float strength) throws IllegalArgumentException {
-		super(name, hitpoints, AnchorTypes.values().length); // length of anchortypes
+		super(name, hitpoints, AnchorType.values().length); // length of anchortypes
 		
 		setStrength(strength);
 		
@@ -94,6 +94,22 @@ public class Hero extends Character {
 		return 20*this.getStrength();
 	}
 	
+	/*******************************
+	 * Protection
+	 *******************************/
+	
+	private static final int DEFAULT_PROTECTION = 10;
+	
+	/**
+	 * Return the protection of the hero
+	 * @return	Return the protection of the hero based on default protection value and armor
+	 */
+	@Override
+	public int getProtection() {
+		return(DEFAULT_PROTECTION + AnchorType.BODY.getAnchorId());
+		
+	}
+	
 	
 	
 	/***********************
@@ -110,13 +126,6 @@ public class Hero extends Character {
 	@Override
 	public boolean wantsToTakeItem(Item item) {
 		return false;
-	}
-	
-	/**
-	 * 
-	 */
-	public int getDamage() {
-		return 0;
 	}
 	
 	/**
@@ -158,17 +167,19 @@ public class Hero extends Character {
 		setHitpoints(newHitpoints);
 	}
 	
-	private static final int DEFAULT_PROTECTION = 10;
+
+	
 	/**
-	 * Return the protection of the hero
-	 * @return	Return the protection of the hero based on default protection value and armor
+	 * Return the damage of the hero
+	 * @return	Return the damage of the hero
 	 */
-	@Override
-	public int getProtection() {
+	public int getDamage() {
 		return 0;
 	}
 	
-	
+	/**
+	 * 
+	 */
 	@Override
 	public boolean canPickUpItem(Item item) {
 		if(!super.canPickUpItem(item)){
@@ -179,6 +190,26 @@ public class Hero extends Character {
 			
 		}
 		return true;
+	}
+	
+	/**
+	 * Return true when the given item can be equipped
+	 * @param 	item
+	 * 			the item to be checked
+	 * @return	Return true when the given item can be equipped
+	 * 			| ...
+	 */
+	@Override
+	public boolean canEquipItem(int anchorId, Item item) {
+		if (super.canEquipItem(anchorId, item)) {
+			if (AnchorType.getTypeFromId(anchorId).holdsPurse() == true) {
+				return item instanceof Purse; // true als purse, false als geen purse
+			} else {
+				return !(item instanceof Purse); // true als geen purse, false als purse
+			}
+		} else {
+			return false;
+		}
 	}
 		
 	/**
@@ -191,7 +222,7 @@ public class Hero extends Character {
 	 * 			| equip(anchorType.getAnchorId())
 	 * @note	This method has been overloaded in order to use our enumerator
 	 */
-	public void equip(AnchorTypes anchorType, Item item) {
+	public void equip(AnchorType anchorType, Item item) {
 		int anchorId = anchorType.getAnchorId();
 		equip(anchorId, item);
 	}
@@ -204,7 +235,7 @@ public class Hero extends Character {
 	 * 			| unequip(anchorType.getAnchorId())
 	 * @note	This method has been overloaded in order to use our enumerator
 	 */
-	public void unequip(AnchorTypes anchorType) {
+	public void unequip(AnchorType anchorType) {
 		int anchorId = anchorType.getAnchorId();
 		unequip(anchorId);
 	}

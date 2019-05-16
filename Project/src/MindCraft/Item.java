@@ -144,8 +144,20 @@ public abstract class Item {
 	 * Value
 	 ***********************/
 	private int value;
-	private abstract final int MAX_VALUE;
-	private abstract final int MIN_VALUE;
+	
+	/**
+	 * Return the maximum value for this item
+	 * @return	Return the maximum value for this item
+	 */
+	@Immutable
+	public abstract int getMaxValue ();
+	
+	/**
+	 * Return the minimum value for this item
+	 * @return	Return the minimum value for this item
+	 */
+	@Immutable
+	public abstract int getMinValue ();
 	
 	/**
 	 * Returns the item's value 
@@ -176,7 +188,7 @@ public abstract class Item {
 	 * 
 	 */
 	public boolean canHaveAsValue(int value) {
-		return (value >= MIN_VALUE && value <= MAX_VALUE);
+		return (value >= getMinValue() && value <= getMaxValue());
 	}
 	
 	

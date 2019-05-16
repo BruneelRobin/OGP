@@ -249,8 +249,23 @@ public class Backpack extends Item implements Container {
 	/*************************
 	 * Value
 	 *************************/
-	private final int MAX_VALUE = 500;
-	private final int MIN_VALUE = 0;
+	/**
+	 * Return the maximum value for this item
+	 * @return	Return the maximum value for this item
+	 */
+	@Immutable@Override
+	public int getMaxValue () {
+		return 500;
+	}
+	
+	/**
+	 * Return the minimum value for this item
+	 * @return	Return the minimum value for this item
+	 */
+	@Immutable@Override
+	public int getMinValue () {
+		return 0;
+	}
 	
 	/**
 	 * Change the own value of a backpack
@@ -261,7 +276,7 @@ public class Backpack extends Item implements Container {
 	 *       | new.getValue() == MathHelper.clamp(old.getValue() + amount, MIN_VALUE, MAX_VALUE)
 	 */
 	public void changeValue(int amount) {
-		this.setValue(MathHelper.clamp(this.getValue() + amount, MIN_VALUE, MAX_VALUE));
+		this.setValue(MathHelper.clamp(this.getValue() + amount, getMinValue(), getMaxValue()));
 	}
 	
 	
