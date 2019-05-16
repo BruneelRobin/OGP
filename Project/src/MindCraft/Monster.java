@@ -14,18 +14,40 @@ public class Monster extends Character {
 	 ***********************/
 	
 	/**
-	 * Creates a monster.
-	 * @post	Creates a monster with the given name.
-	 * @post	Creates a monster with the given hitpoints.
+	 * Create a monster.
+	 * @post	Create a monster with the given name.
+	 * @post	Create a monster with the given hitpoints.
 	 * @throws	IllegalArgumentException
 	 * 			Throws this exception when the given name is not valid.
 	 */
 	
-	public Monster(String name, int hitpoints, int damage, int protection) throws IllegalArgumentException {
-		super(name, hitpoints);
+	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity) throws IllegalArgumentException {
+		super(name, hitpoints, numberOfAnchors);
 		setDamage(damage);
 		setProtection(protection);
+		this.capacity = capacity;
 	}
+	
+	/**
+	 * Create a monster.
+	 * @post	Create a monster with the given name.
+	 * @post	Create a monster with the given hitpoints.
+	 * @throws	IllegalArgumentException
+	 * 			Throws this exception when the given name is not valid.
+	 */
+	
+	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity, ) throws IllegalArgumentException {
+		super(name, hitpoints, numberOfAnchors);
+		setDamage(damage);
+		setProtection(protection);
+		
+		float totalWeight = getTotalWeight();
+		if (capacity >= totalWeight) {
+			this.capacity = capacity;
+		} else
+			this.capacity = totalWeight;
+	}
+
 	
 	/********************************
 	 * Damage - nominal programming
