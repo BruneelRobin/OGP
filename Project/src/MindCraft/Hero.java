@@ -30,13 +30,23 @@ public class Hero extends Character {
 	 * 			| !isValidName(name)
 	 */
 	public Hero(String name, int hitpoints, float strength) throws IllegalArgumentException {
-		super(name, hitpoints);
+		super(name, hitpoints, AnchorTypes.values().length); // length of anchortypes
 		
 		setStrength(strength);
 		
 	}
 	
+	/********************************
+	 * Name - defensive programming
+	 ********************************/
 	
+	/**
+	 * Checks if a hero can have the given name as name
+	 */
+	@Override
+	public boolean canHaveAsName(String name) {
+		return false;
+	}
 	
 	
 	/*******************************
@@ -63,8 +73,7 @@ public class Hero extends Character {
 	 */
 	private void setStrength(float strength) {
 		this.strength = strength;
-		
-		}
+	}
 	
 	
 	/***********************
@@ -77,7 +86,6 @@ public class Hero extends Character {
 	 */
 	public float getCapacity() {
 		return 20*this.getStrength();
-		
 	}
 	
 	
@@ -155,11 +163,31 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Checks if a hero can have the given name as name
+	 * Equips an item in the given anchor
+	 * @param 	anchorType
+	 * 			The anchor to equip an item in
+	 * @param 	item
+	 * 			The item to equip
+	 * @effect	Equips an item in the given anchor
+	 * 			| equip(anchorType.getAnchorId())
+	 * @note	This method has been overloaded in order to use our enumerator
 	 */
-	public static boolean isValidName(String name) {
-		return false;
+	public void equip(AnchorTypes anchorType, Item item) {
+		int anchorId = anchorType.getAnchorId();
+		equip(anchorId, item);
 	}
 	
+	/**
+	 * Unequips an item in the given anchor
+	 * @param 	anchorType
+	 * 			The anchor to unequip an item from
+	 * @effect	Unequips an item in the given anchor
+	 * 			| unequip(anchorType.getAnchorId())
+	 * @note	This method has been overloaded in order to use our enumerator
+	 */
+	public void unequip(AnchorTypes anchorType) {
+		int anchorId = anchorType.getAnchorId();
+		unequip(anchorId);
+	}
 
 }

@@ -1,6 +1,8 @@
 package MindCraft;
 
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
 import sun.security.jca.GetInstance.Instance;
@@ -41,14 +43,14 @@ public abstract class Character {
 	 * 			| !isValidName(name)
 	 */
 	@Model
-	protected Character(String name, int hitpoints) throws IllegalArgumentException {
+	protected Character(String name, int hitpoints, int numberOfAnchors) throws IllegalArgumentException {
 		
-		if (!isValidName(name)) {
+		if (!canHaveAsName(name)) {
 			throw new IllegalArgumentException("Invalid name!");
 		}
 		setName(name);
 		setHitpoints(hitpoints);
-		
+		this.numberOfAnchors = numberOfAnchors;
 	}
 	
 	/********************************
@@ -63,7 +65,7 @@ public abstract class Character {
 	 * 			and only contains letters, spaces and apostrophes
 	 * 			| name != null && name.matches("[A-Z][a-z' ]+")
 	 */
-	public static boolean isValidName(String name) {
+	public boolean canHaveAsName(String name) {
 		return (name != null && name.matches("[A-Z][A-Za-z' ]*"));
 	}
 	
@@ -91,7 +93,7 @@ public abstract class Character {
 	 * 			| !isValidName(name)
 	 */
 	public void changeName(String name) {
-		if (!isValidName(name)) {
+		if (!canHaveAsName(name)) {
 			throw new IllegalArgumentException("Invalid name!");
 		}
 		this.name = name;
@@ -315,7 +317,7 @@ public abstract class Character {
 	 * 			| ...
 	 */
 	public boolean canEquipItem(int anchorId, Item item) {
-		if ((item.getHolder() == this || item.getHolder() == null) && this.getAnchorAt(anchorId) == null){
+		if ((item.getHolder() == this || (item.getHolder() == null && canPickUpItem(item)))){
 			return true;
 		} else {
 			return false;
@@ -323,7 +325,7 @@ public abstract class Character {
 	}
 	
 	/**
-	 * Equip item on the given slot
+	 * Equip item from own inventory or from ground, on the given slot
 	 * @param	anchorId
 	 * 			The id of the anchor to be set
 	 * @param	item
@@ -332,6 +334,11 @@ public abstract class Character {
 	 * 			| unequip(anchorId)
 	 * @post	Equip the given item in the given slot when possible, unequips the item in that slot when not null
 	 * 			| canEquipItem(item)
+	 * @post	When equipped the item at the given id will be set to the given item
+	 * 			| getItemAt(anchorId) == item
+	 * @effect	When equipped the anchor of the current item will bound to this character 
+	 * 			(so bidirectional relations are recreated).
+	 * 			| item.bindAnchor(this)
 	 */
 	public void equip(int anchorId, Item item) {
 		if (this.canEquipItem(anchorId, item)) {
@@ -339,6 +346,7 @@ public abstract class Character {
 				this.unequip(anchorId);
 			}
 			this.setAnchorAt(anchorId, item);
+			item.bindAnchor(this);
 		}
 	}
 	
@@ -346,6 +354,10 @@ public abstract class Character {
 	 * Unequip item on the given slot.
 	 * @post	Unequip the item on the given slot and tries to put it in a backpack
 	 * 			when possible otherwise drops it on the ground.
+	 * @effect	When put in a backpack the item will be moved into that backpack
+	 * 			| item.moveTo(backpack)
+	 * @effect	When not put in a backpack the item will be dropped on the ground
+	 * 			| item.drop();
 	 */
 	public void unequip(int anchorId) {
 		
@@ -358,7 +370,7 @@ public abstract class Character {
 		    if (value instanceof Backpack && key != anchorId) {
 		    	Backpack backpack = (Backpack) value;
 		    	
-				if (backpack.getTotalWeight() + item.getWeight() <= backpack.getCapacity()) {
+				if (backpack.canHaveAsItem(item)) {
 					item.moveTo(backpack);
 					return;
 				}
@@ -373,8 +385,9 @@ public abstract class Character {
 	 * 			The item to be removed from its anchor
 	 * @post	Searches and removes the given item from its anchor
 	 */
+	@Raw
 	protected void removeItemFromHolder(Item item) {
-		for (Map.Entry<Integer, Item> entry : this.anchors.entrySet()) {
+		for (Entry<Integer, Item> entry : this.anchors.entrySet()) {
 		    int key = entry.getKey();
 		    Item value = entry.getValue();
 		    if (value == item) {
@@ -391,7 +404,7 @@ public abstract class Character {
 	 * @return	Returns true when the holder of the item is null or dead
 	 * 			| ...
 	 */
-	public boolean canPickItem(Item item) {
+	public boolean canPickUpItem(Item item) {
 		return true;
 	}
 	
@@ -399,7 +412,7 @@ public abstract class Character {
 	 * Picks an item up from a dead body or from the ground
 	 * @param	item
 	 * 			The item to be picked up
-	 * @pre		The character must be able te pick up the item.
+	 * @pre		The character must be able to pick up the item.
 	 * 			| canPickItem(item)
 	 * @post	Picks an item up from a dead body or from the ground.
 	 */
@@ -408,11 +421,22 @@ public abstract class Character {
 	}
 	
 	/**
-	 * Return the total value of this character
-	 * @return	Return the total value of this character in ducates
+	 * 
+	 * @return
 	 */
-	public int getTotalValue () {
-		return 0;
+	public Set<Entry<Integer, Item>> getAnchorEntrySet () {
+		return this.anchors.entrySet();
+	}
+	
+	private final int numberOfAnchors;
+	
+	/**
+	 * Return the number of anchors of this character
+	 * @return	Return the number of anchors of this character
+	 */
+	@Immutable
+	public int getNumberOfAnchors() {
+		return this.numberOfAnchors;
 	}
 	
 	/***********************
@@ -443,7 +467,14 @@ public abstract class Character {
 	 * 			| wantsToTakeItem(item)
 	 */
 	public void collectTreasures(Character character) {
+		Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
 		
+		for (Entry<Integer, Item> entry : set) {
+			Item item = entry.getValue();
+			if (wantsToTakeItem(item)) { //iterate over all items on dead body and pickup all items you want
+				pickUp(item);
+			}
+		}
 	}
 	
 	/**
@@ -452,4 +483,42 @@ public abstract class Character {
 	 * 			Returns false when the character doesn't want to take this item
 	 */
 	public abstract boolean wantsToTakeItem(Item item);
+	
+	/**
+	 * Return the total value of this character
+	 * @return	Return the total value of this character in ducates calculated as the sum of the 
+	 * 			total values of each anchored item.
+	 */
+	public int getTotalValue () {
+		int value = 0;
+		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
+			Item item = entry.getValue();
+			
+			if (item instanceof Container) {
+				value += ((Container) item).getTotalValue();
+			} else {
+				value += item.getValue();
+			}
+		}
+		return value;
+	}
+	
+	/**
+	 * Return the total weight of this character
+	 * @return	Return the total weight of this character in kg calculated as the sum of the
+	 * 			total weights of each anchored item.
+	 */
+	public float getTotalWeight () {
+		float weight = 0;
+		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
+			Item item = entry.getValue();
+			
+			if (item instanceof Container) {
+				weight += ((Container) item).getTotalWeight();
+			} else {
+				weight += item.getWeight();
+			}
+		}
+		return weight;
+	}
 }

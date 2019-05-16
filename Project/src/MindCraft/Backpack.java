@@ -170,6 +170,7 @@ public class Backpack extends Item implements Container {
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when the given item is not found in this backpack
 	 */
+	@Raw
 	protected void removeItem(Item item) throws IllegalArgumentException {
 		if (!containsItem(item)) {
 			throw new IllegalArgumentException ("The given item does not exist in this backpack");
@@ -185,6 +186,8 @@ public class Backpack extends Item implements Container {
 	 * 			The item to check
 	 * @return	Return false when the item is held by another non dead character than the holder of this backpack
 	 * 			Return false when the given item is a direct or indirect parent backpack of this backpack
+	 * 			Return false when the weight of the backpack with this item is higher than the capacity 
+	 * 			of this backpack.
 	 * 			Return true otherwise.
 	 * 			
 	 */
@@ -192,6 +195,8 @@ public class Backpack extends Item implements Container {
 		if (item.getHolder() != null && item.getHolder() != this.getHolder() && item.getHolder().isDead() == false) {
 			return false;
 		} else if (item instanceof Backpack && this.isDirectOrIndirectSubBackpackOf((Backpack)item)) {
+			return false;
+		} else if (this.getTotalWeight() + item.getWeight() > this.getCapacity()) {
 			return false;
 		}
 		return true;
@@ -248,8 +253,12 @@ public class Backpack extends Item implements Container {
 	private final int MIN_VALUE = 0;
 	
 	/**
-	 * Change the 
+	 * Change the own value of a backpack
 	 * @param amount
+	 * 		  The amount of change, positive if an increase is wished for, negative if the value should be decreased.
+	 * @post the value of the backpack is set to the sum of the old value and the given amount.
+	 * 		 The result is then clamped, to make sure it lies between the MIN_VALUE and MAX_VALUE.
+	 *       | new.getValue() == MathHelper.clamp(old.getValue() + amount, MIN_VALUE, MAX_VALUE)
 	 */
 	public void changeValue(int amount) {
 		this.setValue(MathHelper.clamp(this.getValue() + amount, MIN_VALUE, MAX_VALUE));

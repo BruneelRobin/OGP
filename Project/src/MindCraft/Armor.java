@@ -77,17 +77,18 @@ public class Armor extends Item {
 
 
 	/***********************
-	 * Protection
+	 * Protection (nominal)
 	 ***********************/	
 	
-	private static int MAX_PROTECTION = 100;
-	private static int MIN_PROTECTION = 0;
+	private static final int MAX_FULLPROTECTION = 100;
+	private static final int MIN_FULLPROTECTION = 1;
+	private static final int MIN_PROTECTION = 0;
 	private final int fullProtection;
 	private int currentProtection;
 	
 	/**
-	 * Returns the fullprotection of an armor
-	 * @return Returns the fullprotection of an armor
+	 * Returns the fullProtection of an armor
+	 * @return Returns the fullProtection of an armor
 	 * 		   | result == this.fullProtection
 	 */
 	public int getFullProtection() {
@@ -113,35 +114,57 @@ public class Armor extends Item {
 	 * @post  The protection is set to the given protection
 	 * 		  | new.getProtection == protection
 	 */
+	@Raw
 	private void setProtection(int protection) {
 		currentProtection = protection;
 	
 	}
 	
 	/**
-	 * Return true when the given protection is valid
+	 * Returns whether this armor can have the given protection as protection
 	 * @param	protection
 	 * 			The protection to check
-	 * @return	Return true when the given protection is valid
-	 * 			| result == ... 
+	 * @return	Return true when the given protection lies between MIN_PROTECTION and its fullProtection
+	 * 			
 	 */
-	public static boolean isValidProtection (int protection) {
-		return false;
+	public boolean canHaveAsProtection (int protection) {
+		return (protection >= MIN_PROTECTION && protection <= this.getFullProtection());
 	}
 	
 	/**
-	 * 
+	 * Returns whether this armor can have the given fullProtection as fullProtection
+	 * @param	fullProtection
+	 * 			The fullProtection to check
+	 * @return	Return true when the given fullProtection lies between MIN_FULLPROTECTION and MAX_FULLPROTECTION
+	 * 			
+	 */
+	public boolean isValidFullProtection(int fullProtection) {
+		return(fullProtection >= MIN_FULLPROTECTION && fullProtection <= MAX_FULLPROTECTION);
+	}
+	
+	/**
+	 * Decrease the protection of an armor
 	 * @param amount
+	 * 		  amount by which the protection should be decreased
+	 * @pre   the given amount has to be positive
+	 * @pre	  the protection still has to be valid after the decrease with the given amount
+	 * @post  the protection of the armor is decreased by the given amount
 	 */
 	public void wearOut(int amount) {
+		this.setProtection(this.getProtection() - amount );
 		
 	}
 	
 	/**
-	 * 
+	 * Increase the protection of an armor
 	 * @param amount
+	 * 		  amount by which the protection should be increased
+	 * @pre   the given amount has to be positive
+	 * @pre   the protection still has to be valid after the increase with the given amount
+	 * @post  the protection of the armor is increased by the given amount
 	 */
 	public void repair(int amount) {
+		this.setProtection(this.getProtection() + amount);
 		
 	}
 	
