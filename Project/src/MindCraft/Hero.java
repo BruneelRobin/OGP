@@ -58,7 +58,10 @@ public class Hero extends Character {
 	 */
 	@Override
 	public boolean canHaveAsName(String name) {
-		return false;
+		return (name != null && name.matches("[A-Z][A-Za-z' ]*"));
+		
+		
+		
 	}
 	
 	
