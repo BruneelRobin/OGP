@@ -226,7 +226,8 @@ public class Backpack extends Item implements Container {
 	 * Checks whether this backpack can have an item
 	 * @param 	item
 	 * 			The item to check
-	 * @return	Return false when the item is a purse
+	 * @return	Return false when the item is terminated
+	 * 			Return false when the item is a purse
 	 * 			Return false when the item is held by another non dead character than the holder of this backpack
 	 * 			Return false when the given item is a direct or indirect parent backpack of this backpack
 	 * 			Return false when the weight of the backpack with this item is higher than the capacity 
@@ -235,7 +236,10 @@ public class Backpack extends Item implements Container {
 	 * 			
 	 */
 	public boolean canHaveAsItem (Item item) {
-		if (item instanceof Purse) {
+		if (item.isTerminated()) {
+			return false;
+		}
+		else if (item instanceof Purse) {
 			return false;
 		}
 		else if (item.getHolder() != null && item.getHolder() != this.getHolder() && item.getHolder().isDead() == false) {
@@ -290,6 +294,22 @@ public class Backpack extends Item implements Container {
 			HashSet<Item> list = getListAt(item.getIdentification());
 			list.add(item);
 		}
+	}
+	
+	/**
+	 * Return a set with all the item of this backpack
+	 * @return Return a set with all the item of this backpack
+	 */
+	public HashSet<Item> getItems () {
+		HashSet<Item> itemSet = new HashSet<Item> ();
+		
+		for (HashSet<Item> set : this.content.values()) {
+			for (Item item : set) {
+				itemSet.add(item);
+			}
+		}
+		
+		return itemSet;
 	}
 	
 	/*************************

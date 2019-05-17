@@ -273,6 +273,8 @@ public abstract class Item {
 	 * Binds a character to this anchor
 	 * @param 	anchor
 	 * 			The character to set as anchor
+	 * @pre		This item is not terminated
+	 * 			| !this.isTerminated()
 	 * @post	Binds a character to this anchor, when this item is in a backpack it will be removed
 	 * 			| getParentBackpack() == null && getAnchor() == anchor
 	 */
