@@ -40,7 +40,12 @@ public class Hero extends Character {
 	public Hero(String name, int hitpoints, float strength) throws IllegalArgumentException {
 		super(name, hitpoints, AnchorType.values().length); // length of anchortypes
 		
-		setStrength(strength);
+		if(strength < 0) {
+		setStrength(0);
+		}
+		else {
+			setStrength(strength);
+		}
 		
 	}
 	
@@ -77,7 +82,7 @@ public class Hero extends Character {
 	 * @return Returns the character's strength
 	 */
 	public float getStrength() {
-		return ((float)strengthInteger) * strengthPrecision;
+		return ((float)strengthInteger) * getStrengthPrecision();
 	}
 	
 	/**
@@ -94,19 +99,34 @@ public class Hero extends Character {
 	/**
 	 * Increase the hero's strength, by multiplying with the given factor.
 	 * @param factor
+	 * 		  factor to multiply the strength with
+	 * @post  If the given factor is positive, the strength of the hero is multiplied by the given factor.
+	 * 		  | new.getStrength() == this.getStrength()*factor
+	 * @post  If the given factor is smaller than zero, the strength remains the same value.
+	 * 		  | new.getStrength() == this.getStrength()
 	 */
 	public void multiplyStrength(int factor) {
-		
-	}
+		if(factor < 0) {
+			factor = 1;
+		}
+		this.setStrength(this.getStrength()*factor);
+		}
 	
 	/**
 	 * Decrease the hero's strength, by dividing by the given divisor.
 	 * @param divisor
+	 * 		  the divisor to divide the strength by
+	 * @post  If the given divisor is larger than zero, the strength of the hero is divided by the given divisor.
+	 * 		  | new.getStrength() == this.getStrength()/divisor
+	 * @post  If the given divisor is negative, the strength remains the same value.
+	 * 		  | new.getStrength() == this.getStrength()
 	 */
 	public void divideStrength(int divisor) {
-		
-		
-	}
+		if(divisor <= 0) {
+			divisor = 1;
+		}
+		this.setStrength(this.getStrength()/divisor);
+		}
 	
 	
 	/***********************
