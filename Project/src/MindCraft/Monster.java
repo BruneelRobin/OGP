@@ -208,11 +208,11 @@ public class Monster extends Character {
 	 */
 	@Override
 	public boolean wantsToTakeItem(Item item) {
-		long randomLong = MathHelper.getRandomLongBetweenRange(0,100);
+		int randomInt = MathHelper.getRandomIntBetweenRange(0,100);
 		if (item instanceof Armor) {
 			Armor armor = (Armor) item;
 			int shinyness = (armor.getProtection()/armor.getFullProtection())*100;
-			if (randomLong <= shinyness) {
+			if (randomInt <= shinyness) {
 				return true;
 			} else {
 				return false;
@@ -220,7 +220,7 @@ public class Monster extends Character {
 		}
 		else if (item instanceof Weapon) {
 			Weapon weapon = (Weapon) item;
-			if (randomLong <= 80) {
+			if (randomInt <= 80) {
 				return true;
 			} else {
 				return false;
@@ -229,7 +229,7 @@ public class Monster extends Character {
 		
 		else if (item instanceof Backpack) {
 			Backpack backpack = (Backpack) item;
-			if (randomLong <= 5) {
+			if (randomInt <= 5) {
 				return true;
 			} else {
 				return false;
@@ -238,7 +238,7 @@ public class Monster extends Character {
 		
 		else if (item instanceof Purse) {
 			Purse purse = (Purse) item;
-			if (randomLong <= 25) {
+			if (randomInt <= 25) {
 				return true;
 			} else {
 				return false;
@@ -253,7 +253,7 @@ public class Monster extends Character {
 	 */
 	@Override
 	public void hit(Character character) {
-		int randomNumber = (int)MathHelper.getRandomLongBetweenRange(0, 100);
+		int randomNumber = MathHelper.getRandomIntBetweenRange(0, 100);
 		
 		if (randomNumber < getHitpoints()) {
 			randomNumber = getHitpoints();

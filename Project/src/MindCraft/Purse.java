@@ -29,16 +29,23 @@ public class Purse extends Item implements Container {
 	 * 			The capacity of this purse.
 	 * @param 	weight
 	 * 			The weight of this purse.
+	 * @param	content
+	 * 			The default content
 	 * @pre		The given capacity is valid
 	 * 			| isValidCapacity (capacity)
+	 * @pre		The given content is valid
+	 * 			| canHaveAsContent(content)
 	 * @effect	The new purse is set as an item with given weight and 0 value.
 	 * 			| super(weight, 0)
 	 * @post	The capacity is set to the given capacity.
-	 * 			| new.capacity == capacity
+	 * 			| new.getCapacity() == capacity
+	 * @post	The content is set to the given content.
+	 * 			| new.getContent() == content
 	 */
-	public Purse (int capacity, float weight) {
+	public Purse (float weight, int capacity, int content) {
 		super(weight, 0);
 		this.capacity = capacity;
+		setContent(content);
 		ids.add(getIdentification());
 	}
 	
