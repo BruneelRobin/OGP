@@ -30,13 +30,6 @@ public class Backpack extends Item implements Container {
 	
 	/**
 	 * Create a backpack with given capacity, weight and value.
-	 * 
-	 * @pre		The given capacity is valid
-	 * 			| isValidCapacity(capacity)
-	 */
-	
-	/**
-	 * Create a backpack with given capacity, weight and value.
 	 * @param 	capacity
 	 * 			The capacity of this backpack.
 	 * @param 	weight
@@ -384,11 +377,6 @@ public class Backpack extends Item implements Container {
 		this.setValue(MathHelper.clamp(this.getValue() + amount, getMinValue(), getMaxValue()));
 	}
 	
-	
-	
-	
-	
-	
 	/*************************
 	 * Other methods
 	 *************************/
@@ -400,15 +388,13 @@ public class Backpack extends Item implements Container {
 	 */
 	public float getTotalWeight() {
 		float totalWeight = 0;
-		for (HashSet<Item> set : this.content.values()) {
-			for (Item item : set) {
-				if (item instanceof Container) {
-					totalWeight += ((Container)(item)).getTotalWeight();
-				} else {
-					totalWeight += item.getWeight();
-				}
+		for (Item item : getItems()) {
+			if (item instanceof Container) {
+				totalWeight += ((Container)(item)).getTotalWeight();
+			} else {
+				totalWeight += item.getWeight();
 			}
-			}
+		}
 		
 		return totalWeight;
 		
@@ -421,15 +407,13 @@ public class Backpack extends Item implements Container {
 	 */
 	public int getTotalValue() {
 		int totalValue = 0;
-		for (HashSet<Item> set : this.content.values()) {
-			for (Item item : set) {
-				if (item instanceof Container) {
-					totalValue += ((Container)(item)).getTotalValue();
-				} else {
-					totalValue += item.getValue();
-				}
+		for (Item item : getItems()) {
+			if (item instanceof Container) {
+				totalValue += ((Container)(item)).getTotalValue();
+			} else {
+				totalValue += item.getValue();
 			}
-			}
+		}
 		
 		return totalValue;
 		}

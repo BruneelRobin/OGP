@@ -347,7 +347,10 @@ public abstract class Character {
 	 * 			|			|| (item.getHolder() == null && canPickUpItem(item)))
 	 */
 	public boolean canEquipItem(int anchorId, Item item) {
-		if (anchorId < 0 || anchorId >= getNumberOfAnchors()) {
+		if (item.isTerminated()) {
+			return false;
+		}
+		else if (anchorId < 0 || anchorId >= getNumberOfAnchors()) {
 			return false;
 		}
 		
@@ -451,8 +454,10 @@ public abstract class Character {
 			totalWeightOfItem = item.getWeight();
 		}
 		
-		
-		if(item.getHolder() != null && !item.getHolder().isDead()) {
+		if (item.isTerminated()) {
+			return false;
+		}
+		else if(item.getHolder() != null && !item.getHolder().isDead()) {
 			return false;
 		}
 		else if(this.getCapacity() < this.getTotalWeight() + totalWeightOfItem) {
@@ -526,9 +531,14 @@ public abstract class Character {
 		return this.numberOfAnchors;
 	}
 	
+	/**
+	 * Return true when this item has proper items
+	 * @return	Return true when this item has proper items
+	 * 			Return false when this item doesn't have proper items
+	 */
 	public boolean hasProperItems () {
 		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
-			if (entry.getValue().isTerminated()) { // canHaveAsItemAt() hier ?
+			if (!canEquipItem(entry.getKey(), entry.getValue())) { // false when not possible to reequip in same slot
 				return false;
 			}
 		}
