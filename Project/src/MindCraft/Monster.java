@@ -201,9 +201,47 @@ public class Monster extends Character {
 	 * Return a boolean whether the monster wants to take this item
 	 * @return	Returns true if the monster wants to take this item
 	 * 			Returns false when the monster doesn't want to take this item
+	 * 
+	 * @note	The more shiny an item is, the more likely the monster wants to take it.
 	 */
 	@Override
 	public boolean wantsToTakeItem(Item item) {
+		long randomLong = MathHelper.getRandomLongBetweenRange(0,100);
+		if (item instanceof Armor) {
+			Armor armor = (Armor) item;
+			int shinyness = (armor.getProtection()/armor.getFullProtection())*100;
+			if (randomLong <= shinyness) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		else if (item instanceof Weapon) {
+			Weapon weapon = (Weapon) item;
+			if (randomLong <= 80) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		else if (item instanceof Backpack) {
+			Backpack backpack = (Backpack) item;
+			if (randomLong <= 5) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		else if (item instanceof Purse) {
+			Purse purse = (Purse) item;
+			if (randomLong <= 25) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 		return false;
 	}
 	
