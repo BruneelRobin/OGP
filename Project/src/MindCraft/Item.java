@@ -100,6 +100,7 @@ public abstract class Item {
 	 * @return	Return true when this item is terminated
 	 * 			Return false otherwise
 	 */
+	@Basic
 	public boolean isTerminated() {
 		return this.isTerminated;
 	}

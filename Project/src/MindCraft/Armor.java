@@ -87,6 +87,13 @@ public class Armor extends Item {
 		return canHaveAsIdentification (identification) && ids.contains(identification) == false;
 	}
 
+	/**
+	 * Variable referencing a set with all ids of this class. 
+	 * 
+	 * @invar Each non null element in the hashset references an effective item. 
+	 *        | for (Item item : ids)
+	 *        | 	item != null
+	 */
 	private static final HashSet<Long> ids = new HashSet<Long>();
 
 
@@ -222,7 +229,6 @@ public class Armor extends Item {
 	@Override
 	public int getValue() { 
 		return super.getValue()*(this.getProtection()/this.getFullProtection());
-	
 	}
 	
 	
