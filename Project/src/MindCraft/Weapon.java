@@ -1,5 +1,7 @@
 package MindCraft;
 
+import java.util.HashSet;
+
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -36,6 +38,7 @@ public class Weapon extends Item {
 		super(weight, value);
 		setDamage(damage);
 		this.hasGivenValue = true;
+		ids.add(getIdentification());
 	}
 	
 	/**
@@ -57,6 +60,7 @@ public class Weapon extends Item {
 		super(weight, 0);
 		setDamage(damage);
 		this.hasGivenValue = false;
+		ids.add(getIdentification());
 	}
 	
 	
@@ -100,7 +104,20 @@ public class Weapon extends Item {
 
 	}
 	
+	/**
+	 * @param	identification
+	 * 			The identification to check
+	 * @return	Return true when this weapon can have the given identification number that has to be unique
+	 * 			Return false when this weapon can't
+	 * 			| result == canHaveAsIdentification (identification) 
+	 * 							&& ids.contains(identification) == false
+	 */
+	@Override
+	public boolean canHaveAsNewIdentification (long identification) {
+		return canHaveAsIdentification (identification) && ids.contains(identification) == false;
+	}
 	
+	private static final HashSet<Long> ids = new HashSet<Long>();
 	
 	
 	

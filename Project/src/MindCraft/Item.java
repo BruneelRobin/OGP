@@ -70,7 +70,7 @@ public abstract class Item {
 	 */
 	@Model
 	protected Item(long identification, float weight, int value) {
-		if (!canHaveAsIdentification(identification)) {
+		if (!canHaveAsNewIdentification(identification)) {
 			this.identification = generateIdentification();
 		} else {
 			this.identification = identification;

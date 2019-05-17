@@ -1,5 +1,7 @@
 package MindCraft;
 
+import java.util.HashSet;
+
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -22,6 +24,7 @@ public class Purse extends Item implements Container {
 	public Purse (int capacity, float weight) {
 		super(weight, 0);
 		setCapacity(capacity);
+		ids.add(getIdentification());
 	}
 	
 	
@@ -56,6 +59,21 @@ public class Purse extends Item implements Container {
 	public boolean canHaveAsIdentification(long identification) {
 		return true;
 	}
+	
+	/**
+	 * @param	identification
+	 * 			The identification to check
+	 * @return	Return true when this purse can have the given identification number that has to be unique
+	 * 			Return false when this purse can't
+	 * 			| result == canHaveAsIdentification (identification) 
+	 * 							&& ids.contains(identification) == false
+	 */
+	@Override
+	public boolean canHaveAsNewIdentification (long identification) {
+		return canHaveAsIdentification (identification) && ids.contains(identification) == false;
+	}
+	
+	private static final HashSet<Long> ids = new HashSet<Long>();
 	
 	/*******************************
 	 * Capacity - total programming
