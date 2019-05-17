@@ -82,19 +82,37 @@ public class Hero extends Character {
 		this.strength = strength;
 	}
 	
+	/**
+	 * Increase the hero's strength, by multiplying with the given factor.
+	 * @param factor
+	 */
+	public void multiplyStrength(int factor) {
+		
+	}
+	
+	/**
+	 * Decrease the hero's strength, by dividing by the given divisor.
+	 * @param divisor
+	 */
+	public void divideStrength(int divisor) {
+		
+		
+	}
+	
 	
 	/***********************
 	 * Capacity
 	 ***********************/
 	
 	private static final int MAX_ARMOR_COUNT = 2;
+	private static final float CAPACITY_FACTOR = 20f;
 	
 	/**
 	 * Return the hero's capacity
 	 * @return Return the hero's capacity
 	 */
 	public float getCapacity() {
-		return 20*this.getStrength();
+		return CAPACITY_FACTOR*this.getStrength();
 	}
 	
 	/*******************************

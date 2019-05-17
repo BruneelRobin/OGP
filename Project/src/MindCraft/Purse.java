@@ -111,7 +111,7 @@ public class Purse extends Item implements Container {
 	 * 			| result == ...
 	 */
 	public static boolean isValidCapacity (int capacity) {
-		return false;
+		return (capacity >= 0);
 	}
 	
 	/***********************

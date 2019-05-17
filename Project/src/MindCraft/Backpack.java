@@ -124,7 +124,7 @@ public class Backpack extends Item implements Container {
 	 * 
 	 * @invar Each item in this structure must be an effective item. 
 	 *        | item != null
-	 * @invar Each item references back to this backpack (bidirection relation)
+	 * @invar Each item references back to this backpack (bidirectional relation)
 	 *        | item.getParentBackpack() == this
 	 */	
 	private final HashMap<Long, HashSet<Item>> content = new HashMap<Long, HashSet<Item>>();
@@ -307,7 +307,19 @@ public class Backpack extends Item implements Container {
 	 * 			of this backpack and the weight of all descendants in this backpack
 	 */
 	public float getTotalWeight() {
-		return 0;
+		float totalWeight = 0;
+		for (HashSet<Item> set : this.content.values()) {
+			for (Item item : set) {
+				if (item instanceof Container) {
+					totalWeight += ((Container)(item)).getTotalWeight();
+				} else {
+					totalWeight += item.getWeight();
+				}
+			}
+			}
+		
+		return totalWeight;
+		
 	}
 	
 	/**
@@ -316,8 +328,19 @@ public class Backpack extends Item implements Container {
 	 * 			| result == this.getContent()
 	 */
 	public int getTotalValue() {
-		return 0;
-	}
+		int totalValue = 0;
+		for (HashSet<Item> set : this.content.values()) {
+			for (Item item : set) {
+				if (item instanceof Container) {
+					totalValue += ((Container)(item)).getTotalValue();
+				} else {
+					totalValue += item.getValue();
+				}
+			}
+			}
+		
+		return totalValue;
+		}
 	
 	/**
 	 * Return the amount of armor's in this backpack
