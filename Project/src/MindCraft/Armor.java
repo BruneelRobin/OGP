@@ -94,7 +94,7 @@ public class Armor extends Item {
 	 *        | for (Item item : ids)
 	 *        | 	item != null
 	 */
-	private static final HashSet<Long> ids = new HashSet<Long>();
+	private static final HashSet<Long> armorIds = new HashSet<Long>();
 
 
 	/***********************
