@@ -1,5 +1,6 @@
 package MindCraft;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -138,8 +139,44 @@ public class Hero extends Character {
 	 * @return Returns false when the hero does not want to take the item
 	 */
 	@Override
-	public boolean wantsToTakeItem(Item item) {
-		return false;
+	public boolean wantsToTakeItem(Item item) { 
+		if (item instanceof Armor) {
+			Armor armor = (Armor) item;
+			
+		}
+		
+		else if (item instanceof Weapon) {
+			Weapon weapon = (Weapon) item;
+			Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+			int bestDamage = 0;
+			
+			for (Entry<Integer, Item> entry : set) {
+				Item heroItem = entry.getValue();
+				if (heroItem instanceof Weapon) {
+					Weapon heroWeapon = (Weapon) heroItem;
+					int heroWeaponDamage = heroWeapon.getDamage()
+					if (heroWeaponDamage > bestDamage) {
+						bestDamage = heroWeaponDamage;
+					}
+				}
+			}
+			
+			if (weapon.getDamage() > bestDamage) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		else if (item instanceof Backpack) {
+			Backpack backpack = (Backpack) item;
+			
+		}
+		
+		else if (item instanceof Purse) {
+			Purse purse = (Purse) item;
+			
+		}
 	}
 	
 	/**
