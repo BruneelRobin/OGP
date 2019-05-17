@@ -213,13 +213,13 @@ public class Monster extends Character {
 	 */
 	@Override
 	public void hit(Character character) {
-		int rnd = (int)MathHelper.getRandomLongBetweenRange(0, 100);
+		int randomNumber = (int)MathHelper.getRandomLongBetweenRange(0, 100);
 		
-		if (rnd < getHitpoints()) {
-			rnd = getHitpoints();
+		if (randomNumber < getHitpoints()) {
+			randomNumber = getHitpoints();
 		}
 		
-		if (rnd >= character.getProtection()) {
+		if (randomNumber >= character.getProtection()) {
 			int damage = getDamage();
 			
 			character.takeDamage(damage);
