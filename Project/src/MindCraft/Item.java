@@ -7,6 +7,10 @@ import be.kuleuven.cs.som.annotate.*;
  * 
  * @invar 	Each item must have a unique and valid identification number
  * 			| canHaveAsIdentification(getIdentification())
+ * @invar	Each item must have a valid weight
+ * 			| isValidWeight(getWeight())
+ * @invar	Each item must have a valid value
+ * 			| canHaveAsValue(getValue())
  * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  *
@@ -89,7 +93,28 @@ public abstract class Item {
 	 * Destructor
 	 ***********************/
 	
-	// TODO
+	private boolean isTerminated = false;
+	
+	/**
+	 * Return true when this item is terminated
+	 * @return	Return true when this item is terminated
+	 * 			Return false otherwise
+	 */
+	@Basic
+	public boolean isTerminated() {
+		return this.isTerminated;
+	}
+	
+	/**
+	 * Terminates this item
+	 * @post	Terminates this item by breaking all associations (dropping it on the ground)
+	 * 			and sets terminated state on true
+	 * 			| isTerminated() == true
+	 */
+	protected void terminate () {
+		this.drop();
+		this.isTerminated = true;
+	}
 	
 	/*************************************
 	 * Identification - total programming
@@ -248,6 +273,8 @@ public abstract class Item {
 	 * Binds a character to this anchor
 	 * @param 	anchor
 	 * 			The character to set as anchor
+	 * @pre		This item is not terminated
+	 * 			| !this.isTerminated()
 	 * @post	Binds a character to this anchor, when this item is in a backpack it will be removed
 	 * 			| getParentBackpack() == null && getAnchor() == anchor
 	 */
