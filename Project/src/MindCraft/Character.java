@@ -372,7 +372,7 @@ public abstract class Character {
 	 * 			| getItemAt(anchorId) == item
 	 * @effect	When equipped the anchor of the current item will bound to this character 
 	 * 			(so bidirectional relations are recreated).
-	 * 			| item.bindAnchor(this)
+	 * 			| item.bindCharacter(this)
 	 */
 	public void equip(int anchorId, Item item) {
 		if (this.canEquipItem(anchorId, item)) {
@@ -380,7 +380,7 @@ public abstract class Character {
 				this.unequip(anchorId);
 			}
 			this.setItemAt(anchorId, item);
-			item.bindAnchor(this);
+			item.bindCharacter(this);
 		}
 	}
 	
