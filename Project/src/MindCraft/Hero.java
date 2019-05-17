@@ -47,6 +47,7 @@ public class Hero extends Character {
 			setStrength(strength);
 		}
 		
+		this.giveStarterGear();
 		
 		
 	}
