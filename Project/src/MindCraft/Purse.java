@@ -17,9 +17,17 @@ public class Purse extends Item implements Container {
 	 ***********************/
 	
 	/**
-	 * Creates a purse
+	 * Create a purse with given capacity and weight.
+	 * @param 	capacity
+	 * 			The capacity of this purse.
+	 * @param 	weight
+	 * 			The weight of this purse.
 	 * @pre		The given capacity is valid
 	 * 			| isValidCapacity (capacity)
+	 * @effect	The new purse is set as an item with given weight and 0 value.
+	 * 			| super(weight, 0)
+	 * @post	The capacity is set to the given capacity.
+	 * 			| new.capacity == capacity
 	 */
 	public Purse (int capacity, float weight) {
 		super(weight, 0);
