@@ -215,7 +215,7 @@ public class Armor extends Item {
 	 */
 	@Override
 	public int getValue() { 
-		return this.getValue()*(this.getProtection()/this.getFullProtection());
+		return super.getValue()*(this.getProtection()/this.getFullProtection());
 	
 	}
 	
