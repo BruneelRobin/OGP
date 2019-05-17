@@ -296,6 +296,8 @@ public class Purse extends Item implements Container {
 			
 			purse.remove(c);
 			this.add(c);
+			
+			purse.drop();
 		} else if (purse.isTorn()) {
 			throw new TornException(purse);
 		} else {
