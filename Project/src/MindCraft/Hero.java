@@ -60,26 +60,34 @@ public class Hero extends Character {
 	 * Strength - total programming
 	 *******************************/
 	
-	private float strength;
+	private int strengthInteger;
+	private static float strengthPrecision = 0.01f;
 	
-		/**
-		 * Returns the character's strength
-		 * @return Returns the character's strength
-		 */
+	/**
+	 * Return the internal precision of the float strength
+	 * @return	Return the internal precision of the float strength
+	 */
+	public static float getStrengthPrecision () {
+		return strengthPrecision;
+	}
+	
+	/**
+	 * Returns the character's strength
+	 * @return Returns the character's strength
+	 */
 	public float getStrength() {
-		return this.strength;
-	
+		return ((float)strengthInteger) * strengthPrecision;
 	}
 	
 	/**
 	 * Sets the strength to the given strength
 	 * @param strength
 	 * 		  the new value of the hero's strength
-	 * @post  The strength is set to the given strength
-	 * 		  | new.getStrength == strength
+	 * @post  The strength is set to the given strength, the strength is rounded with the static precision
+	 * 		  | new.getStrength() == strength
 	 */
 	private void setStrength(float strength) {
-		this.strength = strength;
+		this.strengthInteger = (int)(strength/getStrengthPrecision());
 	}
 	
 	

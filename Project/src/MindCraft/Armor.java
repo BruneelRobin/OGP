@@ -158,11 +158,14 @@ public class Armor extends Item {
 	
 	/**
 	 * Decrease the protection of an armor
-	 * @param amount
-	 * 		  amount by which the protection should be decreased
-	 * @pre   the given amount has to be positive
-	 * @pre	  the protection still has to be valid after the decrease with the given amount
-	 * @post  the protection of the armor is decreased by the given amount
+	 * @param 	amount
+	 * 		  	amount by which the protection should be decreased
+	 * @pre   	the given amount has to be positive
+	 * 			| amount > 0
+	 * @pre	  	the protection still has to be valid after the decrease with the given amount
+	 * 			| canHaveAsProtection(getProtection() - amount)
+	 * @post  	the protection of the armor is decreased by the given amount
+	 * 			| new.getProtection() = this.getProtection() - amount
 	 */
 	public void wearOut(int amount) {
 		this.setProtection(this.getProtection() - amount );
@@ -171,11 +174,14 @@ public class Armor extends Item {
 	
 	/**
 	 * Increase the protection of an armor
-	 * @param amount
-	 * 		  amount by which the protection should be increased
-	 * @pre   the given amount has to be positive
-	 * @pre   the protection still has to be valid after the increase with the given amount
-	 * @post  the protection of the armor is increased by the given amount
+	 * @param 	amount
+	 * 		  	amount by which the protection should be increased
+	 * @pre   	the given amount has to be positive
+	 * 			| amount > 0
+	 * @pre   	the protection still has to be valid after the increase with the given amount
+	 * 			| canHaveAsProtection(getProtection() + amount)
+	 * @post  	the protection of the armor is increased by the given amount
+	 * 			| new.getProtection() = this.getProtection() + amount
 	 */
 	public void repair(int amount) {
 		this.setProtection(this.getProtection() + amount);
@@ -218,23 +224,6 @@ public class Armor extends Item {
 		return super.getValue()*(this.getProtection()/this.getFullProtection());
 	
 	}
-	
-	
-	
-	/**
-	 * Returns whether or not the given value is valid
-	 * @param value
-	 * 		  the integer checked for its validity
-	 * @return returns true if the given value is an even number that lies between the minimum and maximum value
-	 * 		   | (value >= MIN_VALUE && value <= MAX_VALUE && value%2 == 0)
-	 * @return returns false if the given value is not even and/or does not lie between the minimum and maximum.
-	 * 
-	 */
-	@Override
-	public boolean canHaveAsValue(int value) {
-		return ((value >= getMinValue()) && (value <= getMaxValue()) && (value%2 == 0));
-		
-		}
 	
 	
 	
