@@ -21,10 +21,26 @@ public class Backpack extends Item implements Container {
 	 ***********************/
 	
 	/**
-	 * Creates a backpack
+	 * Create a backpack with given capacity, weight and value.
 	 * 
 	 * @pre		The given capacity is valid
 	 * 			| isValidCapacity(capacity)
+	 */
+	
+	/**
+	 * Create a backpack with given capacity, weight and value.
+	 * @param 	capacity
+	 * 			The capacity of this backpack.
+	 * @param 	weight
+	 * 			The weight of this backpack.
+	 * @param 	value
+	 * 			The value of this backpack.
+	 * @pre		The given capacity is valid
+	 * 			| isValidCapacity(capacity)
+	 * @effect	The backpack is set as an item with given weight and value.
+	 * 			| super(weight, value)
+	 * @post	The capacity is set to the given capacity.
+	 * 			| new.capacity == capacity
 	 */
 	public Backpack (float capacity, float weight, int value) {
 		super(weight, value);
