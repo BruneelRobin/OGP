@@ -21,6 +21,9 @@ import java.util.Iterator;
  */
 
 // TODO invariants
+//		content en moveto check op capacity hero
+//		getTotalWeight en getTotalValue -> instanceof verwijderen
+//		constructor bij Hero
 
 public class Monster extends Character {
 	
@@ -113,10 +116,10 @@ public class Monster extends Character {
 		
 		Iterator<Item> it = itemset.iterator();
 		int anchorId = 0;
-	     while(it.hasNext()){
+	    while(it.hasNext()){
 	        this.equip(anchorId, it.next());
 	        anchorId ++;
-	     }
+	    }
 	
 	}
 
