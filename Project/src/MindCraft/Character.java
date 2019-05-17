@@ -14,10 +14,20 @@ import java.util.HashSet;
  * A class of characters.
  * @invar 	Each character must have proper items anchored.
  *        	| hasProperItems()
+ * @invar	Each character must have a valid name.
+ * 			| canHaveAsName(getName())
+ * @invar	Each character must have a valid amount of hitpoints
+ * 			| canHaveAsHitpoints(getHitpoints())
+ * @invar	Each character must have a valid maximum amount of hitpoints
+ * 			| isValidMaxHitpoints(getMaxHitpoints())
+ * @invar	Each character must have a valid number of anchors
+ * 			| isValidNumberOfAnchors(getNumberOfAnchors())
  * 
  * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  */
+
+// TODO canHaveAsItemAt/isValidItem toevoegen
 
 public abstract class Character {
 	
@@ -34,6 +44,8 @@ public abstract class Character {
 	 * 			The max amount of hitpoints
 	 * @pre		The given amount of maximum hitpoints must be valid.
 	 * 			| canHaveAsMaxHitpoints(hitpoints)
+	 * @pre		The given number of anchors must be valid.
+	 * 			| isValidNumberOfAnchors(numberOfAnchors)
 	 * @post	The name of this character is set to the given name.
 	 * 			| new.getName() == name
 	 * @post	The amount of hitpoints of this character is set to the given hitpoints.
@@ -324,7 +336,7 @@ public abstract class Character {
 	}
 	
 	/**
-	 * Return true when the given item can be equipped
+	 * Return true when the given item can be equipped in the given slot
 	 * @param 	item
 	 * 			the item to be checked
 	 * @return	Return false when the anchor id is lower than 0 and higher than the maximum anchors allowed
@@ -498,12 +510,29 @@ public abstract class Character {
 	private final int numberOfAnchors;
 	
 	/**
+	 * Return true when the given number of anchors is valid
+	 * @return	Return true when the given number of anchors is valid
+	 */
+	public static boolean isValidNumberOfAnchors (int numberOfAnchors) {
+		return numberOfAnchors > 0;
+	}
+	
+	/**
 	 * Return the number of anchors of this character
 	 * @return	Return the number of anchors of this character
 	 */
 	@Immutable
 	public int getNumberOfAnchors() {
 		return this.numberOfAnchors;
+	}
+	
+	public boolean hasProperItems () {
+		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
+			if (entry.getValue().isTerminated()) { // canHaveAsItemAt() hier ?
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/***********************

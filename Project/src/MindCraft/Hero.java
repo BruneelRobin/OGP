@@ -5,6 +5,9 @@ import java.util.Map.Entry;
 
 /**
  * A class of Heroes. 
+ * 
+ * @invar	Each hero must have a valid strength
+ * 
  * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  *

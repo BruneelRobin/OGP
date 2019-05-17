@@ -4,7 +4,10 @@ import be.kuleuven.cs.som.annotate.*;
 
 /**
  * A class of items
- * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
+ * 
+ * @invar 	Each item must have a unique and valid identification number
+ * 			| canHaveAsIdentification(getIdentification())
+ * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  *
  */
@@ -82,6 +85,12 @@ public abstract class Item {
 		setValue(value);
 	}
 	
+	/***********************
+	 * Destructor
+	 ***********************/
+	
+	// TODO
+	
 	/*************************************
 	 * Identification - total programming
 	 *************************************/
@@ -102,10 +111,18 @@ public abstract class Item {
 	//}
 	
 	/**
-	 * Return true when this class can have this id as identification
-	 * @return	Return true when this class can have this id as identification
+	 * Return true when this class can have this id as identification where id doesn't have to be unique
+	 * @return	Return true when this class can have this id as identification where id doesn't have to be 
+	 * 			unique
 	 */
 	public abstract boolean canHaveAsIdentification(long identification);
+	
+	/**
+	 * Return true when this class can have this id as identification where the given id has to be unique
+	 * @return	Return true when this class can have this id as identification where the given id has to 
+	 * 			be unique
+	 */
+	public abstract boolean canHaveAsNewIdentification(long identification);
 	
 	/**
 	 * Return a valid id for this item
@@ -201,7 +218,6 @@ public abstract class Item {
 	public boolean canHaveAsValue(int value) {
 		return (value >= getMinValue() && value <= getMaxValue());
 	}
-	
 	
 	
 	/***********************

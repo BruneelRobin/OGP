@@ -219,7 +219,7 @@ public class Armor extends Item {
 	 */
 	@Override
 	public boolean canHaveAsValue(int value) {
-		return ((value >= MIN_VALUE) && (value <= MAX_VALUE) && (value%2 == 0));
+		return ((value >= getMinValue()) && (value <= getMaxValue()) && (value%2 == 0));
 		
 		}
 	
