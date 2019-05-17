@@ -7,6 +7,11 @@ import be.kuleuven.cs.som.annotate.*;
 /**
  * A class of armors.
  * 
+ * @invar	Each armor must have a valid full protection
+ * 			| isValidFullProtection(getFullProtection())
+ * @invar	Each armor must have a valid protection
+ * 			| canHaveAsProtection(getProtection())
+ * 
  * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  */

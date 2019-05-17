@@ -3,11 +3,19 @@ package MindCraft;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
 
 /**
  * A class of backpacks
+ * 
+ * @invar	Each backpack must have a valid capacity
+ * 			| isValidCapacity(getCapacity())
+ * @invar	Each backpack must have proper items
+ * 			| hasProperItems()
+ * 			
+ * 
  * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  *
@@ -209,11 +217,20 @@ public class Backpack extends Item implements Container {
 	 * @param 	item
 	 * 			The item to be removed
 	 * @post	Removes the item from this backpack
+	 * 			| new.containsItem(item) == false
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when the given item is not found in this backpack
+	 * 			| !containsItem(item)
+	 * @throws	IllegalStateException
+	 * 			Throws this error when this item is terminated
+	 * 			| this.isTerminated()
 	 */
 	@Raw
-	protected void removeItem(Item item) throws IllegalArgumentException {
+	protected void removeItem(Item item) throws IllegalArgumentException, IllegalStateException {
+		if (this.isTerminated()) {
+			throw new IllegalStateException("This item is terminated");
+		}
+		
 		if (!containsItem(item)) {
 			throw new IllegalArgumentException ("The given item does not exist in this backpack");
 		} else {
@@ -226,7 +243,7 @@ public class Backpack extends Item implements Container {
 	 * Checks whether this backpack can have an item
 	 * @param 	item
 	 * 			The item to check
-	 * @return	Return false when the item is terminated
+	 * @return	Return false when the item is terminated or this backpack is terminated
 	 * 			Return false when the item is a purse
 	 * 			Return false when the item is held by another non dead character than the holder of this backpack
 	 * 			Return false when the given item is a direct or indirect parent backpack of this backpack
@@ -236,7 +253,7 @@ public class Backpack extends Item implements Container {
 	 * 			
 	 */
 	public boolean canHaveAsItem (Item item) {
-		if (item.isTerminated()) {
+		if (this.isTerminated() || item.isTerminated()) {
 			return false;
 		}
 		else if (item instanceof Purse) {
@@ -276,12 +293,20 @@ public class Backpack extends Item implements Container {
 	 * @param 	item
 	 * 			The item to be added
 	 * @post	Adds the item to this backpack
+	 * 			| new.containsItem(item)
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when an item can't be added to this backpack
 	 * 			| !canHaveAsItem(item)
+	 * @throws	IllegalStateException
+	 * 			Throws this error when this item is terminated
+	 * 			| this.isTerminated()
 	 */
 	@Raw
-	protected void addItem(Item item) throws IllegalArgumentException {
+	protected void addItem(Item item) throws IllegalArgumentException, IllegalStateException {
+		if (this.isTerminated()) {
+			throw new IllegalStateException("This item is terminated");
+		}
+		
 		if (!canHaveAsItem(item)) {
 			throw new IllegalArgumentException("This item is not valid");
 		}
@@ -300,7 +325,7 @@ public class Backpack extends Item implements Container {
 	 * Return a set with all the item of this backpack
 	 * @return Return a set with all the item of this backpack
 	 */
-	public HashSet<Item> getItems () {
+	public Set<Item> getItems () {
 		HashSet<Item> itemSet = new HashSet<Item> ();
 		
 		for (HashSet<Item> set : this.content.values()) {
@@ -310,6 +335,20 @@ public class Backpack extends Item implements Container {
 		}
 		
 		return itemSet;
+	}
+	
+	/**
+	 * Return true when this backpack has proper items
+	 * @Return	Return true when this backpack has proper items
+	 * 			Return false when this backpack doesn't have proper items
+	 */
+	public boolean hasProperItems () {
+		for (Item item : getItems()) {
+			if (!canHaveAsItem(item)) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/*************************
@@ -401,13 +440,11 @@ public class Backpack extends Item implements Container {
 	 */
 	public int getArmorCount () {
 		int armorCount = 0;
-		for (HashSet<Item> set : this.content.values()) {
-			for (Item item : set) {
-				if (item instanceof Armor) {
-					armorCount += 1;
-				} else if (item instanceof Backpack) {
-					armorCount += ((Backpack)item).getArmorCount();
-				}
+		for (Item item : getItems()) {
+			if (item instanceof Armor) {
+				armorCount += 1;
+			} else if (item instanceof Backpack) {
+				armorCount += ((Backpack)item).getArmorCount();
 			}
 		}
 		
