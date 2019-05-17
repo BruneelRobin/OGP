@@ -44,7 +44,7 @@ public abstract class Item {
 			this.weight = getDefaultWeight();
 		}
 		
-		setValue(value);
+		setValue(MathHelper.clamp(value, getMinValue(), getMaxValue())); //total programming 
 	}
 	
 	/**
@@ -82,7 +82,7 @@ public abstract class Item {
 			this.weight = getDefaultWeight();
 		}
 		
-		setValue(value);
+		setValue(MathHelper.clamp(value, getMinValue(), getMaxValue()));
 	}
 	
 	/***********************
@@ -319,9 +319,9 @@ public abstract class Item {
 	 * 	
 	 */
 	public void drop() {
-		if (this.getAnchor() != null) {
-			this.getAnchor().removeItemFromHolder(this);
-			this.setAnchor(null);
+		if (this.getCharacter() != null) {
+			this.getCharacter().removeItemFromHolder(this);
+			this.setCharacter(null);
 		} else if (this.getParentBackpack() != null) {
 			this.getParentBackpack().removeItem(this);
 			this.setParentBackpack(null);
@@ -334,8 +334,8 @@ public abstract class Item {
 	 * 			when this item is in a backpack. If a backpack doesn't have a holder this method returns null.
 	 */
 	public Character getHolder() {
-		if (getAnchor() != null) {
-			return getAnchor();
+		if (getCharacter() != null) {
+			return getCharacter();
 		} else if (getParentBackpack() != null) {
 			return getParentBackpack().getHolder();
 		} else {

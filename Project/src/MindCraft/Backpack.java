@@ -63,11 +63,24 @@ public class Backpack extends Item implements Container {
 	 * 			The identification to check
 	 * @return	Return true when this item can have the given identification number
 	 * 			Return false when this item can't have the given identification number
-	 * 			| result == identification == generateIdentification()
+	 * 			| result == identification % 2 == 0
 	 */
 	@Override
 	public boolean canHaveAsIdentification(long identification) {
-		return identification == generateIdentification();
+		return identification % 2 == 0;
+	}
+	
+	/**
+	 * @param	identification
+	 * 			The identification to check
+	 * @return	Return true when this backpack can have the given identification number that has to be unique
+	 * 			Return false when this backpack can't
+	 * 			| result == canHaveAsIdentification (identification) 
+	 * 							&& identification == generateIdentification()
+	 */
+	@Override
+	public boolean canHaveAsNewIdentification (long identification) {
+		return canHaveAsIdentification (identification) && identification == generateIdentification();
 	}
 	
 
@@ -197,7 +210,8 @@ public class Backpack extends Item implements Container {
 	 * Checks whether this backpack can have an item
 	 * @param 	item
 	 * 			The item to check
-	 * @return	Return false when the item is held by another non dead character than the holder of this backpack
+	 * @return	Return false when the item is a purse
+	 * 			Return false when the item is held by another non dead character than the holder of this backpack
 	 * 			Return false when the given item is a direct or indirect parent backpack of this backpack
 	 * 			Return false when the weight of the backpack with this item is higher than the capacity 
 	 * 			of this backpack.
@@ -205,7 +219,10 @@ public class Backpack extends Item implements Container {
 	 * 			
 	 */
 	public boolean canHaveAsItem (Item item) {
-		if (item.getHolder() != null && item.getHolder() != this.getHolder() && item.getHolder().isDead() == false) {
+		if (item instanceof Purse) {
+			return false;
+		}
+		else if (item.getHolder() != null && item.getHolder() != this.getHolder() && item.getHolder().isDead() == false) {
 			return false;
 		} else if (item instanceof Backpack && this.isDirectOrIndirectSubBackpackOf((Backpack)item)) {
 			return false;
