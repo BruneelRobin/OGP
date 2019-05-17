@@ -6,6 +6,13 @@ import be.kuleuven.cs.som.annotate.*;
 
 /**
  * A class of purses
+ * 
+ * @invar	Each purse must have a valid capacity
+ * 			| isValidCapacity(getCapacity())
+ * @invar	Each purse must have a valid content
+ * 			| canHaveAsContent(getContent())
+ * 
+ * 
  * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  *
@@ -184,23 +191,43 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
+	 * Return true when this purse can have the given content
+	 * @param 	content
+	 * 			The content to check
+	 * @return	Return true when the content of this purse is within the allowed range
+	 * 			| result == content >= 0 && content <= getCapacity()
+	 */
+	public boolean canHaveAsContent (int content) {
+		return content >= 0 && content <= getCapacity();
+	}
+	
+	/**
 	 * Adds the given amount
 	 * @param 	amount
 	 * 			The amount to add
-	 * @post	The new content is increased with the given amount (when amount is > 0)
+	 * @post	The new content is increased with the given amount (when amount is >= 0)
 	 * 			| this.getContent() == this.getContent() + amount
 	 * @effect	When the new content is higher than the allowed capacity this purse is torn
 	 * 			| makeTorn()
 	 * @throws	TornException
-	 * 			throws this error when you try to add ducates to a torn purse
+	 * 			Throws this error when you try to add ducates to a torn purse
+	 * 			| this.isTorn()
+	 * @throws	IllegalArgumentException
+	 * 			Throws this error when an illegal amount (overflow or negative) is given.
+	 * 			| getContent() + amount < getContent()
+	 * @throws	IllegalStateException
+	 *			Throws this error when this purse is terminated
+	 *			| this.isTerminated()
 	 */
-	public void add (int amount) throws TornException, IllegalArgumentException {
+	public void add (int amount) throws TornException, IllegalArgumentException, IllegalStateException {
 		if (isTorn()) {
 			throw new TornException(this);
+		} else if (this.isTerminated()) {
+			throw new IllegalStateException ("This item is terminated");
 		}
 		
 		int newAmount = getContent() + amount;
-		if (newAmount > getContent() && newAmount <= getCapacity()) {
+		if (newAmount >= getContent() && newAmount <= getCapacity()) {
 			setContent(getContent() + amount);
 		} else if (newAmount > getCapacity()) {
 			makeTorn();
@@ -214,18 +241,27 @@ public class Purse extends Item implements Container {
 	 * Adds the given amount
 	 * @param 	amount
 	 * 			The amount to remove
-	 * @post	The new content is decreased with the given amount (when amount is > 0 and the new amount > 0)
+	 * @post	The new content is decreased with the given amount (when amount is >= 0 and the new amount > 0)
 	 * 			| this.getContent() == this.getContent() - amount
 	 * @throws	TornException
 	 * 			throws this error when you try to remove ducates from a torn purse
+	 * 			| this.isTorn()
+	 * @throws	IllegalArgumentException
+	 * 			Throws this error when an illegal amount (overflow or negative) is given.
+	 * 			| getContent() - amount < getContent()
+	 * @throws	IllegalStateException
+	 *			Throws this error when this purse is terminated
+	 *			| this.isTerminated()
 	 */
 	public void remove (int amount) throws TornException, IllegalArgumentException {
 		if (isTorn()) {
 			throw new TornException(this);
+		} else if (this.isTerminated()) {
+			throw new IllegalStateException ("This item is terminated");
 		}
 		
 		int newAmount = getContent() - amount;
-		if (newAmount < getContent() && newAmount > 0) {
+		if (newAmount <= getContent() && newAmount > 0) {
 			setContent(newAmount);
 		} else {
 			// overflow of negative amount
@@ -245,6 +281,7 @@ public class Purse extends Item implements Container {
 	 * 			| makeTorn()
 	 * @throws	TornException
 	 * 			throws this error when you try to add or take ducates from a torn purse
+	 * 			| this.isTorn() || purse.isTorn()
 	 */
 	public void add (Purse purse) throws TornException {
 		if (!purse.isTorn() && !this.isTorn()) {

@@ -11,6 +11,7 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidWeight(getWeight())
  * @invar	Each item must have a valid value
  * 			| canHaveAsValue(getValue())
+ * 
  * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  *
@@ -315,11 +316,24 @@ public abstract class Item {
 	}
 	
 	/**
-	 * 
+	 * Moves this item to the given backpack
+	 * @param	backpack
+	 * 			The backpack to move this item to
+	 * @post	Moves this item to the given backpack
+	 * 			| backpack.containsItem(this)
+	 * @throws	IllegalArgumentException
+	 * 			Throws this error when the given backpack can't have this item
+	 * 			| !backpack.canHaveAsItem(this)
+	 * @throws	IllegalStateException
+	 * 			Throws this error when this item is terminated
+	 * 			| this.isTerminated()
 	 */
-	public void moveTo (Backpack backpack) throws IllegalArgumentException {
-		if (!backpack.canHaveAsItem(this)) {
-			throw new IllegalArgumentException ("Invalid backpack to move to");
+	public void moveTo (Backpack backpack) throws IllegalArgumentException, IllegalStateException {
+		if (this.isTerminated()) {
+			throw new IllegalStateException ("This item is terminated and can't be moved");
+		}
+		else if (!backpack.canHaveAsItem(this)) {
+			throw new IllegalArgumentException ("The given backpack can't have this item");
 		}
 		
 		drop(); // break all previous associations
@@ -345,7 +359,7 @@ public abstract class Item {
 	 * 		   	|this.setParentBackpack(null)
 	 * 	
 	 */
-	public void drop() {
+	public void drop() throws IllegalStateException {
 		if (this.getCharacter() != null) {
 			this.getCharacter().removeItemFromHolder(this);
 			this.setCharacter(null);
