@@ -33,6 +33,22 @@ public class MathHelper {
 	}
 	
 	/**
+	 * Return a random prime number in the given range
+	 * @return	Return a random prime number in the given range
+	 */
+	public static long getRandomPrime() {
+		long min = 3L;
+		long max = Long.MAX_VALUE;
+		long candidate = MathHelper.getRandomLongBetweenRange(min, max);
+		
+		if (MathHelper.isPrime(candidate)) {
+			return candidate;
+		} else {
+			return getRandomPrime();
+		}
+	}
+	
+	/**
 	 * Return whether the given number is a prime number
 	 * @param 	number
 	 * 			The number to check
@@ -63,6 +79,19 @@ public class MathHelper {
 		Random r = new Random();
 		long number = min+((long)(r.nextDouble()*(max-min)));
 		return number;
+	}
+	
+	/**
+	 * Return a random int number in the given range
+	 * @param 	min
+	 * 			The minimum value
+	 * @param 	max
+	 * 			The maximum value
+	 * @return	Return a random int number in the given range (between min and max)
+	 * 			| result == (int)getRandomLongBetweenRange((long)min, (long)max);
+	 */
+	public static int getRandomIntBetweenRange(int min, int max){
+		return (int)getRandomLongBetweenRange((long)min, (long)max);
 	}
 	
 	/**

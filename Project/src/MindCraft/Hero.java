@@ -234,7 +234,7 @@ public class Hero extends Character {
 	 * 
 	 */
 	public void hit(Character character) {
-		int randomNumber = (int)MathHelper.getRandomLongBetweenRange(0, 100);
+		int randomNumber = MathHelper.getRandomIntBetweenRange(0, 100);
 		
 		if (randomNumber >= character.getProtection()) {
 			int damage = getDamage();
@@ -258,7 +258,7 @@ public class Hero extends Character {
 	public void heal() {
 		int newHitpoints;
 		do {
-			newHitpoints = (int)MathHelper.getRandomLongBetweenRange(getHitpoints(), getMaxHitpoints());
+			newHitpoints = MathHelper.getRandomIntBetweenRange(getHitpoints(), getMaxHitpoints());
 		} while (!MathHelper.isPrime(newHitpoints));
 		
 		setHitpoints(newHitpoints);
