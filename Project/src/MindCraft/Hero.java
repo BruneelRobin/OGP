@@ -47,6 +47,8 @@ public class Hero extends Character {
 			setStrength(strength);
 		}
 		
+		
+		
 	}
 	
 	/********************************
@@ -365,4 +367,33 @@ public class Hero extends Character {
 		}
 		return armorCount;
 	}
+	
+	private static final int DEFAULT_ARMOR_PROTECTION = 15;
+	private static final int DEFAULT_ARMOR_WEIGHTPERCENTAGE = 10;
+	private static final int DEFAULT_FULLVALUE = 100;
+	
+	private static final int DEFAULT_PURSE_CAPACITY = 100;
+	private static final float DEFAULT_PURSE_WEIGHT = 0.5f;
+	
+	/**
+	 * Generate and equip the starter gear for a hero.
+	 * 
+	 */
+	private void giveStarterGear() {
+		
+		float armorWeight = this.getCapacity()/DEFAULT_ARMOR_WEIGHTPERCENTAGE;
+		Armor starterArmor = new Armor(MathHelper.getRandomPrime(), DEFAULT_ARMOR_PROTECTION, armorWeight, DEFAULT_FULLVALUE);
+		
+		int maxContent = (this.getCapacity() - armorWeight - DEFAULT_PURSE_WEIGHT)/Purse.getDucateWeight();
+		int randomContent = MathHelper.getRandomIntBetweenRange(0, Math.min(maxContent, DEFAULT_PURSE_CAPACITY)); 
+		Purse starterPurse = new Purse(DEFAULT_PURSE_WEIGHT, DEFAULT_PURSE_CAPACITY , randomContent);
+		
+		this.equip(AnchorType.BODY, starterArmor);
+		this.equip(AnchorType.BELT, starterPurse);
+	}
+	
+	
+	
+	
+	
 }
