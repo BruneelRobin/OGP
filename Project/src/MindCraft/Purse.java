@@ -17,13 +17,21 @@ public class Purse extends Item implements Container {
 	 ***********************/
 	
 	/**
-	 * Creates a purse
+	 * Create a purse with given capacity and weight.
+	 * @param 	capacity
+	 * 			The capacity of this purse.
+	 * @param 	weight
+	 * 			The weight of this purse.
 	 * @pre		The given capacity is valid
 	 * 			| isValidCapacity (capacity)
+	 * @effect	The new purse is set as an item with given weight and 0 value.
+	 * 			| super(weight, 0)
+	 * @post	The capacity is set to the given capacity.
+	 * 			| new.capacity == capacity
 	 */
 	public Purse (int capacity, float weight) {
 		super(weight, 0);
-		setCapacity(capacity);
+		this.capacity = capacity;
 		ids.add(getIdentification());
 	}
 	
@@ -73,13 +81,20 @@ public class Purse extends Item implements Container {
 		return canHaveAsIdentification (identification) && ids.contains(identification) == false;
 	}
 	
+	/**
+	 * Variable referencing a set with all ids of this class. 
+	 * 
+	 * @invar Each non null element in the hashset references an effective item. 
+	 *        | for (Item item : ids)
+	 *        | 	item != null
+	 */
 	private static final HashSet<Long> ids = new HashSet<Long>();
 	
 	/*******************************
 	 * Capacity - total programming
 	 *******************************/
 	
-	private int capacity;
+	private final int capacity;
 	
 	/**
 	 * Return the capacity of this container
@@ -88,18 +103,6 @@ public class Purse extends Item implements Container {
 	@Basic
 	public int getCapacity() {
 		return this.capacity;
-	}
-	
-	/**
-	 * Set the capacity of this container
-	 * @param 	capacity
-	 * 			the new capacity
-	 * @post	the new capacity is set to the given capacity
-	 * 			| new.getCapacity() == capacity
-	 */
-	@Raw
-	private void setCapacity(int capacity) {
-		this.capacity = capacity;
 	}
 	
 	/**

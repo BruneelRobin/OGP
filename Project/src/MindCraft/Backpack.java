@@ -21,10 +21,26 @@ public class Backpack extends Item implements Container {
 	 ***********************/
 	
 	/**
-	 * Creates a backpack
+	 * Create a backpack with given capacity, weight and value.
 	 * 
 	 * @pre		The given capacity is valid
 	 * 			| isValidCapacity(capacity)
+	 */
+	
+	/**
+	 * Create a backpack with given capacity, weight and value.
+	 * @param 	capacity
+	 * 			The capacity of this backpack.
+	 * @param 	weight
+	 * 			The weight of this backpack.
+	 * @param 	value
+	 * 			The value of this backpack.
+	 * @pre		The given capacity is valid
+	 * 			| isValidCapacity(capacity)
+	 * @effect	The backpack is set as an item with given weight and value.
+	 * 			| super(weight, value)
+	 * @post	The capacity is set to the given capacity.
+	 * 			| new.capacity == capacity
 	 */
 	public Backpack (float capacity, float weight, int value) {
 		super(weight, value);
@@ -63,11 +79,24 @@ public class Backpack extends Item implements Container {
 	 * 			The identification to check
 	 * @return	Return true when this item can have the given identification number
 	 * 			Return false when this item can't have the given identification number
-	 * 			| result == identification == generateIdentification()
+	 * 			| result == identification % 2 == 0
 	 */
 	@Override
 	public boolean canHaveAsIdentification(long identification) {
-		return identification == generateIdentification();
+		return identification % 2 == 0;
+	}
+	
+	/**
+	 * @param	identification
+	 * 			The identification to check
+	 * @return	Return true when this backpack can have the given identification number that has to be unique
+	 * 			Return false when this backpack can't
+	 * 			| result == canHaveAsIdentification (identification) 
+	 * 							&& identification == generateIdentification()
+	 */
+	@Override
+	public boolean canHaveAsNewIdentification (long identification) {
+		return canHaveAsIdentification (identification) && identification == generateIdentification();
 	}
 	
 
@@ -197,7 +226,9 @@ public class Backpack extends Item implements Container {
 	 * Checks whether this backpack can have an item
 	 * @param 	item
 	 * 			The item to check
-	 * @return	Return false when the item is held by another non dead character than the holder of this backpack
+	 * @return	Return false when the item is terminated
+	 * 			Return false when the item is a purse
+	 * 			Return false when the item is held by another non dead character than the holder of this backpack
 	 * 			Return false when the given item is a direct or indirect parent backpack of this backpack
 	 * 			Return false when the weight of the backpack with this item is higher than the capacity 
 	 * 			of this backpack.
@@ -205,7 +236,13 @@ public class Backpack extends Item implements Container {
 	 * 			
 	 */
 	public boolean canHaveAsItem (Item item) {
-		if (item.getHolder() != null && item.getHolder() != this.getHolder() && item.getHolder().isDead() == false) {
+		if (item.isTerminated()) {
+			return false;
+		}
+		else if (item instanceof Purse) {
+			return false;
+		}
+		else if (item.getHolder() != null && item.getHolder() != this.getHolder() && item.getHolder().isDead() == false) {
 			return false;
 		} else if (item instanceof Backpack && this.isDirectOrIndirectSubBackpackOf((Backpack)item)) {
 			return false;
@@ -257,6 +294,22 @@ public class Backpack extends Item implements Container {
 			HashSet<Item> list = getListAt(item.getIdentification());
 			list.add(item);
 		}
+	}
+	
+	/**
+	 * Return a set with all the item of this backpack
+	 * @return Return a set with all the item of this backpack
+	 */
+	public HashSet<Item> getItems () {
+		HashSet<Item> itemSet = new HashSet<Item> ();
+		
+		for (HashSet<Item> set : this.content.values()) {
+			for (Item item : set) {
+				itemSet.add(item);
+			}
+		}
+		
+		return itemSet;
 	}
 	
 	/*************************

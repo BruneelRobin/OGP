@@ -117,6 +117,13 @@ public class Weapon extends Item {
 		return canHaveAsIdentification (identification) && ids.contains(identification) == false;
 	}
 	
+	/**
+	 * Variable referencing a set with all ids of this class. 
+	 * 
+	 * @invar Each non null element in the hashset references an effective item. 
+	 *        | for (Item item : ids)
+	 *        | 	item != null
+	 */
 	private static final HashSet<Long> ids = new HashSet<Long>();
 	
 	

@@ -7,6 +7,10 @@ import be.kuleuven.cs.som.annotate.*;
  * 
  * @invar 	Each item must have a unique and valid identification number
  * 			| canHaveAsIdentification(getIdentification())
+ * @invar	Each item must have a valid weight
+ * 			| isValidWeight(getWeight())
+ * @invar	Each item must have a valid value
+ * 			| canHaveAsValue(getValue())
  * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  *
@@ -44,7 +48,7 @@ public abstract class Item {
 			this.weight = getDefaultWeight();
 		}
 		
-		setValue(value);
+		setValue(MathHelper.clamp(value, getMinValue(), getMaxValue())); //total programming 
 	}
 	
 	/**
@@ -82,14 +86,35 @@ public abstract class Item {
 			this.weight = getDefaultWeight();
 		}
 		
-		setValue(value);
+		setValue(MathHelper.clamp(value, getMinValue(), getMaxValue()));
 	}
 	
 	/***********************
 	 * Destructor
 	 ***********************/
 	
-	// TODO
+	private boolean isTerminated = false;
+	
+	/**
+	 * Return true when this item is terminated
+	 * @return	Return true when this item is terminated
+	 * 			Return false otherwise
+	 */
+	@Basic
+	public boolean isTerminated() {
+		return this.isTerminated;
+	}
+	
+	/**
+	 * Terminates this item
+	 * @post	Terminates this item by breaking all associations (dropping it on the ground)
+	 * 			and sets terminated state on true
+	 * 			| isTerminated() == true
+	 */
+	protected void terminate () {
+		this.drop();
+		this.isTerminated = true;
+	}
 	
 	/*************************************
 	 * Identification - total programming
@@ -248,6 +273,8 @@ public abstract class Item {
 	 * Binds a character to this anchor
 	 * @param 	anchor
 	 * 			The character to set as anchor
+	 * @pre		This item is not terminated
+	 * 			| !this.isTerminated()
 	 * @post	Binds a character to this anchor, when this item is in a backpack it will be removed
 	 * 			| getParentBackpack() == null && getAnchor() == anchor
 	 */
@@ -319,9 +346,9 @@ public abstract class Item {
 	 * 	
 	 */
 	public void drop() {
-		if (this.getAnchor() != null) {
-			this.getAnchor().removeItemFromHolder(this);
-			this.setAnchor(null);
+		if (this.getCharacter() != null) {
+			this.getCharacter().removeItemFromHolder(this);
+			this.setCharacter(null);
 		} else if (this.getParentBackpack() != null) {
 			this.getParentBackpack().removeItem(this);
 			this.setParentBackpack(null);
@@ -334,8 +361,8 @@ public abstract class Item {
 	 * 			when this item is in a backpack. If a backpack doesn't have a holder this method returns null.
 	 */
 	public Character getHolder() {
-		if (getAnchor() != null) {
-			return getAnchor();
+		if (getCharacter() != null) {
+			return getCharacter();
 		} else if (getParentBackpack() != null) {
 			return getParentBackpack().getHolder();
 		} else {

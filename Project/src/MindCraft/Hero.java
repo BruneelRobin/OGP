@@ -1,5 +1,6 @@
 package MindCraft;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -60,26 +61,34 @@ public class Hero extends Character {
 	 * Strength - total programming
 	 *******************************/
 	
-	private float strength;
+	private int strengthInteger;
+	private static float strengthPrecision = 0.01f;
 	
-		/**
-		 * Returns the character's strength
-		 * @return Returns the character's strength
-		 */
+	/**
+	 * Return the internal precision of the float strength
+	 * @return	Return the internal precision of the float strength
+	 */
+	public static float getStrengthPrecision () {
+		return strengthPrecision;
+	}
+	
+	/**
+	 * Returns the character's strength
+	 * @return Returns the character's strength
+	 */
 	public float getStrength() {
-		return this.strength;
-	
+		return ((float)strengthInteger) * strengthPrecision;
 	}
 	
 	/**
 	 * Sets the strength to the given strength
 	 * @param strength
 	 * 		  the new value of the hero's strength
-	 * @post  The strength is set to the given strength
-	 * 		  | new.getStrength == strength
+	 * @post  The strength is set to the given strength, the strength is rounded with the static precision
+	 * 		  | new.getStrength() == strength
 	 */
 	private void setStrength(float strength) {
-		this.strength = strength;
+		this.strengthInteger = (int)(strength/getStrengthPrecision());
 	}
 	
 	/**
@@ -148,8 +157,44 @@ public class Hero extends Character {
 	 * @return Returns false when the hero does not want to take the item
 	 */
 	@Override
-	public boolean wantsToTakeItem(Item item) {
-		return false;
+	public boolean wantsToTakeItem(Item item) { 
+		if (item instanceof Armor) {
+			Armor armor = (Armor) item;
+			
+		}
+		
+		else if (item instanceof Weapon) {
+			Weapon weapon = (Weapon) item;
+			Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+			int bestDamage = 0;
+			
+			for (Entry<Integer, Item> entry : set) {
+				Item heroItem = entry.getValue();
+				if (heroItem instanceof Weapon) {
+					Weapon heroWeapon = (Weapon) heroItem;
+					int heroWeaponDamage = heroWeapon.getDamage()
+					if (heroWeaponDamage > bestDamage) {
+						bestDamage = heroWeaponDamage;
+					}
+				}
+			}
+			
+			if (weapon.getDamage() > bestDamage) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		else if (item instanceof Backpack) {
+			Backpack backpack = (Backpack) item;
+			
+		}
+		
+		else if (item instanceof Purse) {
+			Purse purse = (Purse) item;
+			
+		}
 	}
 	
 	/**
