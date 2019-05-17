@@ -20,6 +20,8 @@ import java.util.Iterator;
  * @version 1.0 - 2019
  */
 
+// TODO invariants
+
 public class Monster extends Character {
 	
 	/***********************
