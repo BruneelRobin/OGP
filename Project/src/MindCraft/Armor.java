@@ -29,20 +29,20 @@ public class Armor extends Item {
 	 * 			The full protection and current protection of this armor.
 	 * @param 	weight
 	 * 			The weight of this armor.
-	 * @param 	value
-	 * 			The value of this armor.
+	 * @param 	fullValue
+	 * 			The maximum value of this armor.
 	 * @pre		The given protection must be valid.
 	 * 			| isValidProtection(fullProtection)
-	 * @effect	The armor is set as an item with given identification, weight and value.
-	 * 			| super(identification, weight, value)
+	 * @effect	The armor is set as an item with given identification, weight and maximum value.
+	 * 			| super(identification, weight, fullValue)
 	 * @post	
 	 */
 	
-	protected Armor(long identification, int protection, float weight, int value) {
-		super(identification, weight, value);
+	protected Armor(long identification, int protection, float weight, int fullValue) {
+		super(identification, weight, fullValue);
 		this.currentProtection = protection;
 		this.fullProtection = protection;
-		ids.add(getIdentification());
+		armorIds.add(getIdentification());
 	}
 	
 	/**************************************
@@ -89,7 +89,7 @@ public class Armor extends Item {
 	 */
 	@Override
 	public boolean canHaveAsNewIdentification (long identification) {
-		return canHaveAsIdentification (identification) && ids.contains(identification) == false;
+		return canHaveAsIdentification (identification) && armorIds.contains(identification) == false;
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class Armor extends Item {
 	 *        | for (Item item : ids)
 	 *        | 	item != null
 	 */
-	private static final HashSet<Long> ids = new HashSet<Long>();
+	private static final HashSet<Long> armorIds = new HashSet<Long>();
 
 
 	/***********************
