@@ -35,7 +35,10 @@ public class Armor extends Item {
 	 * 			| isValidProtection(fullProtection)
 	 * @effect	The armor is set as an item with given identification, weight and maximum value.
 	 * 			| super(identification, weight, fullValue)
-	 * @post	
+	 * @post	Sets the current protection to the given value
+	 * 			| new.getProtection() = protection
+	 * @post	Sets the full protection to the given value
+	 * 			| new.getFullProtection() = protection
 	 */
 	
 	protected Armor(long identification, int protection, float weight, int fullValue) {

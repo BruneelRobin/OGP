@@ -55,10 +55,16 @@ public class Hero extends Character {
 	
 	/**
 	 * Checks if a hero can have the given name as name
+	 * @return	Return true when the given name starts with a capital letter, only contains letters,
+	 * 			maximum two apostrophes, spaces and colons followed by spaces.
+	 * 			Otherwise return false
+	 * 
+	 * @note	Matches the given characters starting with a capital letter and returns false when it 
+	 * 			contains a : without a space or 3 apostrophes
 	 */
 	@Override
 	public boolean canHaveAsName(String name) {
-		return false;
+		return (name != null && name.matches("(?![^:]*:[^ ])(?![^']*'[^']*'[^']*')[A-Z][A-Za-z' :]*"));
 	}
 	
 	
@@ -192,7 +198,7 @@ public class Hero extends Character {
 				Item heroItem = entry.getValue();
 				if (heroItem instanceof Weapon) {
 					Weapon heroWeapon = (Weapon) heroItem;
-					int heroWeaponDamage = heroWeapon.getDamage()
+					int heroWeaponDamage = heroWeapon.getDamage();
 					if (heroWeaponDamage > bestDamage) {
 						bestDamage = heroWeaponDamage;
 					}
