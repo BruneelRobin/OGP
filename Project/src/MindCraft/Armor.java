@@ -65,13 +65,26 @@ public class Armor extends Item {
 	 * 
 	 * @param 	identification
 	 * 			The identification to check
-	 * @return	Return true when this item can have the given identification number
-	 * 			Return false when this item can't have the given identification number
-	 * 			| result == MathHelper.isPrime(identification) && ids.contains(identification) == false
+	 * @return	Return true when this armor can have the given identification number
+	 * 			Return false when this armor can't have the given identification number
+	 * 			| result == MathHelper.isPrime(identification)
 	 */
 	@Override
 	public boolean canHaveAsIdentification(long identification) {
-		return MathHelper.isPrime(identification) && ids.contains(identification) == false;
+		return MathHelper.isPrime(identification);
+	}
+	
+	/**
+	 * @param	identification
+	 * 			The identification to check
+	 * @return	Return true when this armor can have the given identification number that has to be unique
+	 * 			Return false when this armor can't
+	 * 			| result == canHaveAsIdentification (identification) 
+	 * 							&& ids.contains(identification) == false
+	 */
+	@Override
+	public boolean canHaveAsNewIdentification (long identification) {
+		return canHaveAsIdentification (identification) && ids.contains(identification) == false;
 	}
 
 	private static final HashSet<Long> ids = new HashSet<Long>();
@@ -219,7 +232,7 @@ public class Armor extends Item {
 	 */
 	@Override
 	public boolean canHaveAsValue(int value) {
-		return ((value >= MIN_VALUE) && (value <= MAX_VALUE) && (value%2 == 0));
+		return ((value >= getMinValue()) && (value <= getMaxValue()) && (value%2 == 0));
 		
 		}
 	
