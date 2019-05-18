@@ -5,6 +5,9 @@ import be.kuleuven.cs.som.annotate.*;
 /**
  * A class for signaling illegal attempts to change a purse
  * due to it being torn.
+ * 
+ * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
+ * @version 1.0 - 2019
  */
 public class TornException extends RuntimeException {
 

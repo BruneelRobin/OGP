@@ -31,7 +31,7 @@ public class Hero extends Character {
 	 * 			The strength of this hero.
 	 * @effect	The new hero is set as a character with a given name, amount of hitpoints
 	 * 			and a default number of anchors.
-	 * 			|super(name, hitpoints, AnchorTypes.values().length)
+	 * 			| super(name, hitpoints, AnchorTypes.values().length)
 	 * @post	The strength of this hero is set to the given strength
 	 * 			| new.getStrength() == strength
 	 * @throws	IllegalArgumentException
@@ -48,9 +48,7 @@ public class Hero extends Character {
 			setStrength(strength);
 		}
 		
-		this.giveStarterGear();
-		
-		
+		giveStarterGear();
 	}
 	
 	/********************************
@@ -199,19 +197,19 @@ public class Hero extends Character {
 	 */
 	@Override
 	public boolean wantsToTakeItem(Item item) { 
-		if (item instanceof Armor) {
+		if (item.isArmor()) {
 			Armor armor = (Armor) item;
 			
 		}
 		
-		else if (item instanceof Weapon) {
+		else if (item.isWeapon()) {
 			Weapon weapon = (Weapon) item;
 			Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
 			int bestDamage = 0;
 			
 			for (Entry<Integer, Item> entry : set) {
 				Item heroItem = entry.getValue();
-				if (heroItem instanceof Weapon) {
+				if (heroItem.isWeapon()) {
 					Weapon heroWeapon = (Weapon) heroItem;
 					int heroWeaponDamage = heroWeapon.getDamage();
 					if (heroWeaponDamage > bestDamage) {
@@ -227,12 +225,12 @@ public class Hero extends Character {
 			}
 		}
 		
-		else if (item instanceof Backpack) {
+		else if (item.isBackpack()) {
 			Backpack backpack = (Backpack) item;
 			
 		}
 		
-		else if (item instanceof Purse) {
+		else if (item.isPurse()) {
 			Purse purse = (Purse) item;
 			
 		}
@@ -308,7 +306,7 @@ public class Hero extends Character {
 		if(!super.canPickUpItem(item)){
 			return false;
 		}
-		else if(item instanceof Armor && this.getArmorCount() >= MAX_ARMOR_COUNT){
+		else if(item.isArmor() && this.getArmorCount() >= MAX_ARMOR_COUNT){
 			return false;
 			
 		}
@@ -326,9 +324,9 @@ public class Hero extends Character {
 	public boolean canEquipItem(int anchorId, Item item) {
 		if (super.canEquipItem(anchorId, item)) {
 			if (AnchorType.getTypeFromId(anchorId).holdsPurse() == true) {
-				return item instanceof Purse; // true als purse, false als geen purse
+				return item.isPurse(); // true als purse, false als geen purse
 			} else {
-				return !(item instanceof Purse); // true als geen purse, false als purse
+				return !(item.isPurse()); // true als geen purse, false als purse
 			}
 		} else {
 			return false;
@@ -372,9 +370,9 @@ public class Hero extends Character {
 		
 		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
 			Item item = entry.getValue();
-			if (item instanceof Armor) { //iterate over all items on dead body and pickup all items you want
+			if (item.isArmor()) { //iterate over all items on dead body and pickup all items you want
 				armorCount += 1;
-			} else if (item instanceof Backpack) {
+			} else if (item.isBackpack()) {
 				armorCount += ((Backpack)item).getArmorCount();
 			}
 		}
@@ -397,7 +395,7 @@ public class Hero extends Character {
 		float armorWeight = this.getCapacity()/DEFAULT_ARMOR_WEIGHTPERCENTAGE;
 		Armor starterArmor = new Armor(MathHelper.getRandomPrime(), DEFAULT_ARMOR_PROTECTION, armorWeight, DEFAULT_FULLVALUE);
 		
-		int maxContent = (this.getCapacity() - armorWeight - DEFAULT_PURSE_WEIGHT)/Purse.getDucateWeight();
+		int maxContent = (int)(((float)this.getCapacity() - armorWeight - DEFAULT_PURSE_WEIGHT)/Purse.getDucateWeight());
 		int randomContent = MathHelper.getRandomIntBetweenRange(0, Math.min(maxContent, DEFAULT_PURSE_CAPACITY)); 
 		Purse starterPurse = new Purse(DEFAULT_PURSE_WEIGHT, DEFAULT_PURSE_CAPACITY , randomContent);
 		

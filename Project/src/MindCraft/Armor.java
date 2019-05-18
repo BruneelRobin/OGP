@@ -48,6 +48,19 @@ public class Armor extends Item {
 		armorIds.add(getIdentification());
 	}
 	
+	/***********************
+	 * Class type
+	 ***********************/
+	
+	/**
+	 * Return true when this item is an armor
+	 * @return	Always return true since this item is an armor
+	 * 			| result == true
+	 */
+	public boolean isArmor () {
+		return true;
+	}
+	
 	/**************************************
 	 * Identification - total programming
 	 **************************************/

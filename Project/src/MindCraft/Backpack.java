@@ -50,7 +50,18 @@ public class Backpack extends Item implements Container {
 		backpackCount ++;
 	}
 	
+	/***********************
+	 * Class type
+	 ***********************/
 	
+	/**
+	 * Return true when this item is a backpack
+	 * @return	Always return true since this item is a backpack
+	 * 			| result == true
+	 */
+	public boolean isBackpack () {
+		return true;
+	}
 	
 	/**************************************
 	 * Identification - total programming
@@ -239,6 +250,7 @@ public class Backpack extends Item implements Container {
 	 * @return	Return false when the item is terminated or this backpack is terminated
 	 * 			Return false when the item is a purse
 	 * 			Return false when the item is held by another non dead character than the holder of this backpack
+	 * 			Return false when the item can't be picked up by the holder of this backpack
 	 * 			Return false when the given item is a direct or indirect parent backpack of this backpack
 	 * 			Return false when the weight of the backpack with this item is higher than the capacity 
 	 * 			of this backpack.
@@ -249,12 +261,14 @@ public class Backpack extends Item implements Container {
 		if (this.isTerminated() || item.isTerminated()) {
 			return false;
 		}
-		else if (item instanceof Purse) {
+		else if (item.isPurse()) {
 			return false;
 		}
 		else if (item.getHolder() != null && item.getHolder() != this.getHolder() && item.getHolder().isDead() == false) {
 			return false;
-		} else if (item instanceof Backpack && this.isDirectOrIndirectSubBackpackOf((Backpack)item)) {
+		} else if (item.getHolder() == null && this.getHolder() != null && !this.getHolder().canPickUpItem(item)) { 
+			return false;
+		} else if (item.isBackpack() && this.isDirectOrIndirectSubBackpackOf((Backpack)item)) {
 			return false;
 		} else if (this.getTotalWeight() + item.getWeight() > this.getCapacity()) {
 			return false;
@@ -389,7 +403,7 @@ public class Backpack extends Item implements Container {
 	public float getTotalWeight() {
 		float totalWeight = 0;
 		for (Item item : getItems()) {
-			if (item instanceof Container) {
+			if (item.isContainer()) {
 				totalWeight += ((Container)(item)).getTotalWeight();
 			} else {
 				totalWeight += item.getWeight();
@@ -408,7 +422,7 @@ public class Backpack extends Item implements Container {
 	public int getTotalValue() {
 		int totalValue = 0;
 		for (Item item : getItems()) {
-			if (item instanceof Container) {
+			if (item.isContainer()) {
 				totalValue += ((Container)(item)).getTotalValue();
 			} else {
 				totalValue += item.getValue();
@@ -425,9 +439,9 @@ public class Backpack extends Item implements Container {
 	public int getArmorCount () {
 		int armorCount = 0;
 		for (Item item : getItems()) {
-			if (item instanceof Armor) {
+			if (item.isArmor()) {
 				armorCount += 1;
-			} else if (item instanceof Backpack) {
+			} else if (item.isBackpack()) {
 				armorCount += ((Backpack)item).getArmorCount();
 			}
 		}

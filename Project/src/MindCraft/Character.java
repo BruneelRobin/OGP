@@ -166,18 +166,13 @@ public abstract class Character {
 	 * removes hitpoints from the character
 	 * @param	hitpoints
 	 * 			The amount of hitpoints to be taken
-	 * @post	Removes the given amount of hitpoints
-	 * 			| new.getHitpoints() == this.getHitpoints() - hitpoints
+	 * @post	Removes the given amount of hitpoints or sets it to zero when the new amount of hitpoints would be negative
+	 * 			| new.getHitpoints() == Math.max(0, getHitpoints()-hitpoints)
 	 * @post	when the character takes damage, isFighting is set to true
 	 * 			| new.isFighting() == true
-	 * @pre		The given amount of hitpoints is valid
-	 * 			| hitpoints > 0
 	 */
 	public void takeDamage(int hitpoints) {
-		int newValue = getHitpoints()-hitpoints;
-		if (newValue <= 0) {
-			newValue = 0;
-		}
+		int newValue = Math.max(0, getHitpoints()-hitpoints);
 		
 		setFighting (true);
 		setHitpoints(newValue);
@@ -404,7 +399,7 @@ public abstract class Character {
 		    int key = entry.getKey();
 		    Item value = entry.getValue();
 		    		
-		    if (value instanceof Backpack && key != anchorId) {
+		    if (value.isBackpack() && key != anchorId) {
 		    	Backpack backpack = (Backpack) value;
 		    	
 				if (backpack.canHaveAsItem(item)) {
@@ -446,7 +441,7 @@ public abstract class Character {
 	 */
 	public boolean canPickUpItem(Item item) {
 		float totalWeightOfItem;
-		if(item instanceof Container) {
+		if(item.isContainer()) {
 			totalWeightOfItem = ((Container)(item)).getTotalWeight();
 			
 			}
@@ -487,10 +482,10 @@ public abstract class Character {
 			Set <Backpack> backpacks = new HashSet <Backpack>();
 			for(int anchorId = 0; anchorId < this.getNumberOfAnchors(); anchorId ++) {
 				Item itemAt = this.getItemAt(anchorId);
-				if(itemAt instanceof Backpack) {
+				if(itemAt.isBackpack()) {
 					backpacks.add((Backpack)(itemAt));
 				}
-				if(itemAt == null && this.canEquipItem(anchorId, item)) {
+				else if(itemAt == null && this.canEquipItem(anchorId, item)) {
 					this.equip(anchorId, item);
 					return;
 				}
@@ -600,7 +595,7 @@ public abstract class Character {
 		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
 			Item item = entry.getValue();
 			
-			if (item instanceof Container) {
+			if (item.isContainer()) {
 				value += ((Container) item).getTotalValue();
 			} else {
 				value += item.getValue();
@@ -619,7 +614,7 @@ public abstract class Character {
 		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
 			Item item = entry.getValue();
 			
-			if (item instanceof Container) {
+			if (item.isContainer()) {
 				weight += ((Container) item).getTotalWeight();
 			} else {
 				weight += item.getWeight();

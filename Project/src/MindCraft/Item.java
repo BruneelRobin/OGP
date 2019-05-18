@@ -91,6 +91,54 @@ public abstract class Item {
 	}
 	
 	/***********************
+	 * Class type
+	 ***********************/
+	
+	/**
+	 * Return true when this item is a weapon
+	 * @return	Return true when this item is a weapon
+	 * 			Return false otherwise
+	 */
+	public boolean isWeapon () {
+		return false;
+	}
+	
+	/**
+	 * Return true when this item is an armor
+	 * @return	Return true when this item is an armor
+	 * 			Return false otherwise
+	 */
+	public boolean isArmor () {
+		return false;
+	}
+	
+	/**
+	 * Return true when this item is a backpack
+	 * @return	Return true when this item is a backpack
+	 * 			Return false otherwise
+	 */
+	public boolean isBackpack () {
+		return false;
+	}
+	
+	/**
+	 * Return true when this item is a purse
+	 * @return	Return true when this item is a purse
+	 * 			Return false otherwise
+	 */
+	public boolean isPurse () {
+		return false;
+	}
+	
+	/**
+	 * Return true when this item is a purse or backpack
+	 * @return 	Return true when this item is a purse or backpack
+	 */
+	public boolean isContainer () {
+		return isBackpack() || isPurse();
+	}
+	
+	/***********************
 	 * Destructor
 	 ***********************/
 	

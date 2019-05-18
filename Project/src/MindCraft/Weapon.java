@@ -66,7 +66,18 @@ public class Weapon extends Item {
 		ids.add(getIdentification());
 	}
 	
+	/***********************
+	 * Class type
+	 ***********************/
 	
+	/**
+	 * Return true when this item is a weapon
+	 * @return	Always return true since this item is a weapon
+	 * 			| result == true
+	 */
+	public boolean isWeapon () {
+		return true;
+	}
 	
 	/**************************************
 	 * Identification - total programming

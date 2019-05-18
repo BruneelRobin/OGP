@@ -27,11 +27,11 @@ import java.util.Iterator;
  * @version 1.0 - 2019
  */
 
-// TODO invariants
-//		content en moveto check op capacity hero
-//		getTotalWeight en getTotalValue -> instanceof verwijderen
-//		constructor bij Hero
-//		constructors samenvoegen bij monster sws ...
+// TODO invariants (done)
+//		content en moveto check op capacity hero  (done)
+//		getTotalWeight en getTotalValue -> instanceof verwijderen (done)
+//		constructor bij Hero -> nog te doen, maar giveStarterGear hiervoor aanpassen
+//		constructors samenvoegen bij monster sws ... (done)
 
 public class Monster extends Character {
 	
@@ -54,24 +54,19 @@ public class Monster extends Character {
 	 * 			The number of anchors of this monster.
 	 * @param 	capacity
 	 * 			The carry capacity of this monster.
-	 * @pre		The given damage is valid
-	 * 			| isValidDamage(damage)
-	 * @pre		The given protection is valid
-	 * 			| isValidProtection(protection)
-	 * @pre		The given capacity is valid
-	 * 			| isValidCapacity(capacity)
 	 * @effect	The new monster is set as a character with a given name, amount of hitpoints
 	 * 			and a number of anchors.
-	 * @post	The damage of this monster is set to the given damage.
-	 * @post	The number of anchors of this monster is set to the given number of anchors.
-	 * @post	The capacity of this monster is set to the given capacity.
-	 * @throws	IllegalArgumentException
-	 * 			Throws this exception when the given name is not valid.
+	 * 			| super(name, hitpoints, numberOfAnchors)
+	 * @effect	The new monster is initialized with the given damage and protection
+	 * 			| initialize(damage, protection)
+	 * @post	The capacity of this monster is set to the given capacity or 0 when the given capacity is negative.
 	 */
 	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity) throws IllegalArgumentException {
 		super(name, hitpoints, numberOfAnchors);
-		setDamage(damage);
-		setProtection(protection);
+		this.initialize(damage, protection);
+		if (capacity < 0) {
+			capacity = 0;
+		}
 		this.capacity = capacity;
 	}
 	
@@ -90,57 +85,67 @@ public class Monster extends Character {
 	 * 			The number of anchors of this monster.
 	 * @param 	capacity
 	 * 			The carry capacity of this monster.
-	 * @param	itemset	
+	 * @param	items
 	 * 			The given set of items for this monster to carry.
-	 * @pre		The given damage is valid
-	 * 			| isValidDamage(damage)
-	 * @pre		The given protection is valid
-	 * 			| isValidProtection(protection)
-	 * @pre		The given capacity is valid
-	 * 			| isValidCapacity(capacity)
+	 * @pre		The given number of anchors is equal to or higher than the amount of items to equip
+	 * 			| numberOfAnchors >= items.size()
 	 * @effect	The new monster is set as a character with a given name, amount of hitpoints
 	 * 			and a number of anchors.
-	 * @post	The damage of this monster is set to the given damage.
-	 * @post	The number of anchors of this monster is set to the given number of anchors.
+	 * 			| super(name, hitpoints, numberOfAnchors)
+	 * @effect	The new monster is initialized with the given damage and protection
+	 * 			| initialize(damage, protection)
 	 * @post	The capacity of this monster is set to the given capacity, if the capacity 
-	 * 			can handle the total weight of the given itemset. If not the capacity is set
-	 * 			to the total weight of the given itemset.
-	 * @throws	IllegalArgumentException
-	 * 			Throws this exception when the given name is not valid.
+	 * 			can handle the total weight of the given items. If not the capacity is set
+	 * 			to the total weight of the given items.
+	 * @post	Each item given in this constructor will be equipped, since all items are given in a set no order can be guaranteed
 	 */
-	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity, HashSet<Item> itemset) throws IllegalArgumentException {
+	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity, HashSet<Item> items) throws IllegalArgumentException {
 		super(name, hitpoints, numberOfAnchors);
-		setDamage(damage);
-		setProtection(protection);
+		this.initialize(damage, protection);
 		
-		Iterator<Item> i = itemset.iterator();
 		float totalWeight = 0;
-	     while(i.hasNext()){
-	    	Item item = i.next();
-	    	if (item instanceof Weapon || item instanceof Armor) {
+	    for (Item item : items) {
+	    	if (item.isWeapon() || item.isArmor()) {
 	    		totalWeight = totalWeight + item.getWeight();
-	    	} else if (item instanceof Backpack) {
-	    		Backpack backpack = (Backpack) item;
-	    		totalWeight = totalWeight + backpack.getTotalWeight();
-	    	} else if (item instanceof Purse) {
-	    		Purse purse = (Purse) item;
-	    		totalWeight = totalWeight +  purse.getTotalWeight();
+	    	} else if (item.isContainer()) {
+	    		totalWeight = totalWeight + ((Container) item).getTotalWeight();
 	    	}
-	     }
+	    }
 		
 		if (capacity >= totalWeight) {
 			this.capacity = capacity;
 		} else {
 			this.capacity = totalWeight;
-	     }
+	    }
 		
-		Iterator<Item> it = itemset.iterator();
+		Iterator<Item> it = items.iterator();
 		int anchorId = 0;
 	    while(it.hasNext()){
 	        this.equip(anchorId, it.next());
 	        anchorId ++;
 	    }
 	
+	}
+	
+	/**
+	 * Initialises this monster with the given damage and protection
+	 * @param 	damage
+	 * 			The damage of this monster
+	 * @param 	protection
+	 * 			The protection of this monster
+	 * @pre		The given damage is valid
+	 * 			| isValidDamage(damage)
+	 * @pre		The given protection is valid
+	 * 			| isValidProtection(protection)
+	 * @post	The damage of this monster is set to the given damage.
+	 * 			| new.getDamage() == damage
+	 * @post	The protection of this monster is set to the given protection.
+	 * 			| new.getProtection() == protection
+	 * 
+	 */
+	private void initialize (int damage, int protection) {
+		setDamage(damage);
+		setProtection(protection);
 	}
 
 	
@@ -264,7 +269,7 @@ public class Monster extends Character {
 	@Override
 	public boolean wantsToTakeItem(Item item) {
 		int randomInt = MathHelper.getRandomIntBetweenRange(0,100);
-		if (item instanceof Armor) {
+		if (item.isArmor()) {
 			Armor armor = (Armor) item;
 			int shinyness = (armor.getProtection()/armor.getFullProtection())*100;
 			if (randomInt <= shinyness) {
@@ -273,7 +278,7 @@ public class Monster extends Character {
 				return false;
 			}
 		}
-		else if (item instanceof Weapon) {
+		else if (item.isWeapon()) {
 			Weapon weapon = (Weapon) item;
 			if (randomInt <= 80) {
 				return true;
@@ -282,7 +287,7 @@ public class Monster extends Character {
 			}
 		}
 		
-		else if (item instanceof Backpack) {
+		else if (item.isBackpack()) {
 			Backpack backpack = (Backpack) item;
 			if (randomInt <= 5) {
 				return true;
@@ -291,7 +296,7 @@ public class Monster extends Character {
 			}
 		}
 		
-		else if (item instanceof Purse) {
+		else if (item.isPurse()) {
 			Purse purse = (Purse) item;
 			if (randomInt <= 25) {
 				return true;
