@@ -8,6 +8,7 @@ import java.util.Map.Entry;
  * A class of Heroes. 
  * 
  * @invar	Each hero must have a valid strength
+ * 			| isValidStrength(getStrength())
  * 
  * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
@@ -40,8 +41,8 @@ public class Hero extends Character {
 	public Hero(String name, int hitpoints, float strength) throws IllegalArgumentException {
 		super(name, hitpoints, AnchorType.values().length); // length of anchortypes
 		
-		if(strength < 0) {
-		setStrength(0);
+		if(!isValidStrength(strength)) {
+			setStrength(0);
 		}
 		else {
 			setStrength(strength);
@@ -83,6 +84,17 @@ public class Hero extends Character {
 	 */
 	public static float getStrengthPrecision () {
 		return strengthPrecision;
+	}
+	
+	/**
+	 * Return true when a hero can have the given strength
+	 * @param	strength
+	 * 			The strength to check
+	 * @return 	true when the given strength is positive
+	 * 			| strength >= 0
+	 */
+	public static boolean isValidStrength(float strength) {
+		return strength >= 0;
 	}
 	
 	/**

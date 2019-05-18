@@ -7,6 +7,9 @@ import be.kuleuven.cs.som.annotate.*;
 /**
  * A class of weapons.
  * 
+ * @invar	Each weapon must have a valid damage
+ * 			| isValidDamage(getDamage())
+ * 
  * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  */
@@ -152,7 +155,7 @@ public class Weapon extends Item {
 	 * @return 	False if the given damage is not valid
 	 */
 	public static boolean isValidDamage(int damage) {
-		return false;
+		return damage >= MIN_DAMAGE && damage <= MAX_DAMAGE && damage % 7 == 0;
 	}
 	
 	/**
@@ -192,7 +195,7 @@ public class Weapon extends Item {
 	 */
 	public void upgrade(int amount) {
 		this.setDamage(this.getDamage() + amount);
-		}
+	}
 	
 	
 	/**

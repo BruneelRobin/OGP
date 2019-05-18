@@ -16,6 +16,13 @@ import java.util.Iterator;
 /**
  * A class of monsters.
  * 
+ * @invar	Each monster must have a valid damage
+ * 			| isValidDamage(getDamage())
+ * @invar	Each monster must have a valid protection
+ * 			| isValidProtection(getProtection())
+ * @invar	Each monster must have a valid capacity
+ * 			| isValidCapacity(getCapacity())
+ * 
  * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  */
@@ -24,6 +31,7 @@ import java.util.Iterator;
 //		content en moveto check op capacity hero
 //		getTotalWeight en getTotalValue -> instanceof verwijderen
 //		constructor bij Hero
+//		constructors samenvoegen bij monster sws ...
 
 public class Monster extends Character {
 	
@@ -46,6 +54,12 @@ public class Monster extends Character {
 	 * 			The number of anchors of this monster.
 	 * @param 	capacity
 	 * 			The carry capacity of this monster.
+	 * @pre		The given damage is valid
+	 * 			| isValidDamage(damage)
+	 * @pre		The given protection is valid
+	 * 			| isValidProtection(protection)
+	 * @pre		The given capacity is valid
+	 * 			| isValidCapacity(capacity)
 	 * @effect	The new monster is set as a character with a given name, amount of hitpoints
 	 * 			and a number of anchors.
 	 * @post	The damage of this monster is set to the given damage.
@@ -78,6 +92,12 @@ public class Monster extends Character {
 	 * 			The carry capacity of this monster.
 	 * @param	itemset	
 	 * 			The given set of items for this monster to carry.
+	 * @pre		The given damage is valid
+	 * 			| isValidDamage(damage)
+	 * @pre		The given protection is valid
+	 * 			| isValidProtection(protection)
+	 * @pre		The given capacity is valid
+	 * 			| isValidCapacity(capacity)
 	 * @effect	The new monster is set as a character with a given name, amount of hitpoints
 	 * 			and a number of anchors.
 	 * @post	The damage of this monster is set to the given damage.
@@ -145,6 +165,17 @@ public class Monster extends Character {
 	}
 	
 	/**
+	 * Return true when the given damage is valid
+	 * @param	damage
+	 * 			The damage to check
+	 * @return	Return true when the given damage is positive
+	 * 			| damage >= 0
+	 */
+	public static boolean isValidDamage(int damage) {
+		return damage >= 0;
+	}
+	
+	/**
 	 * Return the damage of this monster.
 	 * @return	Return the damage of this monster.
 	 */
@@ -175,6 +206,17 @@ public class Monster extends Character {
 	
 	
 	/**
+	 * Return true when the given protection is valid
+	 * @param	protection
+	 * 			The protection to check
+	 * @return	Return true when the given protection is positive
+	 * 			| protection >= 0
+	 */
+	public static boolean isValidProtection(int protection) {
+		return protection >= 0;
+	}
+	
+	/**
 	 * Return the protection of the monster
 	 * @return	Return the protection of the monster
 	 */
@@ -195,7 +237,17 @@ public class Monster extends Character {
 	 */
 	public float getCapacity() {
 		return this.capacity;
-		
+	}
+	
+	/**
+	 * Return true when the given capacity is valid
+	 * @param	capacity
+	 * 			The capacity to check
+	 * @return	Return true when the given capacity is positive
+	 * 			| capacity >= 0
+	 */
+	public static boolean isValidCapacity(float capacity) {
+		return capacity >= 0;
 	}
 	
 	/***********************
