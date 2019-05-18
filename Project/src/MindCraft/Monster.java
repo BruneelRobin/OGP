@@ -77,7 +77,7 @@ public class Monster extends Character {
 	
 	/**
 	 * Create a monster with a given name, amount of hitpoints, damage, protection,
-	 * number of anchors and capacity.
+	 * number of anchors, capacity and given items, which are randomly distributed on the anchors.
 	 * @param 	name
 	 *			The name of this monster.
 	 * @param 	hitpoints
