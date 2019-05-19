@@ -34,6 +34,8 @@ class HeroTest {
 		purse = new Purse(2, 500, 20);
 	}
 	
+	// constructors testen
+	
 	@Test
 	public void testCanHaveAsName_LegalCase() {
 		assertTrue(hero.canHaveAsName("ABCdef': 'ghiJKL"));

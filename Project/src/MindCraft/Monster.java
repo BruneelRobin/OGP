@@ -128,7 +128,7 @@ public class Monster extends Character {
 	}
 	
 	/**
-	 * Initialises this monster with the given damage and protection
+	 * Initialize this monster with the given damage and protection
 	 * @param 	damage
 	 * 			The damage of this monster
 	 * @param 	protection

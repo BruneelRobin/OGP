@@ -20,6 +20,8 @@ class MonsterTest {
 		
 	}
 	
+	// constructors testen
+	
 	
 
 }
