@@ -199,6 +199,25 @@ public class Hero extends Character {
 	public boolean wantsToTakeItem(Item item) { 
 		if (item.isArmor()) {
 			Armor armor = (Armor) item;
+			Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+			int bestFullProtection = 0;
+			
+			for (Entry<Integer, Item> entry : set) {
+				Item heroItem = entry.getValue();
+				if (heroItem.isArmor()) {
+					Armor heroArmor = (Armor) heroItem;
+					int heroArmorProtection = heroArmor.getFullProtection();
+					if (heroArmorProtection > bestFullProtection) {
+						bestFullProtection = heroArmorProtection;
+					}
+				}
+			}
+			
+			if (armor.getFullProtection() > bestFullProtection) {
+				return true;
+			} else {
+				return false;
+			}
 			
 		}
 		
@@ -226,13 +245,15 @@ public class Hero extends Character {
 		}
 		
 		else if (item.isBackpack()) {
-			Backpack backpack = (Backpack) item;
+			return false;
 			
 		}
 		
 		else if (item.isPurse()) {
-			Purse purse = (Purse) item;
+			return false;
 			
+		} else {
+			return false;
 		}
 	}
 	
@@ -302,8 +323,8 @@ public class Hero extends Character {
 	 * 
 	 */
 	@Override
-	public boolean canPickUpItem(Item item) {
-		if(!super.canPickUpItem(item)){
+	public boolean canPickUp(Item item) {
+		if(!super.canPickUp(item)){
 			return false;
 		}
 		else if(item.isArmor() && this.getArmorCount() >= MAX_ARMOR_COUNT){
@@ -321,8 +342,8 @@ public class Hero extends Character {
 	 * 			| ...
 	 */
 	@Override
-	public boolean canEquipItem(int anchorId, Item item) {
-		if (super.canEquipItem(anchorId, item)) {
+	public boolean canEquip(int anchorId, Item item) {
+		if (super.canEquip(anchorId, item)) {
 			if (AnchorType.getTypeFromId(anchorId).holdsPurse() == true) {
 				return item.isPurse(); // true als purse, false als geen purse
 			} else {

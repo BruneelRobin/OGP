@@ -197,6 +197,7 @@ public class Monster extends Character {
 	 * Variable referencing the protection of a monster.
 	 */
 	private int protection = 0;
+	private static final int MAX_PROTECTION = 100;
 	
 	/**
 	 * Set the protection of a monster to a given amount of protection.
@@ -218,7 +219,7 @@ public class Monster extends Character {
 	 * 			| protection >= 0
 	 */
 	public static boolean isValidProtection(int protection) {
-		return protection >= 0;
+		return protection >= 0 && protection <= MAX_PROTECTION;
 	}
 	
 	/**

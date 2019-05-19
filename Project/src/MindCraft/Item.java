@@ -160,7 +160,7 @@ public abstract class Item {
 	 * 			and sets terminated state on true
 	 * 			| isTerminated() == true
 	 */
-	protected void terminate () {
+	public void terminate () {
 		this.drop();
 		this.isTerminated = true;
 	}

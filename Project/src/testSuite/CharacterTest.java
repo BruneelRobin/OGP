@@ -1,4 +1,4 @@
-package testSuite;
+package testSuite; 
 
 import MindCraft.*;
 
@@ -24,16 +24,16 @@ class CharacterTest {
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		terminatedWeapon = new Weapon(20, 15);
-		// terminatedWeapon.terminate();
+		terminatedWeapon.terminate();
 	}
 	
 	@Before
 	public void setUp() {
-		monster = new Monster("LegalName", 499, 20, 200, 10, 50);
+		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
 		smallMonster = new Monster("LegalName", 7, 1, 10, 2, 10);
 		hero = new Hero("LegalName", 97, 10);
 		weapon1 = new Weapon(10,5);
-		weapon2 = new Weapon(15,10);
+		weapon2 = new Weapon(25,10);
 		heavyWeapon = new Weapon(30, 100);
 		smallWeapon = new Weapon(2,1);
 		backpack = new Backpack(100, 10, 2);
@@ -109,18 +109,19 @@ class CharacterTest {
 	}
 	
 	@Test
-	public void testCanEquipItem_LegalCase() {
-		assertTrue(monster.canEquipItem(1, weapon1));
+	public void testcanEquip_LegalCase() {
+		assertTrue(monster.canEquip(1, weapon1));
 		monster.pickUp(weapon1);
-		assertTrue(monster.canEquipItem(1, weapon1));
+		assertTrue(monster.canEquip(1, weapon1));
 	}
 	
 	@Test
-	public void testCanEquipItem_IllegalCase() { // nog een case met isTerminated
-		assertFalse(monster.canEquipItem(10, weapon1));
-		assertFalse(monster.canEquipItem(1, heavyWeapon));
+	public void testcanEquip_IllegalCase() {
+		assertFalse(monster.canEquip(10, weapon1));
+		assertFalse(monster.canEquip(1, terminatedWeapon));
+		assertFalse(monster.canEquip(1, heavyWeapon));
 		hero.pickUp(weapon1);
-		assertFalse(monster.canEquipItem(1, weapon1));
+		assertFalse(monster.canEquip(1, weapon1));
 	}
 	
 	@Test
@@ -157,18 +158,19 @@ class CharacterTest {
 	}
 	
 	@Test
-	public void testCanPickUpItem_LegalCase() {
-		assertTrue(monster.canPickUpItem(weapon1));
+	public void testcanPickUp_LegalCase() {
+		assertTrue(monster.canPickUp(weapon1));
 		monster.pickUp(weapon1);
 		monster.takeDamage(500);
-		assertTrue(hero.canPickUpItem(weapon1));
+		assertTrue(hero.canPickUp(weapon1));
 	}
 	
 	@Test
-	public void testCanPickUpItem_IllegalCase() { // nog een case waarbij item.isTerminated()
-		assertFalse(monster.canPickUpItem(heavyWeapon));
+	public void testcanPickUp_IllegalCase() {
+		assertFalse(monster.canPickUp(heavyWeapon));
+		assertFalse(monster.canPickUp(terminatedWeapon));
 		monster.pickUp(weapon1);
-		assertFalse(hero.canPickUpItem(weapon1));
+		assertFalse(hero.canPickUp(weapon1));
 	}
 	
 	@Test
@@ -204,8 +206,9 @@ class CharacterTest {
 	public void testCollectTreasures() {
 		smallMonster.pickUp(weapon1);
 		hero.equip(AnchorType.RIGHT_HAND, smallWeapon);
-		hero.hit(smallMonster);
-		hero.collectTreasures(smallMonster);
+		while (smallMonster.isDead() == false) {
+			hero.hit(smallMonster);
+		}
 		assertEquals(hero, weapon1.getHolder());
 	}
 	

@@ -41,7 +41,7 @@ public class Armor extends Item {
 	 * 			| new.getFullProtection() = protection
 	 */
 	
-	protected Armor(long identification, int protection, float weight, int fullValue) {
+	public Armor(long identification, int protection, float weight, int fullValue) {
 		super(identification, weight, fullValue);
 		this.currentProtection = protection;
 		this.fullProtection = protection;

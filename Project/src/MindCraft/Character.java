@@ -345,9 +345,9 @@ public abstract class Character {
 	 * 			be picked up.
 	 * 			Return false otherwise
 	 * 			| result == (anchorId >= 0 && anchorId < getNumberOfAnchors()) && (item.getHolder == this
-	 * 			|			|| (item.getHolder() == null && canPickUpItem(item)))
+	 * 			|			|| (item.getHolder() == null && canPickUp(item)))
 	 */
-	public boolean canEquipItem(int anchorId, Item item) {
+	public boolean canEquip(int anchorId, Item item) {
 		if (item.isTerminated()) {
 			return false;
 		}
@@ -355,7 +355,7 @@ public abstract class Character {
 			return false;
 		}
 		
-		if ((item.getHolder() == this || (item.getHolder() == null && canPickUpItem(item)))){
+		if ((item.getHolder() == this || (item.getHolder() == null && canPickUp(item)))){
 			return true;
 		} else {
 			return false;
@@ -371,7 +371,7 @@ public abstract class Character {
 	 * @effect	Unequip the item in that slot if not null
 	 * 			| unequip(anchorId)
 	 * @post	Equip the given item in the given slot when possible, unequips the item in that slot when not null
-	 * 			| canEquipItem(item)
+	 * 			| canEquip(item)
 	 * @post	When equipped the item at the given id will be set to the given item
 	 * 			| getItemAt(anchorId) == item
 	 * @effect	When equipped the anchor of the current item will bound to this character 
@@ -379,7 +379,7 @@ public abstract class Character {
 	 * 			| item.bindCharacter(this)
 	 */
 	public void equip(int anchorId, Item item) {
-		if (this.canEquipItem(anchorId, item)) {
+		if (this.canEquip(anchorId, item)) {
 			if (this.getItemAt(anchorId) != null) {
 				this.unequip(anchorId);
 			}
@@ -445,7 +445,7 @@ public abstract class Character {
 	 * 			| result == !(item.getHolder() != null && !item.getHolder().isDead()) && 
 	 * 						!(this.getCapacity() < this.getTotalWeight() + totalWeightOfItem)
 	 */
-	public boolean canPickUpItem(Item item) {
+	public boolean canPickUp(Item item) {
 		float totalWeightOfItem;
 		if(item.isContainer()) {
 			totalWeightOfItem = ((Container)(item)).getTotalWeight();
@@ -474,7 +474,7 @@ public abstract class Character {
 	 * @param	item
 	 * 			The item to be picked up
 	 * @post	If this item can not be picked up, nothings happens
-	 * 			| !canPickUpItem(item)
+	 * 			| !canPickUp(item)
 	 * @effect	Otherwise all anchors are checked, if an empty anchor is found and the item can be equipped
 	 * 			the item equipped there.
 	 * 			| this.equip(anchorId, item)
@@ -484,14 +484,14 @@ public abstract class Character {
 	 * 			
 	 */
 	public void pickUp(Item item) {
-		if(canPickUpItem(item)) {
+		if(canPickUp(item)) {
 			Set <Backpack> backpacks = new HashSet <Backpack>();
 			for(int anchorId = 0; anchorId < this.getNumberOfAnchors(); anchorId ++) {
 				Item itemAt = this.getItemAt(anchorId);
 				if(itemAt.isBackpack()) {
 					backpacks.add((Backpack)(itemAt));
 				}
-				else if(itemAt == null && this.canEquipItem(anchorId, item)) {
+				else if(itemAt == null && this.canEquip(anchorId, item)) {
 					this.equip(anchorId, item);
 					return;
 				}
@@ -539,7 +539,7 @@ public abstract class Character {
 	 */
 	public boolean hasProperItems () {
 		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
-			if (!canEquipItem(entry.getKey(), entry.getValue())) { // false when not possible to reequip in same slot
+			if (!canEquip(entry.getKey(), entry.getValue())) { // false when not possible to reequip in same slot
 				return false;
 			}
 		}
