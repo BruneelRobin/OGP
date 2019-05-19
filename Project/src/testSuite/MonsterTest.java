@@ -15,6 +15,11 @@ import org.junit.*;
  */
 class MonsterTest {
 
+	@Before
+	public void setUp() {
+		
+	}
+	
 	
 
 }

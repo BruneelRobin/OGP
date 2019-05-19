@@ -18,8 +18,14 @@ class CharacterTest {
 	
 	static Monster monster, smallMonster;
 	static Hero hero;
-	static Weapon weapon1, weapon2, heavyWeapon, smallWeapon;
+	static Weapon weapon1, weapon2, heavyWeapon, smallWeapon, terminatedWeapon;
 	static Backpack backpack;
+	
+	@BeforeClass
+	public static void setUpBeforeClass() {
+		terminatedWeapon = new Weapon(20, 15);
+		// terminatedWeapon.terminate();
+	}
 	
 	@Before
 	public void setUp() {

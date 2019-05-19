@@ -1,6 +1,9 @@
 package testSuite;
 
 import MindCraft.*;
+import filesystem.Directory;
+import filesystem.File;
+import filesystem.Type;
 
 import static org.junit.Assert.*;
 
@@ -15,6 +18,11 @@ import org.junit.*;
  */
 class HeroTest {
 
+	@Before
+	public void setUp() {
+		
+	}
+	
 	
 
 }
