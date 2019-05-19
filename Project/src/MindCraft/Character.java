@@ -571,14 +571,14 @@ public abstract class Character {
 	 * This character collects the treasures it wants to take found on a dead body.
 	 * @post	Collects all anchored items of the other character 
 	 * 			when the current character wants to take it
-	 * 			| wantsToTakeItem(item)
+	 * 			| wantsToTake(item)
 	 */
 	public void collectTreasures(Character character) {
 		Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
 		
 		for (Entry<Integer, Item> entry : set) {
 			Item item = entry.getValue();
-			if (wantsToTakeItem(item)) { //iterate over all items on dead body and pickup all items you want
+			if (wantsToTake(item)) { //iterate over all items on dead body and pickup all items you want
 				pickUp(item);
 			}
 		}
@@ -589,7 +589,7 @@ public abstract class Character {
 	 * @return	Returns true if the character wants to take this item
 	 * 			Returns false when the character doesn't want to take this item
 	 */
-	public abstract boolean wantsToTakeItem(Item item);
+	public abstract boolean wantsToTake(Item item);
 	
 	/**
 	 * Return the total value of this character

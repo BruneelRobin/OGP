@@ -1,10 +1,10 @@
 package testSuite; 
 
 import MindCraft.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import static org.junit.Assert.*;
-
-import org.junit.*;
 
 
 /**
@@ -21,13 +21,13 @@ class CharacterTest {
 	static Weapon weapon1, weapon2, heavyWeapon, smallWeapon, terminatedWeapon;
 	static Backpack backpack;
 	
-	@BeforeClass
+	@BeforeAll
 	public static void setUpBeforeClass() {
 		terminatedWeapon = new Weapon(20, 15);
 		terminatedWeapon.terminate();
 	}
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
 		smallMonster = new Monster("LegalName", 7, 1, 10, 2, 10);
@@ -57,9 +57,12 @@ class CharacterTest {
 		assertEquals("NewLegalName", monster.getName());
 	}
 	
-	@Test (expected = IllegalArgumentException.class)
+	@Test
 	public void testChangeName_IllegalCase() {
 		monster.changeName("NewIllegalN*me");
+		assertThrows(IllegalArgumentException.class, () -> {
+		      throw new IllegalArgumentException("Invalid name!");
+		    });
 	}
 	
 	@Test
@@ -93,7 +96,7 @@ class CharacterTest {
 	@Test
 	public void testIsValidMaxHitpoints_IllegalCase() {
 		assertFalse(Monster.isValidMaxHitpoints(500));
-		assertFalse(Monster.isValidMaxHitpoints(-1));
+		assertFalse(Monster.isValidMaxHitpoints(-2));
 	}
 	
 	@Test
