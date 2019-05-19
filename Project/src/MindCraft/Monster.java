@@ -279,7 +279,6 @@ public class Monster extends Character {
 			}
 		}
 		else if (item.isWeapon()) {
-			Weapon weapon = (Weapon) item;
 			if (randomInt <= 80) {
 				return true;
 			} else {
@@ -288,7 +287,6 @@ public class Monster extends Character {
 		}
 		
 		else if (item.isBackpack()) {
-			Backpack backpack = (Backpack) item;
 			if (randomInt <= 5) {
 				return true;
 			} else {
@@ -297,7 +295,6 @@ public class Monster extends Character {
 		}
 		
 		else if (item.isPurse()) {
-			Purse purse = (Purse) item;
 			if (randomInt <= 25) {
 				return true;
 			} else {

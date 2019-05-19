@@ -166,6 +166,8 @@ public abstract class Character {
 	 * removes hitpoints from the character
 	 * @param	hitpoints
 	 * 			The amount of hitpoints to be taken
+	 * @pre		The given amount of hitpoints must be a positive amount.
+	 * 			| hitpoints >= 0
 	 * @post	Removes the given amount of hitpoints or sets it to zero when the new amount of hitpoints would be negative
 	 * 			| new.getHitpoints() == Math.max(0, getHitpoints()-hitpoints)
 	 * @post	when the character takes damage, isFighting is set to true
@@ -215,7 +217,7 @@ public abstract class Character {
 	 * @return	Return false when the character can't have the maximum amount of hitpoints
 	 */
 	public static boolean isValidMaxHitpoints(int hitpoints) {
-		return hitpoints >= 0 && MathHelper.isPrime(hitpoints);
+		return hitpoints > 0 && MathHelper.isPrime(hitpoints);
 	}
 	
 	/**
@@ -245,6 +247,8 @@ public abstract class Character {
 	 * Increase the maximum amount of hitpoints
 	 * @param 	hitpoints
 	 * 			the new amount of maximum hitpoints
+	 * @pre		The given amount of hitpoints must be a positive amount.
+	 * 			| hitpoints >= 0
 	 * @pre		the new amount of maximum hitpoints must be valid
 	 * 			| canHaveAsMaxHitpoints(this.getMaxHitpoints() + hitpoints)
 	 * @post	Increase the amount of maximum hitpoints with the given amount
@@ -258,6 +262,8 @@ public abstract class Character {
 	 * Lowers the maximum amount of hitpoints
 	 * @param 	hitpoints
 	 * 			the new amount of maximum hitpoints
+	 * @pre		The given amount of hitpoints must be a positive amount.
+	 * 			| hitpoints >= 0
 	 * @pre		the new amount of maximum hitpoints must be valid
 	 * 			| canHaveAsMaxHitpoints(this.getMaxHitpoints() - hitpoints)
 	 * @post	Lower the amount of maximum hitpoints with the given amount
@@ -527,7 +533,7 @@ public abstract class Character {
 	}
 	
 	/**
-	 * Return true when this item has proper items
+	 * Return true when this character has proper items
 	 * @return	Return true when this item has proper items
 	 * 			Return false when this item doesn't have proper items
 	 */
@@ -562,7 +568,7 @@ public abstract class Character {
 	public abstract void hit(Character character);
 	
 	/**
-	 * This character collects the treasures found on a dead body
+	 * This character collects the treasures it wants to take found on a dead body.
 	 * @post	Collects all anchored items of the other character 
 	 * 			when the current character wants to take it
 	 * 			| wantsToTakeItem(item)

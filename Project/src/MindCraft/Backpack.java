@@ -198,8 +198,8 @@ public class Backpack extends Item implements Container {
 	 * @return	Return true when the current backpack contains this item
 	 * 			Return false when the current backpack doesn't contain this item
 	 */
-	public boolean containsItem(Item item) {
-		if (!containsId(item.getIdentification()) || !this.getListAt(item.getIdentification()).contains(item)) {
+	public boolean contains(Item item) {
+		if (!contains(item.getIdentification()) || !this.getListAt(item.getIdentification()).contains(item)) {
 			return false;
 		}
 		return true;
@@ -212,7 +212,7 @@ public class Backpack extends Item implements Container {
 	 * @return	Return true when the current backpack contains an item with this id
 	 * 			Return false when the current backpack doesn't contain an item with this id
 	 */
-	private boolean containsId (long identification) {
+	private boolean contains(long identification) {
 		return this.content.containsKey(identification);
 	}
 	
@@ -221,10 +221,10 @@ public class Backpack extends Item implements Container {
 	 * @param 	item
 	 * 			The item to be removed
 	 * @post	Removes the item from this backpack
-	 * 			| new.containsItem(item) == false
+	 * 			| new.contains(item) == false
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when the given item is not found in this backpack
-	 * 			| !containsItem(item)
+	 * 			| !contains(item)
 	 * @throws	IllegalStateException
 	 * 			Throws this error when this item is terminated
 	 * 			| this.isTerminated()
@@ -235,7 +235,7 @@ public class Backpack extends Item implements Container {
 			throw new IllegalStateException("This item is terminated");
 		}
 		
-		if (!containsItem(item)) {
+		if (!contains(item)) {
 			throw new IllegalArgumentException ("The given item does not exist in this backpack");
 		} else {
 			HashSet<Item> list = getListAt(item.getIdentification());
@@ -300,7 +300,7 @@ public class Backpack extends Item implements Container {
 	 * @param 	item
 	 * 			The item to be added
 	 * @post	Adds the item to this backpack
-	 * 			| new.containsItem(item)
+	 * 			| new.contains(item)
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when an item can't be added to this backpack
 	 * 			| !canHaveAsItem(item)
@@ -318,7 +318,7 @@ public class Backpack extends Item implements Container {
 			throw new IllegalArgumentException("This item is not valid");
 		}
 		
-		if (!containsId(item.getIdentification())) {
+		if (!contains(item.getIdentification())) {
 			HashSet<Item> newList = new HashSet<Item>();
 			newList.add(item);
 			setContent(item.getIdentification(), newList);
