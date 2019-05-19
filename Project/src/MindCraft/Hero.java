@@ -1,8 +1,13 @@
 package MindCraft;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A class of Heroes. 
@@ -49,6 +54,44 @@ public class Hero extends Character {
 		}
 		
 		giveStarterGear();
+	}
+	
+	/**
+	 * Create a hero with a given name, amount of hitpoints, strength and gear.
+	 * @param 	name
+	 * 			The name of this hero.
+	 * @param 	hitpoints
+	 * 			The amount of hitpoints of this hero.
+	 * @param 	strength
+	 * 			The strength of this hero.
+	 * @param	items
+	 * 			The initial gear of this hero.
+	 * @effect	The new hero is set as a character with a given name, amount of hitpoints
+	 * 			and a default number of anchors.
+	 * 			| super(name, hitpoints, AnchorTypes.values().length)
+	 * @post	The strength of this hero is set to the given strength
+	 * 			| new.getStrength() == strength
+	 * @post	...
+	 * @throws	IllegalArgumentException
+	 * 			Throws this exception when the given name is not valid
+	 * 			| !isValidName(name)
+	 */
+	public Hero(String name, int hitpoints, float strength, List<Item> items) throws IllegalArgumentException {
+		super(name, hitpoints, AnchorType.values().length); // length of anchortypes
+		
+		if(!isValidStrength(strength)) {
+			setStrength(0);
+		}
+		else {
+			setStrength(strength);
+		}
+		
+		Iterator<Item> it = items.iterator();
+		int anchorId = 0;
+	    while(it.hasNext()){
+	        this.equip(anchorId, it.next());
+	        anchorId ++;
+	    }
 	}
 	
 	/********************************
@@ -196,7 +239,7 @@ public class Hero extends Character {
 	 * @return Returns false when the hero does not want to take the item
 	 */
 	@Override
-	public boolean wantsToTakeItem(Item item) { 
+	public boolean wantsToTake(Item item) { 
 		if (item.isArmor()) {
 			Armor armor = (Armor) item;
 			Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();

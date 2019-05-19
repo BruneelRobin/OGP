@@ -1,10 +1,9 @@
 package testSuite;
 
 import MindCraft.*;
-
-import static org.junit.Assert.*;
-
-import org.junit.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 /**
  * Testcase for the hero class.
@@ -21,7 +20,7 @@ class HeroTest {
 	static Armor armor1, armor2, armor3;
 	static Purse purse;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		hero = new Hero("LegalName", 97, 10);
 		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
@@ -34,7 +33,30 @@ class HeroTest {
 		purse = new Purse(2, 500, 20);
 	}
 	
-	// constructors testen
+	@Test
+	public void testHeroStringIntFloat_LegalCase() {
+		
+	}
+	
+	@Test 
+	public void testHeroStringIntFloat_InvalidName() {
+		
+	}
+	
+	@Test
+	public void testHeroStringIntFloat_InvalidStrength() {
+		
+	}
+	
+	@Test
+	public void testHeroStringIntFloatSet_LegalCase() {
+		
+	}
+	
+	@Test
+	public void testHeroStringIntFloatSet_IllegalSet() {
+		
+	}
 	
 	@Test
 	public void testCanHaveAsName_LegalCase() {
@@ -84,12 +106,12 @@ class HeroTest {
 	}
 	
 	@Test
-	public void testWantsToTakeItem() {
+	public void testWantsToTake() {
 		hero.pickUp(weapon1);
-		assertTrue(hero.wantsToTakeItem(weapon2));
-		assertFalse(hero.wantsToTakeItem(smallWeapon));
+		assertTrue(hero.wantsToTake(weapon2));
+		assertFalse(hero.wantsToTake(smallWeapon));
 		hero.pickUp(armor1);
-		assertTrue(hero.wantsToTakeItem(armor2));
+		assertTrue(hero.wantsToTake(armor2));
 	}
 	
 	@Test

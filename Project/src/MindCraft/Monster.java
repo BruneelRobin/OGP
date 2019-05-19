@@ -268,7 +268,7 @@ public class Monster extends Character {
 	 * @note	The more shiny an item is, the more likely the monster wants to take it.
 	 */
 	@Override
-	public boolean wantsToTakeItem(Item item) {
+	public boolean wantsToTake(Item item) {
 		int randomInt = MathHelper.getRandomIntBetweenRange(0,100);
 		if (item.isArmor()) {
 			Armor armor = (Armor) item;
