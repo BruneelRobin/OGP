@@ -121,6 +121,7 @@ class HeroTest {
 			hero.hit(monster);
 		}
 		assertEquals(monster.getHitpoints(), monster.getMaxHitpoints() - hero.getDamage());
+		assertTrue(monster.isFighting());
 	}
 		
 	@Test

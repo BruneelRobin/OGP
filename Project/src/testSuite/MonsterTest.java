@@ -16,11 +16,13 @@ class MonsterTest {
 	
 	static Monster monster;
 	static Hero hero;
+	static Armor armor;
 
 	@BeforeEach
 	public void setUp() {
 		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
 		hero = new Hero("LegalName", 97, 10);
+		armor = new Armor(7, 70, 50, 200);
 	}
 	
 	@Test
@@ -66,12 +68,22 @@ class MonsterTest {
 	
 	@Test
 	public void testWantsToTake() {
-		
+		assertTrue(monster.wantsToTake(armor));
+		armor.wearOut(armor.getProtection());
+		assertFalse(monster.wantsToTake(armor));
 	}
 	
 	@Test
 	public void testHit() {
-		
+		while (hero.getHitpoints() == hero.getMaxHitpoints()) {
+			monster.hit(hero);
+		}
+		assertEquals(hero.getHitpoints(), hero.getMaxHitpoints() - monster.getDamage());
+		assertTrue(hero.isFighting());
+		hero.equip(AnchorType.BODY, armor);
+		monster.takeDamage(450);
+		monster.hit(hero);
+		assertEquals(hero.getHitpoints(), hero.getMaxHitpoints() - monster.getDamage());
 	}
 	
 	
