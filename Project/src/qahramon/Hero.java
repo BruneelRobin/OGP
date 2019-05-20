@@ -309,12 +309,12 @@ public class Hero extends Character {
 	 * 			character's protection, the character takes the damage of this hero. When this number is
 	 * 			lower than the character's protection, nothing happens.
 	 * 			| character.takeDamage(this.getDamage())
-	 * @throws	IsDeadException
+	 * @throws	DeadException
 	 * 			throws this exception when the current hero is dead.
 	 */
-	public void hit(Character character) throws IsDeadException {
+	public void hit(Character character) throws DeadException {
 		if (isDead()) {
-			throw new IsDeadException(this);
+			throw new DeadException(this);
 		}
 		
 		int randomNumber = MathHelper.getRandomIntBetweenRange(0, 100);
@@ -337,12 +337,12 @@ public class Hero extends Character {
 	 * Heals the hero by adding hitpoints
 	 * @post	The hero's new hp is a random prime number between its current health and its max health.
 	 * 			| MathHelper.isPrime(getHitpoints())
-	 * @throws	IsDeadException
+	 * @throws	DeadException
 	 * 			throws this exception when the current hero is dead.
 	 */
-	public void heal() throws IsDeadException {
+	public void heal() throws DeadException {
 		if (isDead()) {
-			throw new IsDeadException(this);
+			throw new DeadException(this);
 		}
 		
 		int newHitpoints;
@@ -485,12 +485,12 @@ public class Hero extends Character {
 	 * Generate and equip the starter gear for a hero.
 	 * @post	Equips a starter armor and starter purse to this hero, the weights of these items will
 	 * 			be scaled so this hero can always equip the gear
-	 * @throws	IsDeadException
+	 * @throws	DeadException
 	 * 			throws this exception when the current character is dead.
 	 */
-	private void giveStarterGear() throws IsDeadException {
+	private void giveStarterGear() throws DeadException {
 		if (isDead()) {
-			throw new IsDeadException(this);
+			throw new DeadException(this);
 		}
 		
 		float armorWeight = this.getCapacity()/DEFAULT_ARMOR_WEIGHTPERCENTAGE;

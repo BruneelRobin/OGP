@@ -27,8 +27,7 @@ import java.util.HashSet;
  * @version 1.0 - 2019
  */
 
-// TODO isDeadException, isTerminatedException, alle zwaarden na doodslag monster 
-// 		terminated
+// TODO DeadException (nog uitbreiden in testen), TerminatedException, annotations
 
 public abstract class Character {
 	
@@ -396,12 +395,12 @@ public abstract class Character {
 	 * @effect	When equipped the anchor of the current item will bound to this character 
 	 * 			(so bidirectional relations are recreated).
 	 * 			| item.bindCharacter(this)
-	 * @throws	IsDeadException
+	 * @throws	DeadException
 	 * 			throws this exception when the current character is dead.
 	 */
-	public void equip(int anchorId, Item item) throws IsDeadException {
+	public void equip(int anchorId, Item item) throws DeadException {
 		if (isDead()) {
-			throw new IsDeadException(this);
+			throw new DeadException(this);
 		}
 		
 		if (this.canHaveAsItemAt(anchorId, item)) {
@@ -421,12 +420,12 @@ public abstract class Character {
 	 * 			| item.moveTo(backpack)
 	 * @effect	When not put in a backpack the item will be dropped on the ground
 	 * 			| item.drop();
-	 * @throws	IsDeadException
+	 * @throws	DeadException
 	 * 			throws this exception when the current character is dead.
 	 */
-	public void unequip(int anchorId) throws IsDeadException {
+	public void unequip(int anchorId) throws DeadException {
 		if (isDead()) {
-			throw new IsDeadException(this);
+			throw new DeadException(this);
 		}
 		
 		Item item = this.getItemAt(anchorId);
@@ -511,12 +510,12 @@ public abstract class Character {
 	 * @effect	If there are no available anchors and there is an anchored backpack that can take this item,
 	 * 			then the item will be put in that backpack.
 	 * 			| item.moveTo(backpack)
-	 * @throws	IsDeadException
+	 * @throws	DeadException
 	 * 			throws this exception when the current character is dead.			
 	 */
-	public void pickUp(Item item) throws IsDeadException {
+	public void pickUp(Item item) throws DeadException {
 		if (isDead()) {
-			throw new IsDeadException(this);
+			throw new DeadException(this);
 		}
 		
 		if(canPickUp(item)) {

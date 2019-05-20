@@ -303,13 +303,13 @@ public class Monster extends Character {
 	 * @post	Collects all anchored items of the other character 
 	 * 			when the current monster wants to take it
 	 * 			| wantsToTake(item)
-	 * @throws	IsDeadException
+	 * @throws	DeadException
 	 * 			throws this exception when the current monster is dead.
 	 */
 	@Override
-	public void collectTreasures(Character character) throws IsDeadException {
+	public void collectTreasures(Character character) throws DeadException {
 		if (isDead()) {
-			throw new IsDeadException(this);
+			throw new DeadException(this);
 		}
 		
 		if (character.isDead()) {
@@ -332,13 +332,13 @@ public class Monster extends Character {
 	/**
 	 * This monster hits the given character.
 	 * @post	The character that was hit by this monster will take damage.
-	 * @throws	IsDeadException
+	 * @throws	DeadException
 	 * 			throws this exception when the current monster is dead.
 	 */
 	@Override
-	public void hit(Character character) throws IsDeadException {
+	public void hit(Character character) throws DeadException {
 		if (isDead()) {
-			throw new IsDeadException(this);
+			throw new DeadException(this);
 		}
 		
 		int randomNumber = MathHelper.getRandomIntBetweenRange(0, 100);
