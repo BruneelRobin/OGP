@@ -112,19 +112,19 @@ class CharacterTest {
 	}
 	
 	@Test
-	public void testcanEquip_LegalCase() {
-		assertTrue(monster.canEquip(1, weapon1));
+	public void testcanHaveAsAnchorAt_LegalCase() {
+		assertTrue(monster.canHaveAsAnchorAt(1, weapon1));
 		monster.pickUp(weapon1);
-		assertTrue(monster.canEquip(1, weapon1));
+		assertTrue(monster.canHaveAsAnchorAt(1, weapon1));
 	}
 	
 	@Test
 	public void testcanEquip_IllegalCase() {
-		assertFalse(monster.canEquip(10, weapon1));
-		assertFalse(monster.canEquip(1, terminatedWeapon));
-		assertFalse(monster.canEquip(1, heavyWeapon));
+		assertFalse(monster.canHaveAsAnchorAt(10, weapon1));
+		assertFalse(monster.canHaveAsAnchorAt(1, terminatedWeapon));
+		assertFalse(monster.canHaveAsAnchorAt(1, heavyWeapon));
 		hero.pickUp(weapon1);
-		assertFalse(monster.canEquip(1, weapon1));
+		assertFalse(monster.canHaveAsAnchorAt(1, weapon1));
 	}
 	
 	@Test

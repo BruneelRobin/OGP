@@ -347,7 +347,7 @@ public abstract class Character {
 	 * 			| result == (anchorId >= 0 && anchorId < getNumberOfAnchors()) && (item.getHolder == this
 	 * 			|			|| (item.getHolder() == null && canPickUp(item)))
 	 */
-	public boolean canEquip(int anchorId, Item item) {
+	public boolean canHaveAsAnchorAt(int anchorId, Item item) {
 		if (item.isTerminated()) {
 			return false;
 		}
@@ -371,7 +371,7 @@ public abstract class Character {
 	 * @effect	Unequip the item in that slot if not null
 	 * 			| unequip(anchorId)
 	 * @post	Equip the given item in the given slot when possible, unequips the item in that slot when not null
-	 * 			| canEquip(item)
+	 * 			| canHaveAsAnchorAt(item)
 	 * @post	When equipped the item at the given id will be set to the given item
 	 * 			| getItemAt(anchorId) == item
 	 * @effect	When equipped the anchor of the current item will bound to this character 
@@ -379,7 +379,7 @@ public abstract class Character {
 	 * 			| item.bindCharacter(this)
 	 */
 	public void equip(int anchorId, Item item) {
-		if (this.canEquip(anchorId, item)) {
+		if (this.canHaveAsAnchorAt(anchorId, item)) {
 			if (this.getItemAt(anchorId) != null) {
 				this.unequip(anchorId);
 			}
@@ -488,10 +488,10 @@ public abstract class Character {
 			Set <Backpack> backpacks = new HashSet <Backpack>();
 			for(int anchorId = 0; anchorId < this.getNumberOfAnchors(); anchorId ++) {
 				Item itemAt = this.getItemAt(anchorId);
-				if(itemAt.isBackpack()) {
+				if(itemAt != null && itemAt.isBackpack()) {
 					backpacks.add((Backpack)(itemAt));
 				}
-				else if(itemAt == null && this.canEquip(anchorId, item)) {
+				else if(itemAt == null && this.canHaveAsAnchorAt(anchorId, item)) {
 					this.equip(anchorId, item);
 					return;
 				}
@@ -539,7 +539,7 @@ public abstract class Character {
 	 */
 	public boolean hasProperItems () {
 		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
-			if (!canEquip(entry.getKey(), entry.getValue())) { // false when not possible to reequip in same slot
+			if (!canHaveAsAnchorAt(entry.getKey(), entry.getValue())) { // false when not possible to reequip in same slot
 				return false;
 			}
 		}
