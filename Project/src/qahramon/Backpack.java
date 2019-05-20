@@ -83,7 +83,7 @@ public class Backpack extends Item implements Container {
 			result += (i-n)/(i+1)*prev;
 		}
 		return result;*/
-		return 2^n;
+		return (long) Math.pow(2, n);
 	}
 	
 	/**
@@ -147,12 +147,12 @@ public class Backpack extends Item implements Container {
 	 * Return true when the given capacity is valid
 	 * @param 	capacity
 	 * 			The capacity to check
-	 * @return	Return true when the given capacity is valid
-	 * 			Return false when the given capacity is invalid
-	 * 			| result == ...
+	 * @return	Return true when the given capacity is positive
+	 * 			Return false when the given capacity is negative
+	 * 			| result == capacity >= 0
 	 */
 	public static boolean isValidCapacity (float capacity) {
-		return false;
+		return capacity >= 0;
 	}
 	
 	/**********************************
@@ -200,7 +200,7 @@ public class Backpack extends Item implements Container {
 	 * 			Return false when the current backpack doesn't contain this item
 	 */
 	public boolean contains(Item item) {
-		if (!contains(item.getIdentification()) || !this.getListAt(item.getIdentification()).contains(item)) {
+		if (!containsKey(item.getIdentification()) || !this.getListAt(item.getIdentification()).contains(item)) {
 			return false;
 		}
 		return true;
@@ -213,7 +213,7 @@ public class Backpack extends Item implements Container {
 	 * @return	Return true when the current backpack contains an item with this id
 	 * 			Return false when the current backpack doesn't contain an item with this id
 	 */
-	private boolean contains(long identification) {
+	private boolean containsKey(long identification) {
 		return this.content.containsKey(identification);
 	}
 	
@@ -319,7 +319,7 @@ public class Backpack extends Item implements Container {
 			throw new IllegalArgumentException("This item is not valid");
 		}
 		
-		if (!contains(item.getIdentification())) {
+		if (!containsKey(item.getIdentification())) {
 			HashSet<Item> newList = new HashSet<Item>();
 			newList.add(item);
 			setContent(item.getIdentification(), newList);
@@ -402,7 +402,7 @@ public class Backpack extends Item implements Container {
 	 * 			of this backpack and the weight of all descendants in this backpack
 	 */
 	public float getTotalWeight() {
-		float totalWeight = 0;
+		float totalWeight = getWeight();
 		for (Item item : getItems()) {
 			if (item.isContainer()) {
 				totalWeight += ((Container)(item)).getTotalWeight();
@@ -421,7 +421,7 @@ public class Backpack extends Item implements Container {
 	 * 			| result == this.getContent()
 	 */
 	public int getTotalValue() {
-		int totalValue = 0;
+		int totalValue = getValue();
 		for (Item item : getItems()) {
 			if (item.isContainer()) {
 				totalValue += ((Container)(item)).getTotalValue();
