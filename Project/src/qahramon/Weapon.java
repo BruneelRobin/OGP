@@ -41,7 +41,7 @@ public class Weapon extends Item {
 		super(weight, value);
 		setDamage(damage);
 		this.hasGivenValue = true;
-		ids.add(getIdentification());
+		weaponIds.add(getIdentification());
 	}
 	
 	/**
@@ -63,7 +63,7 @@ public class Weapon extends Item {
 		super(weight, 0);
 		setDamage(damage);
 		this.hasGivenValue = false;
-		ids.add(getIdentification());
+		weaponIds.add(getIdentification());
 	}
 	
 	/***********************
@@ -124,21 +124,21 @@ public class Weapon extends Item {
 	 * @return	Return true when this weapon can have the given identification number that has to be unique
 	 * 			Return false when this weapon can't
 	 * 			| result == canHaveAsIdentification (identification) 
-	 * 							&& ids.contains(identification) == false
+	 * 							&& !weaponIds.contains(identification)
 	 */
 	@Override
 	public boolean canHaveAsNewIdentification (long identification) {
-		return canHaveAsIdentification (identification) && ids.contains(identification) == false;
+		return canHaveAsIdentification (identification) && !weaponIds.contains(identification);
 	}
 	
 	/**
-	 * Variable referencing a set with all ids of this class. 
+	 * Variable referencing a set with all weaponIds of this class. 
 	 * 
 	 * @invar Each non null element in the hashset references an effective item. 
-	 *        | for (Item item : ids)
+	 *        | for (Item item : weaponIds)
 	 *        | 	item != null
 	 */
-	private static final HashSet<Long> ids = new HashSet<Long>();
+	private static final HashSet<Long> weaponIds = new HashSet<Long>();
 	
 	
 	
