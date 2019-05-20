@@ -75,8 +75,9 @@ public class MathHelper {
 	 * @param 	max
 	 * 			The maximum value
 	 * @pre		Range is smaller than the max long value
-	 * 			| max-min < Long.MAX_VALUE
+	 * 			| max-min <= Long.MAX_VALUE
 	 * @return	Return a random long number in the given range (between min and max)
+	 * 			| randomNumberGenerator.nextLong()
 	 */
 	public static long getRandomLongBetweenRange(long min, long max){
 		Random randomNumberGenerator = new Random();
@@ -96,10 +97,11 @@ public class MathHelper {
 	 * @param 	max
 	 * 			The maximum value
 	 * @return	Return a random int number in the given range (between min and max)
-	 * 			| result == (int)getRandomLongBetweenRange((long)min, (long)max);
+	 * 			| result == randomNumberGenerator.nextInt();
 	 */
 	public static int getRandomIntBetweenRange(int min, int max){
-		return (int)getRandomLongBetweenRange((long)min, (long)max);
+		Random randomNumberGenerator = new Random();
+		return randomNumberGenerator.nextInt();
 	}
 	
 	/**

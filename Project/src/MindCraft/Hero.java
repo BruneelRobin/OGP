@@ -353,17 +353,34 @@ public class Hero extends Character {
 	 */
 	@Override
 	public int getDamage() {
-		int anchorIdOfRightHand = AnchorType.RIGHT_HAND.getAnchorId();
-		int anchorIdOfLeftHand = AnchorType.LEFT_HAND.getAnchorId();
+		int leftHandDamage;
+		int rightHandDamage;
+		
+		Item left = getItemAt(AnchorType.LEFT_HAND.getAnchorId());
+		if (left != null && left.isWeapon()) {
+			leftHandDamage = ((Weapon)left).getDamage();
+		} else {
+			leftHandDamage = 0;
+		}
+		
+		Item right = getItemAt(AnchorType.RIGHT_HAND.getAnchorId());
+		if (right != null && right.isWeapon()) {
+			rightHandDamage = ((Weapon)right).getDamage();
+		} else {
+			rightHandDamage = 0;
+		}
+		
+		
 		float strengthOfHero = this.getStrength();
-		float sum = (float)(anchorIdOfRightHand + anchorIdOfLeftHand + strengthOfHero -10);
+		float sum = (float)(leftHandDamage + rightHandDamage + strengthOfHero -10);
+		
 		int result = (int)(sum/2);
+		
 		if(result < 0) {
-		return 0;
+			return 0;
 		}
 		return result;
-		
-		}
+	}
 	
 	/**
 	 * 
