@@ -39,6 +39,7 @@ public class TornException extends RuntimeException {
 	
 	/**
 	 * Return the purse involved in this torn exception.
+	 * @return Return the purse involved in this torn exception
 	 */
 	@Raw @Basic
 	public Purse getPurse() {
