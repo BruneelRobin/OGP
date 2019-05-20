@@ -3,6 +3,7 @@ package qahramon;
 import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
+import qahramon.exceptions.TerminatedException;
 
 /**
  * A class of armors.
@@ -91,7 +92,7 @@ public class Armor extends Item {
 	 */
 	@Override
 	public boolean canHaveAsIdentification(long identification) {
-		return MathHelper.isPrime(identification);
+		return (MathHelper.isPrime(identification) && identification>0);
 	}
 	
 	/**
@@ -100,11 +101,11 @@ public class Armor extends Item {
 	 * @return	Return true when this armor can have the given identification number that has to be unique
 	 * 			Return false when this armor can't
 	 * 			| result == canHaveAsIdentification (identification) 
-	 * 							&& ids.contains(identification) == false
+	 * 							&& !armorIds.contains(identification)
 	 */
 	@Override
 	public boolean canHaveAsNewIdentification (long identification) {
-		return canHaveAsIdentification (identification) && armorIds.contains(identification) == false;
+		return canHaveAsIdentification (identification) && !armorIds.contains(identification);
 	}
 
 	/**
@@ -132,6 +133,7 @@ public class Armor extends Item {
 	 * @return Returns the fullProtection of an armor
 	 * 		   | result == this.fullProtection
 	 */
+	@Basic
 	public int getFullProtection() {
 		return this.fullProtection;
 	}
@@ -141,6 +143,7 @@ public class Armor extends Item {
 	 * Returns the armor's current protection
 	 * @return Returns the armor's current protection
 	 */
+	@Basic
 	public int getProtection() {
 		return this.currentProtection;
 
@@ -179,7 +182,7 @@ public class Armor extends Item {
 	 * @return	Return true when the given fullProtection lies between MIN_FULLPROTECTION and MAX_FULLPROTECTION
 	 * 			
 	 */
-	public boolean isValidFullProtection(int fullProtection) {
+	public static boolean isValidFullProtection(int fullProtection) {
 		return(fullProtection >= MIN_FULLPROTECTION && fullProtection <= MAX_FULLPROTECTION);
 	}
 	
@@ -193,8 +196,14 @@ public class Armor extends Item {
 	 * 			| canHaveAsProtection(getProtection() - amount)
 	 * @post  	the protection of the armor is decreased by the given amount
 	 * 			| new.getProtection() = this.getProtection() - amount
+	 * @throws	TerminatedException
+	 * 			Throws this exception when this armor is terminated
+	 * 			| this.isTerminated()
 	 */
-	public void wearOut(int amount) {
+	public void wearOut(int amount) throws TerminatedException {
+		if(this.isTerminated()) {
+			throw new TerminatedException(this);
+		}
 		this.setProtection(this.getProtection() - amount );
 		
 	}
@@ -209,8 +218,14 @@ public class Armor extends Item {
 	 * 			| canHaveAsProtection(getProtection() + amount)
 	 * @post  	the protection of the armor is increased by the given amount
 	 * 			| new.getProtection() = this.getProtection() + amount
+	 * @throws	TerminatedException
+	 * 			Throws this exception when this armor is terminated
+	 * 			| this.isTerminated()
 	 */
-	public void repair(int amount) {
+	public void repair(int amount) throws TerminatedException {
+		if(this.isTerminated()) {
+			throw new TerminatedException(this);
+		}
 		this.setProtection(this.getProtection() + amount);
 		
 	}
@@ -248,14 +263,18 @@ public class Armor extends Item {
 	 */
 	@Override
 	public int getValue() { 
-		return super.getValue()*(this.getProtection()/this.getFullProtection());
+		return (int)((float)this.getFullValue()*((float)this.getProtection()/(float)this.getFullProtection()));
 	}
 	
 	
+	/**
+	 * Returns the fullValue of the armor
+	 * @return return the fullValue of the armor
+	 * 		   | result == super.getValue()
+	 */
+	public int getFullValue() {
+		return super.getValue();
+	}
 	
-	
-	/***********************
-	 * Other Methods
-	 ***********************/
 	
 }

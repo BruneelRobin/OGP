@@ -142,6 +142,10 @@ class MonsterTest {
 		assertFalse(monster.wantsToTake(armor));
 	}
 	
+	/**************************************************************************************
+	 * Test of hit
+	 ***************************************************************************************/
+	
 	@Test
 	public void testHit() {
 		while (hero.getHitpoints() == hero.getMaxHitpoints()) {
@@ -154,6 +158,10 @@ class MonsterTest {
 		monster.hit(hero);
 		assertEquals(hero.getHitpoints(), hero.getMaxHitpoints() - monster.getDamage());
 	}
+	
+	/**************************************************************************************
+	 * End of test of hit
+	 ***************************************************************************************/
 	
 	
 

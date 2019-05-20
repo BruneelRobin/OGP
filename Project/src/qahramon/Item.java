@@ -237,7 +237,7 @@ public abstract class Item {
 	 * @return	Return the default weight
 	 */
 	public float getDefaultWeight () {
-		return 100;
+		return 100f;
 	}
 	
 	
