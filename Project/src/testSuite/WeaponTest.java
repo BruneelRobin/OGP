@@ -53,7 +53,7 @@ class WeaponTest {
 		Weapon weapon4 = new Weapon(20, 10, 300);
 		assertEquals(20, weapon4.getDamage());
 		assertEquals(10, weapon4.getWeight());
-		assertEquals(300, weapon4.getValue());
+		assertEquals(200, weapon4.getValue());
 	}
 	
 	@Test
