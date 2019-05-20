@@ -3,6 +3,7 @@ package testSuite;
 import static org.junit.jupiter.api.Assertions.*;
 
 import qahramon.*;
+import qahramon.exceptions.TerminatedException;
 
 import org.junit.jupiter.api.*;
 
@@ -18,8 +19,8 @@ class ItemTest {
 
 	static Hero hero;
 	static Monster monster;
-	static Weapon weapon1, weapon2, smallWeapon, terminatedWeapon;
-	static Armor armor1, armor2, armor3;
+	static Weapon weapon, terminatedWeapon;
+	static Armor armor;
 	static Purse purse;
 	static Backpack backpack;
 	
@@ -33,42 +34,38 @@ class ItemTest {
 	public void setUp() {
 		hero = new Hero("LegalName", 97, 10);
 		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
-		weapon1 = new Weapon(10,5);
-		weapon2 = new Weapon(25,10);
-		smallWeapon = new Weapon(2,1);
-		armor1 = new Armor(7, 20, 10, 15);
-		armor2 = new Armor(11, 50, 30, 50);
-		armor3 = new Armor(13, 10, 5, 10);
+		weapon = new Weapon(10,5);
+		armor = new Armor(7, 20, 10, 15);
 		purse = new Purse(2, 500, 20);
 		backpack = new Backpack(100, 10, 2);
 	}
 	
 	@Test
 	public void testClassTypes () {
-		assertTrue(weapon1.isWeapon());
-		assertFalse(armor1.isWeapon());
+		assertTrue(weapon.isWeapon());
+		assertFalse(armor.isWeapon());
 		assertFalse(purse.isWeapon());
 		assertFalse(backpack.isWeapon());
 		
-		assertFalse(weapon1.isArmor());
-		assertTrue(armor1.isArmor());
+		assertFalse(weapon.isArmor());
+		assertTrue(armor.isArmor());
 		assertFalse(purse.isArmor());
 		assertFalse(backpack.isArmor());
 		
-		assertFalse(weapon1.isPurse());
-		assertFalse(armor1.isPurse());
+		assertFalse(weapon.isPurse());
+		assertFalse(armor.isPurse());
 		assertTrue(purse.isPurse());
 		assertFalse(backpack.isPurse());
 		
-		assertFalse(weapon1.isBackpack());
-		assertFalse(armor1.isBackpack());
+		assertFalse(weapon.isBackpack());
+		assertFalse(armor.isBackpack());
 		assertFalse(purse.isBackpack());
 		assertTrue(backpack.isBackpack());
 	}
 	
 	@Test
 	public void testTerminate () {
-		assertFalse(weapon1.isTerminated());
+		assertFalse(weapon.isTerminated());
 		
 		assertTrue(terminatedWeapon.isTerminated());
 		assertEquals(terminatedWeapon.getCharacter(), null);
@@ -83,44 +80,53 @@ class ItemTest {
 	
 	@Test
 	public void testAnchor () {
-		assertEquals(weapon1.getCharacter(), null);
-		monster.equip(2,weapon1);
-		assertEquals(weapon1.getCharacter(), monster);
+		assertEquals(weapon.getCharacter(), null);
+		monster.equip(2,weapon);
+		assertEquals(weapon.getCharacter(), monster);
 	}
 	
 	@Test
 	public void testBackpack () {
-		assertEquals(weapon1.getParentBackpack(), null);
-		weapon1.moveTo(backpack);
-		assertEquals(weapon1.getParentBackpack(), backpack);
+		assertEquals(weapon.getParentBackpack(), null);
+		weapon.moveTo(backpack);
+		assertEquals(weapon.getParentBackpack(), backpack);
+	}
+	
+	@Test
+	public void testMoveTo () {
+		assertEquals(weapon.getParentBackpack(), null);
+		weapon.moveTo(backpack);
+		assertEquals(weapon.getParentBackpack(), backpack);
+		
+		assertThrows(TerminatedException.class, () -> { terminatedWeapon.moveTo(backpack); });
 	}
 	
 	@Test
 	public void testDrop () {
-		weapon1.moveTo(backpack);
-		assertEquals(weapon1.getParentBackpack(), backpack);
-		assertTrue(backpack.contains(weapon1));
-		weapon1.drop();
-		assertEquals(weapon1.getParentBackpack(), null);
-		assertFalse(backpack.contains(weapon1));
+		weapon.moveTo(backpack);
+		assertEquals(weapon.getParentBackpack(), backpack);
+		assertTrue(backpack.contains(weapon));
+		weapon.drop();
+		assertEquals(weapon.getParentBackpack(), null);
+		assertFalse(backpack.contains(weapon));
 		//
-		monster.equip(2,weapon1);
-		assertEquals(weapon1.getCharacter(), monster);
-		assertTrue(monster.hasItem(weapon1));
-		weapon1.drop();
-		assertEquals(weapon1.getCharacter(), null);
-		assertFalse(monster.hasItem(weapon1));
+		monster.equip(2,weapon);
+		assertEquals(weapon.getCharacter(), monster);
+		assertTrue(monster.hasItem(weapon));
+		weapon.drop();
+		assertEquals(weapon.getCharacter(), null);
+		assertFalse(monster.hasItem(weapon));
 	}
 	
 	@Test
 	public void testGetHolder () {
-		assertEquals(weapon1.getHolder(), null);
-		weapon1.moveTo(backpack);
-		assertEquals(weapon1.getHolder(), null);
-		monster.equip(2,weapon1);
-		assertEquals(weapon1.getHolder(), monster);
-		weapon1.drop();
-		assertEquals(weapon1.getHolder(), null);
+		assertEquals(weapon.getHolder(), null);
+		weapon.moveTo(backpack);
+		assertEquals(weapon.getHolder(), null);
+		monster.equip(2,weapon);
+		assertEquals(weapon.getHolder(), monster);
+		weapon.drop();
+		assertEquals(weapon.getHolder(), null);
 	}
 
 }
