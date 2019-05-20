@@ -30,6 +30,8 @@ import java.util.HashSet;
 
 // TODO Item legal en illegal cases, backpack ook, purse test case
 //		annotations, monster collectTreasures in testen
+//		hero.collectTreasures
+//		UML
 
 public abstract class Character {
 	
