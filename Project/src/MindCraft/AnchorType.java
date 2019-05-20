@@ -13,7 +13,7 @@ import be.kuleuven.cs.som.annotate.Value;
  * @version	1.0 - 2019
  */
 @Value
- public enum AnchorType {
+public enum AnchorType {
 	
 	RIGHT_HAND("Right hand", 0, false),
 	LEFT_HAND("Left hand", 1, false),

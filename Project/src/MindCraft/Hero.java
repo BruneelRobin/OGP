@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -39,6 +40,8 @@ public class Hero extends Character {
 	 * 			| super(name, hitpoints, AnchorTypes.values().length)
 	 * @post	The strength of this hero is set to the given strength
 	 * 			| new.getStrength() == strength
+	 * @effect	Gives starter gear to this hero
+	 * 			| giveStarterGear()
 	 * @throws	IllegalArgumentException
 	 * 			Throws this exception when the given name is not valid
 	 * 			| !isValidName(name)
@@ -71,12 +74,13 @@ public class Hero extends Character {
 	 * 			| super(name, hitpoints, AnchorTypes.values().length)
 	 * @post	The strength of this hero is set to the given strength
 	 * 			| new.getStrength() == strength
-	 * @post	...
+	 * @post	Equips the given items on the given slots of this hero
+	 * 			Only equips what this hero can wear, all other items are dropped.
 	 * @throws	IllegalArgumentException
 	 * 			Throws this exception when the given name is not valid
 	 * 			| !isValidName(name)
 	 */
-	public Hero(String name, int hitpoints, float strength, List<Item> items) throws IllegalArgumentException {
+	public Hero(String name, int hitpoints, float strength, HashMap<AnchorType, Item> items) throws IllegalArgumentException {
 		super(name, hitpoints, AnchorType.values().length); // length of anchortypes
 		
 		if(!isValidStrength(strength)) {
@@ -86,12 +90,11 @@ public class Hero extends Character {
 			setStrength(strength);
 		}
 		
-		Iterator<Item> it = items.iterator();
-		int anchorId = 0;
-	    while(it.hasNext()){
-	        this.equip(anchorId, it.next());
-	        anchorId ++;
-	    }
+		for (Entry<AnchorType, Item> entry : items.entrySet()) {
+			this.equip(entry.getKey(), entry.getValue());
+		}
+	    
+	        
 	}
 	
 	/********************************
@@ -452,7 +455,8 @@ public class Hero extends Character {
 	
 	/**
 	 * Generate and equip the starter gear for a hero.
-	 * 
+	 * @post	Equips a starter armor and starter purse to this hero, the weights of these items will
+	 * 			be scaled so this hero can al
 	 */
 	private void giveStarterGear() {
 		

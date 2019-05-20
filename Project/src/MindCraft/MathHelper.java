@@ -34,11 +34,12 @@ public class MathHelper {
 	
 	/**
 	 * Return a random prime number in the given range
-	 * @return	Return a random prime number in the given range
+	 * @return	Return a random prime number in the given range the current maximum number is 2^31
+	 * 			to speed up this process, but this can be changed
 	 */
 	public static long getRandomPrime() {
 		long min = 3L;
-		long max = Long.MAX_VALUE;
+		long max = Integer.MAX_VALUE; //not too big
 		long candidate = MathHelper.getRandomLongBetweenRange(min, max);
 		
 		if (MathHelper.isPrime(candidate)) {

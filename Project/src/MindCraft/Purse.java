@@ -77,6 +77,11 @@ public class Purse extends Item implements Container {
 	@Override
 	protected long generateIdentification() {
 		long candidate = MathHelper.getRandomLongBetweenRange(Long.MIN_VALUE, Long.MAX_VALUE);
+		
+		if (!canHaveAsNewIdentification (candidate)) {
+			return generateIdentification();
+		}
+		
 		return candidate;
 	}
 	

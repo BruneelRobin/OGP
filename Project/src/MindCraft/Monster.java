@@ -141,7 +141,6 @@ public class Monster extends Character {
 	 * 			| new.getDamage() == damage
 	 * @post	The protection of this monster is set to the given protection.
 	 * 			| new.getProtection() == protection
-	 * 
 	 */
 	private void initialize (int damage, int protection) {
 		setDamage(damage);
