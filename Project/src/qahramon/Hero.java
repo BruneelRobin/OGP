@@ -1,4 +1,4 @@
-package MindCraft;
+package qahramon;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -112,7 +112,7 @@ public class Hero extends Character {
 	 */
 	@Override
 	public boolean canHaveAsName(String name) {
-		return (name != null && name.matches("(?![^:]*:[^ ])(?![^']*'[^']*'[^']*')[A-Z][A-Za-z' :]*"));
+		return (name != null && name.matches("(?![^:]*:([^ ]|$))(?![^']*'[^']*'[^']*')[A-Z][A-Za-z' :]*"));
 	}
 	
 	
@@ -405,8 +405,8 @@ public class Hero extends Character {
 	 * 			| ...
 	 */
 	@Override
-	public boolean canHaveAsAnchorAt(int anchorId, Item item) {
-		if (super.canHaveAsAnchorAt(anchorId, item)) {
+	public boolean canHaveAsItemAt(int anchorId, Item item) {
+		if (super.canHaveAsItemAt(anchorId, item)) {
 			if (AnchorType.getTypeFromId(anchorId).holdsPurse() == true) {
 				return item.isPurse(); // true als purse, false als geen purse
 			} else {

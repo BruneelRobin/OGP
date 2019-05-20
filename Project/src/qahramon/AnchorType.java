@@ -1,4 +1,4 @@
-package MindCraft;
+package qahramon;
 
 import be.kuleuven.cs.som.annotate.Value;
 

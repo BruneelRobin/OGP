@@ -1,4 +1,4 @@
-package MindCraft;
+package qahramon;
 
 import java.util.HashSet;
 

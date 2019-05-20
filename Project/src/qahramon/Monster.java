@@ -1,4 +1,4 @@
-package MindCraft;
+package qahramon;
 
 
 import java.util.Map;
@@ -306,7 +306,7 @@ public class Monster extends Character {
 	public void hit(Character character) {
 		int randomNumber = MathHelper.getRandomIntBetweenRange(0, 100);
 		
-		if (randomNumber < getHitpoints()) {
+		if (randomNumber > getHitpoints()) {
 			randomNumber = getHitpoints();
 		}
 		

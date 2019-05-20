@@ -1,4 +1,4 @@
-package MindCraft;
+package qahramon;
 
 import java.util.Random;
 
@@ -77,12 +77,12 @@ public class MathHelper {
 	 * @pre		Range is smaller than the max long value
 	 * 			| max-min <= Long.MAX_VALUE
 	 * @return	Return a random long number in the given range (between min and max)
-	 * 			| randomNumberGenerator.nextLong()
+	 * 			| Math.abs((randomNumberGenerator.nextLong() % (max - min))) + min
 	 */
 	public static long getRandomLongBetweenRange(long min, long max){
 		Random randomNumberGenerator = new Random();
 		
-		return (randomNumberGenerator.nextLong() % (max - min)) + min;
+		return Math.abs((randomNumberGenerator.nextLong() % (max - min))) + min;
 	}
 	
 	public static long getRandomLong() {
@@ -97,11 +97,10 @@ public class MathHelper {
 	 * @param 	max
 	 * 			The maximum value
 	 * @return	Return a random int number in the given range (between min and max)
-	 * 			| result == randomNumberGenerator.nextInt();
+	 * 			| result == (int)getRandomLongBetweenRange((long)min, (long)max);
 	 */
 	public static int getRandomIntBetweenRange(int min, int max){
-		Random randomNumberGenerator = new Random();
-		return randomNumberGenerator.nextInt();
+		return (int)getRandomLongBetweenRange((long)min, (long)max);
 	}
 	
 	/**

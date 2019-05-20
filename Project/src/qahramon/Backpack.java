@@ -1,4 +1,4 @@
-package MindCraft;
+package qahramon;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -266,7 +266,7 @@ public class Backpack extends Item implements Container {
 		}
 		else if (item.getHolder() != null && item.getHolder() != this.getHolder() && item.getHolder().isDead() == false) {
 			return false;
-		} else if (item.getHolder() == null && this.getHolder() != null && !this.getHolder().canPickUpItem(item)) { 
+		} else if (item.getHolder() == null && this.getHolder() != null && !this.getHolder().canPickUp(item)) { 
 			return false;
 		} else if (item.isBackpack() && this.isDirectOrIndirectSubBackpackOf((Backpack)item)) {
 			return false;

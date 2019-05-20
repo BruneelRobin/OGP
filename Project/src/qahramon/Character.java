@@ -1,4 +1,4 @@
-package MindCraft;
+package qahramon;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -321,9 +321,14 @@ public abstract class Character {
 	 * 			The anchorId to set the item at
 	 * @param 	item
 	 * 			The item to set at the given anchorId
+	 * @post	Sets the item at the given anchor of this character
 	 */
 	private void setItemAt(int anchorId, Item item) {
-		this.anchors.put(anchorId, item);
+		if (item == null) {
+			this.anchors.remove(anchorId);
+		} else {
+			this.anchors.put(anchorId, item);
+		}
 	}
 	
 	/**
@@ -347,7 +352,7 @@ public abstract class Character {
 	 * 			| result == (anchorId >= 0 && anchorId < getNumberOfAnchors()) && (item.getHolder == this
 	 * 			|			|| (item.getHolder() == null && canPickUp(item)))
 	 */
-	public boolean canHaveAsAnchorAt(int anchorId, Item item) {
+	public boolean canHaveAsItemAt(int anchorId, Item item) {
 		if (item.isTerminated()) {
 			return false;
 		}
@@ -363,6 +368,19 @@ public abstract class Character {
 	}
 	
 	/**
+	 * Return true when this character has the given item anchored
+	 * @return	Return true when this character has the given item anchored
+	 */
+	public boolean hasItem (Item item) {
+		for (Item itemAt : this.anchors.values()) {
+			if (itemAt == item) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Equip item from own inventory or from ground, on the given slot
 	 * @param	anchorId
 	 * 			The id of the anchor to be set
@@ -371,7 +389,7 @@ public abstract class Character {
 	 * @effect	Unequip the item in that slot if not null
 	 * 			| unequip(anchorId)
 	 * @post	Equip the given item in the given slot when possible, unequips the item in that slot when not null
-	 * 			| canHaveAsAnchorAt(item)
+	 * 			| canHaveAsItemAt(item)
 	 * @post	When equipped the item at the given id will be set to the given item
 	 * 			| getItemAt(anchorId) == item
 	 * @effect	When equipped the anchor of the current item will bound to this character 
@@ -379,7 +397,7 @@ public abstract class Character {
 	 * 			| item.bindCharacter(this)
 	 */
 	public void equip(int anchorId, Item item) {
-		if (this.canHaveAsAnchorAt(anchorId, item)) {
+		if (this.canHaveAsItemAt(anchorId, item)) {
 			if (this.getItemAt(anchorId) != null) {
 				this.unequip(anchorId);
 			}
@@ -491,7 +509,7 @@ public abstract class Character {
 				if(itemAt != null && itemAt.isBackpack()) {
 					backpacks.add((Backpack)(itemAt));
 				}
-				else if(itemAt == null && this.canHaveAsAnchorAt(anchorId, item)) {
+				else if(itemAt == null && this.canHaveAsItemAt(anchorId, item)) {
 					this.equip(anchorId, item);
 					return;
 				}
@@ -539,7 +557,7 @@ public abstract class Character {
 	 */
 	public boolean hasProperItems () {
 		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
-			if (!canHaveAsAnchorAt(entry.getKey(), entry.getValue())) { // false when not possible to reequip in same slot
+			if (!canHaveAsItemAt(entry.getKey(), entry.getValue())) { // false when not possible to reequip in same slot
 				return false;
 			}
 		}
