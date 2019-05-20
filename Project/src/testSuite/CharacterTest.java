@@ -24,7 +24,7 @@ class CharacterTest {
 	static Backpack backpack;
 	
 	@BeforeAll
-	public static void setUpBeforeClass() {
+	public static void setUpBeforeAll() {
 		terminatedWeapon = new Weapon(20, 15);
 		terminatedWeapon.terminate();
 	}
