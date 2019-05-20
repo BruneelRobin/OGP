@@ -28,7 +28,7 @@ import java.util.HashSet;
  * @version 1.0 - 2019
  */
 
-// TODO  
+// TODO Item legal en illegal cases, backpack ook, purse test case
 //		annotations, monster collectTreasures in testen
 
 public abstract class Character {
