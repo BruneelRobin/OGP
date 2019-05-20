@@ -7,6 +7,7 @@ import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 
 import qahramon.*;
+import qahramon.exceptions.DeadException;
 
 import org.junit.jupiter.api.*;
 
@@ -19,7 +20,7 @@ import org.junit.jupiter.api.*;
  */
 class HeroTest {
 	
-	static Hero hero;
+	static Hero hero, deadHero;
 	static Monster monster;
 	static Weapon weapon1, weapon2, smallWeapon;
 	static Armor armor1, armor2, armor3;
@@ -36,6 +37,8 @@ class HeroTest {
 		armor2 = new Armor(11, 50, 30, 50);
 		armor3 = new Armor(13, 10, 5, 10);
 		purse = new Purse(2, 500, 20);
+		deadHero = new Hero("LegalName", 97, 10);
+		deadHero.takeDamage(97);
 	}
 	
 	@Test
@@ -46,6 +49,8 @@ class HeroTest {
 		assertEquals (AnchorType.values().length, hero2.getNumberOfAnchors());
 		assertEquals (10.51, hero2.getStrength(), 0.01);
 		assertEquals (50, hero2.getHitpoints());
+		
+		assertThrows(DeadException.class, () -> { new Hero("LegalName", 0, 10); });
 	}
 	
 	@Test 
@@ -170,6 +175,8 @@ class HeroTest {
 		}
 		assertEquals(monster.getHitpoints(), monster.getMaxHitpoints() - hero.getDamage());
 		assertTrue(monster.isFighting());
+		
+		assertThrows(DeadException.class, () -> { deadHero.hit(monster); });
 	}
 	
 	/**************************************************************************************
@@ -184,6 +191,8 @@ class HeroTest {
 		int hitpointsAfter = hero.getHitpoints();
 		assertTrue(hero.canHaveAsHitpoints(hitpointsAfter));
 		assertTrue(hitpointsBefore <= hitpointsAfter);
+		
+		assertThrows(DeadException.class, () -> { deadHero.heal(); });
 	}
 	
 	@Test

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import org.junit.jupiter.api.Test;
 
 import qahramon.*;
+import qahramon.exceptions.DeadException;
 
 import org.junit.jupiter.api.*;
 
@@ -19,7 +20,7 @@ import org.junit.jupiter.api.*;
  */
 class MonsterTest {
 	
-	static Monster monster;
+	static Monster monster, deadMonster;
 	static Hero hero;
 	static Armor armor;
 
@@ -28,6 +29,8 @@ class MonsterTest {
 		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
 		hero = new Hero("LegalName", 97, 10);
 		armor = new Armor(7, 70, 50, 200);
+		deadMonster = new Monster("LegalName", 499, 20, 70, 10, 50);
+		deadMonster.takeDamage(499);
 	}
 	
 	@Test
@@ -157,6 +160,8 @@ class MonsterTest {
 		monster.takeDamage(450);
 		monster.hit(hero);
 		assertEquals(hero.getHitpoints(), hero.getMaxHitpoints() - monster.getDamage());
+		
+		assertThrows(DeadException.class, () -> { deadMonster.hit(monster); });
 	}
 	
 	/**************************************************************************************

@@ -227,7 +227,7 @@ public abstract class Item {
 	 * @return	Return true when the given weight is valid, thus positive.
 	 * 			Return false when the given weight is invalid
 	 */
-	public boolean isValidWeight(float weight) {
+	public static boolean isValidWeight(float weight) {
 		
 		return (weight >= 0);
 	}
@@ -236,6 +236,7 @@ public abstract class Item {
 	 * Return the default weight
 	 * @return	Return the default weight
 	 */
+	@Immutable
 	public float getDefaultWeight () {
 		return 100f;
 	}

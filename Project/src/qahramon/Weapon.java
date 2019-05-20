@@ -4,6 +4,8 @@ import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
 
+import qahramon.exceptions.*;
+
 /**
  * A class of weapons.
  * 
@@ -41,7 +43,7 @@ public class Weapon extends Item {
 		super(weight, value);
 		setDamage(damage);
 		this.hasGivenValue = true;
-		ids.add(getIdentification());
+		weaponIds.add(getIdentification());
 	}
 	
 	/**
@@ -63,7 +65,7 @@ public class Weapon extends Item {
 		super(weight, 0);
 		setDamage(damage);
 		this.hasGivenValue = false;
-		ids.add(getIdentification());
+		weaponIds.add(getIdentification());
 	}
 	
 	/***********************
@@ -124,21 +126,21 @@ public class Weapon extends Item {
 	 * @return	Return true when this weapon can have the given identification number that has to be unique
 	 * 			Return false when this weapon can't
 	 * 			| result == canHaveAsIdentification (identification) 
-	 * 							&& ids.contains(identification) == false
+	 * 							&& !weaponIds.contains(identification)
 	 */
 	@Override
 	public boolean canHaveAsNewIdentification (long identification) {
-		return canHaveAsIdentification (identification) && ids.contains(identification) == false;
+		return canHaveAsIdentification (identification) && !weaponIds.contains(identification);
 	}
 	
 	/**
-	 * Variable referencing a set with all ids of this class. 
+	 * Variable referencing a set with all weaponIds of this class. 
 	 * 
 	 * @invar Each non null element in the hashset references an effective item. 
-	 *        | for (Item item : ids)
+	 *        | for (Item item : weaponIds)
 	 *        | 	item != null
 	 */
-	private static final HashSet<Long> ids = new HashSet<Long>();
+	private static final HashSet<Long> weaponIds = new HashSet<Long>();
 	
 	
 	
@@ -196,31 +198,42 @@ public class Weapon extends Item {
 	
 	
 	/**
-	 * Upgrades the weapon to a higher damage
+	 * Upgrade the weapon to a higher damage
 	 * @pre the given amount must be positive
 	 * @pre the result has to be valid
 	 * 		| isValidDamage(this.getDamage() + amount) == true
 	 * @post The damage of the weapon is incremented with the given amount
 	 * 		| new.getDamage() == this.getDamage() + amount
-	 * 
+	 * @throws	TerminatedException
+	 * 		  	Throws this exception when this weapon is terminated.
+	 * 		 	| isTerminated()
 	 */
-	public void upgrade(int amount) {
+	public void upgrade(int amount) throws TerminatedException{
+		if (this.isTerminated()) {
+			throw new TerminatedException(this);
+		} else {
 		this.setDamage(this.getDamage() + amount);
+		}
 	}
 	
 	
 	/**
-	 * Downgrades the weapon to a lower damage
+	 * Downgrade the weapon to a lower damage
 	 * @pre the given amount must be positive
 	 * @pre the result has to be valid
 	 * 		| isValidDamage(this.getDamage() - amount) == true
 	 * @post The damage of the weapon is decremented with the given amount
 	 * 		| new.getDamage() == this.getDamage() - amount
-	 * 
+	 * @throws	TerminatedException
+	 * 		  	Throws this exception when this weapon is terminated.
+	 * 			| isTerminated()
 	 */
-	public void downgrade(int amount) {
+	public void downgrade(int amount) throws TerminatedException {
+		if (this.isTerminated()) {
+			throw new TerminatedException(this);
+		} else {
 		this.setDamage(this.getDamage() - amount);
-		
+		}
 	}
 	
 	
