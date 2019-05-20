@@ -29,6 +29,7 @@ public class DeadException extends RuntimeException{
 	 * @post The character involved in this DeadException is set to the given character
 	 * 		 | new.getCharacter() == character
 	 */
+	@Raw
 	public DeadException(Character character) {
 		this.character = character;
 		}
@@ -38,6 +39,7 @@ public class DeadException extends RuntimeException{
 	 * Return the character involved in this DeadException.
 	 * @return Return the character involved in this DeadException
 	 */
+	@Raw @Basic
 	public Character getCharacter() {
 		return this.character;
 	}
