@@ -7,7 +7,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Monster Bob = new Monster("O' villain",4,4,4);
+		Armor armor = new Armor (0, 10, 10f, 10);
 	}
 
 }

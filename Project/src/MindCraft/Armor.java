@@ -71,14 +71,13 @@ public class Armor extends Item {
 	 */
 	@Override
 	protected long generateIdentification() {
-		long min = 3L;
-		long max = Long.MAX_VALUE;
-		long candidate = MathHelper.getRandomLongBetweenRange(min, max);
+		long prime = MathHelper.getRandomPrime();
 		
-		if (!canHaveAsIdentification (candidate)) {
+		if (!canHaveAsNewIdentification (prime)) {
 			return generateIdentification();
 		} else {
-			return candidate;
+			//System.out.println(prime);
+			return prime;
 		}
 	}
 	

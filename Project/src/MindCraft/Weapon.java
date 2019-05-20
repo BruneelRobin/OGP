@@ -94,8 +94,8 @@ public class Weapon extends Item {
 		long flooredMax = Long.MAX_VALUE/6;
 		long generatedNumber = MathHelper.getRandomLongBetweenRange(0, flooredMax);
 		long candidate = generatedNumber*6;
-		if(!canHaveAsIdentification(candidate)) {
-			assert false;
+		if(!canHaveAsNewIdentification(candidate)) { // this number already exists
+			return generateIdentification();
 		}
 		
 		return candidate;
