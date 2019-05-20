@@ -1,8 +1,10 @@
 package testSuite;
 
-import MindCraft.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
+import qahramon.*;
+
 import org.junit.jupiter.api.*;
 
 /**
@@ -35,26 +37,36 @@ class HeroTest {
 	
 	@Test
 	public void testHeroStringIntFloat_LegalCase() {
+		Hero hero2 = new Hero ("Legalname", 50, 10.51f);
 		
+		assertEquals ("Legalname", hero2.getName());
+		assertEquals (AnchorType.values().length, hero2.getNumberOfAnchors());
+		assertEquals (10.51, hero2.getStrength(), 0.01);
+		assertEquals (50, hero2.getHitpoints());
 	}
 	
 	@Test 
 	public void testHeroStringIntFloat_InvalidName() {
-		
+		assertThrows(IllegalArgumentException.class, () -> {new Hero ("Illegalname:", 50, 10.51f);});
 	}
 	
 	@Test
 	public void testHeroStringIntFloat_InvalidStrength() {
+		Hero hero2 = new Hero ("Legalname", 50, -10.51f);
+		
+		assertEquals ("Legalname", hero2.getName());
+		assertEquals (AnchorType.values().length, hero2.getNumberOfAnchors());
+		assertEquals (0, hero2.getStrength(), 0.01);
+		assertEquals (50, hero2.getHitpoints());
+	}
+	
+	@Test
+	public void testHeroStringIntFloatHashMap_LegalCase() {
 		
 	}
 	
 	@Test
-	public void testHeroStringIntFloatSet_LegalCase() {
-		
-	}
-	
-	@Test
-	public void testHeroStringIntFloatSet_IllegalSet() {
+	public void testHeroStringIntFloatHashMap_IllegalSet() {
 		
 	}
 	
@@ -101,7 +113,7 @@ class HeroTest {
 	
 	@Test
 	public void testDivideStrength_IllegalCase() {
-		hero.divideStrength(2);
+		hero.divideStrength(-1);
 		assertEquals(10, hero.getStrength(), 0.1);
 	}
 	
@@ -142,10 +154,10 @@ class HeroTest {
 	}
 	
 	@Test
-	public void testCanEquip_PurseCase() {
-		assertTrue(hero.canEquip(2, purse));
-		assertFalse(hero.canEquip(2, weapon1));
-		assertFalse(hero.canEquip(1, purse));
+	public void testCanHaveAsItemAt_PurseCase() {
+		assertTrue(hero.canHaveAsItemAt(2, purse));
+		assertFalse(hero.canHaveAsItemAt(2, weapon1));
+		assertFalse(hero.canHaveAsItemAt(1, purse));
 	}
 
 }

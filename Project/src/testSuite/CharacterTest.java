@@ -1,8 +1,10 @@
 package testSuite; 
 
-import MindCraft.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
+import qahramon.*;
+
 import org.junit.jupiter.api.*;
 
 
@@ -59,10 +61,9 @@ class CharacterTest {
 	
 	@Test
 	public void testChangeName_IllegalCase() {
-		monster.changeName("NewIllegalN*me");
 		assertThrows(IllegalArgumentException.class, () -> {
-		      throw new IllegalArgumentException("Invalid name!");
-		    });
+				monster.changeName("NewIllegalN*me");
+		});
 	}
 	
 	@Test
@@ -82,7 +83,7 @@ class CharacterTest {
 	public void testTakeDamage() {
 		monster.takeDamage(5);
 		assertTrue(monster.isFighting());
-		assertEquals(495, monster.getHitpoints());
+		assertEquals(494, monster.getHitpoints());
 		monster.takeDamage(500);
 		assertTrue(monster.isDead());
 		assertEquals(0, monster.getHitpoints());
@@ -112,19 +113,19 @@ class CharacterTest {
 	}
 	
 	@Test
-	public void testcanHaveAsAnchorAt_LegalCase() {
-		assertTrue(monster.canHaveAsAnchorAt(1, weapon1));
+	public void testcanHaveAsItemAt_LegalCase() {
+		assertTrue(monster.canHaveAsItemAt(1, weapon1));
 		monster.pickUp(weapon1);
-		assertTrue(monster.canHaveAsAnchorAt(1, weapon1));
+		assertTrue(monster.canHaveAsItemAt(1, weapon1));
 	}
 	
 	@Test
-	public void testcanEquip_IllegalCase() {
-		assertFalse(monster.canHaveAsAnchorAt(10, weapon1));
-		assertFalse(monster.canHaveAsAnchorAt(1, terminatedWeapon));
-		assertFalse(monster.canHaveAsAnchorAt(1, heavyWeapon));
+	public void testcanHaveAsItemAt_IllegalCase() {
+		assertFalse(monster.canHaveAsItemAt(10, weapon1));
+		assertFalse(monster.canHaveAsItemAt(1, terminatedWeapon));
+		assertFalse(monster.canHaveAsItemAt(1, heavyWeapon));
 		hero.pickUp(weapon1);
-		assertFalse(monster.canHaveAsAnchorAt(1, weapon1));
+		assertFalse(monster.canHaveAsItemAt(1, weapon1));
 	}
 	
 	@Test

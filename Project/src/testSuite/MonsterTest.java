@@ -1,8 +1,13 @@
 package testSuite;
 
-import MindCraft.*;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.HashSet;
+
 import org.junit.jupiter.api.Test;
+
+import qahramon.*;
+
 import org.junit.jupiter.api.*;
 
 /**
@@ -27,12 +32,76 @@ class MonsterTest {
 	
 	@Test
 	public void monsterStringIntIntIntFloat_LegalCase() {
+		Monster monster2 = new Monster("LegalName", 499, 20, 70, 10, 50);
+		assertEquals(499, monster2.getHitpoints());
+		assertEquals(499, monster2.getMaxHitpoints());
 		
+		assertEquals(20, monster2.getDamage());
+		assertEquals(70, monster2.getProtection());
+		assertEquals(10, monster2.getNumberOfAnchors());
+		assertEquals(50, monster2.getCapacity());
+		
+		Monster monster3 = new Monster("LegalName", 499, 20, 70, 10, -50);
+		assertEquals(499, monster3.getHitpoints());
+		assertEquals(499, monster3.getMaxHitpoints());
+		
+		assertEquals(20, monster3.getDamage());
+		assertEquals(70, monster3.getProtection());
+		assertEquals(10, monster3.getNumberOfAnchors());
+		assertEquals(0, monster3.getCapacity());
+	}
+	
+	@Test
+	public void monsterStringIntIntIntFloat_IllegalCase() {
+		assertThrows(IllegalArgumentException.class, () -> { new Monster("illegalName", 499, 20, 70, 10, 50); });
+		
+		Monster monster3 = new Monster("LegalName", 499, 20, 70, 10, -50);
+		assertEquals(499, monster3.getHitpoints());
+		assertEquals(499, monster3.getMaxHitpoints());
+		
+		assertEquals(20, monster3.getDamage());
+		assertEquals(70, monster3.getProtection());
+		assertEquals(10, monster3.getNumberOfAnchors());
+		assertEquals(0, monster3.getCapacity());
 	}
 	
 	@Test
 	public void monsterStringIntIntIntFloatSet_LegalCase() {
+		HashSet<Item> items = new HashSet<Item>();
 		
+		items.add(armor);
+		
+		Monster monster2 = new Monster("LegalName", 499, 20, 70, 10, 50, items);
+		assertEquals(499, monster2.getHitpoints());
+		assertEquals(499, monster2.getMaxHitpoints());
+		
+		assertEquals(20, monster2.getDamage());
+		assertEquals(70, monster2.getProtection());
+		assertEquals(10, monster2.getNumberOfAnchors());
+		assertEquals(50, monster2.getCapacity());
+		
+		assertEquals(true, monster2.hasItem(armor));
+	}
+	
+	@Test
+	public void monsterStringIntIntIntFloatSet_IllegalCase() {
+		assertThrows(IllegalArgumentException.class, () -> { new Monster("illegalName", 499, 20, 70, 10, 50); });
+		
+		
+		HashSet<Item> items = new HashSet<Item>();
+		
+		items.add(armor);
+		
+		Monster monster2 = new Monster("LegalName", 499, 20, 70, 10, 1, items);
+		assertEquals(499, monster2.getHitpoints());
+		assertEquals(499, monster2.getMaxHitpoints());
+		
+		assertEquals(20, monster2.getDamage());
+		assertEquals(70, monster2.getProtection());
+		assertEquals(10, monster2.getNumberOfAnchors());
+		assertEquals(50, monster2.getCapacity());
+		
+		assertEquals(true, monster2.hasItem(armor));
 	}
 	
 	@Test

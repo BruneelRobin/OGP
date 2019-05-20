@@ -1,8 +1,10 @@
 package testSuite;
 
-import MindCraft.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
+import qahramon.*;
+
 import org.junit.jupiter.api.*;
 
 

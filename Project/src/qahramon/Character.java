@@ -355,7 +355,7 @@ public abstract class Character {
 			return false;
 		}
 		
-		if ((item.getHolder() == this || (item.getHolder() == null && canPickUp(item)))){
+		if ((item.getHolder() == this || ((item.getHolder() == null || item.getHolder().isDead()) && canPickUp(item)))){
 			return true;
 		} else {
 			return false;
