@@ -68,6 +68,11 @@ class HeroTest {
 		assertEquals (50, hero2.getHitpoints());
 	}
 	
+	/**************************************************************************************
+	 * Test of most extensive constructor of Hero
+	 ***************************************************************************************/
+	
+	
 	@Test
 	public void testHeroStringIntFloatHashMap_LegalCase() {
 		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
@@ -95,6 +100,12 @@ class HeroTest {
 		assertEquals (50, hero2.getHitpoints());
 		assertEquals(false, hero2.hasItem(armor1));
 	}
+	
+	/**************************************************************************************
+	 * End of test of most extensive constructor of Hero
+	 ***************************************************************************************/
+	
+	
 	
 	@Test
 	public void testCanHaveAsName_LegalCase() {
@@ -152,6 +163,10 @@ class HeroTest {
 		assertTrue(hero.wantsToTake(armor2));
 	}
 	
+	/**************************************************************************************
+	 * Test of hit
+	 ***************************************************************************************/
+	
 	@Test
 	public void testHit() {
 		hero.equip(AnchorType.RIGHT_HAND, weapon1);
@@ -163,6 +178,10 @@ class HeroTest {
 		
 		assertThrows(DeadException.class, () -> { deadHero.hit(monster); });
 	}
+	
+	/**************************************************************************************
+	 * End of test of hit
+	 ***************************************************************************************/
 		
 	@Test
 	public void testHeal() {

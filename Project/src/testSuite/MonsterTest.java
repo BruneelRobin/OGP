@@ -145,6 +145,10 @@ class MonsterTest {
 		assertFalse(monster.wantsToTake(armor));
 	}
 	
+	/**************************************************************************************
+	 * Test of hit
+	 ***************************************************************************************/
+	
 	@Test
 	public void testHit() {
 		while (hero.getHitpoints() == hero.getMaxHitpoints()) {
@@ -159,6 +163,10 @@ class MonsterTest {
 		
 		assertThrows(DeadException.class, () -> { deadMonster.hit(monster); });
 	}
+	
+	/**************************************************************************************
+	 * End of test of hit
+	 ***************************************************************************************/
 	
 	
 

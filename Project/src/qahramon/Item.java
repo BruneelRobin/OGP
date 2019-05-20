@@ -238,7 +238,7 @@ public abstract class Item {
 	 */
 	@Immutable
 	public float getDefaultWeight () {
-		return 100;
+		return 100f;
 	}
 	
 	
