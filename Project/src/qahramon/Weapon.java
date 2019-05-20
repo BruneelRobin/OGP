@@ -4,6 +4,8 @@ import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
 
+import qahramon.exceptions.*;
+
 /**
  * A class of weapons.
  * 
@@ -196,7 +198,7 @@ public class Weapon extends Item {
 	
 	
 	/**
-	 * Upgrades the weapon to a higher damage
+	 * Upgrade the weapon to a higher damage
 	 * @pre the given amount must be positive
 	 * @pre the result has to be valid
 	 * 		| isValidDamage(this.getDamage() + amount) == true
@@ -205,12 +207,16 @@ public class Weapon extends Item {
 	 * 
 	 */
 	public void upgrade(int amount) {
+		if (this.isTerminated()) {
+			throw new TerminatedException(this);
+		} else {
 		this.setDamage(this.getDamage() + amount);
+		}
 	}
 	
 	
 	/**
-	 * Downgrades the weapon to a lower damage
+	 * Downgrade the weapon to a lower damage
 	 * @pre the given amount must be positive
 	 * @pre the result has to be valid
 	 * 		| isValidDamage(this.getDamage() - amount) == true
@@ -219,8 +225,11 @@ public class Weapon extends Item {
 	 * 
 	 */
 	public void downgrade(int amount) {
+		if (this.isTerminated()) {
+			throw new TerminatedException(this);
+		} else {
 		this.setDamage(this.getDamage() - amount);
-		
+		}
 	}
 	
 	
