@@ -217,7 +217,7 @@ public class Purse extends Item implements Container {
 	 * Return true when this purse can have the given content
 	 * @param 	content
 	 * 			The content to check
-	 * @return	Return true when the content of this purse is within the allowed range and the additional content doesn't exceed 
+	 * @return	Return true when the content of this non torn purse is within the allowed range and the additional content doesn't exceed 
 	 * 			the maximum capacity of the holder of this purse
 	 * 			| result == content >= 0 && content <= getCapacity() && (this.getHolder() == null || 
 	 * 						this.getHolder().getCapacity() - this.getHolder().getTotalWeight() >= (content - getContent())*getDucateWeight())
@@ -226,7 +226,7 @@ public class Purse extends Item implements Container {
 		float newWeight = (content - getContent())*getDucateWeight();
 		boolean validWeight =  (this.getHolder() == null || this.getHolder().getCapacity() - this.getHolder().getTotalWeight() >= newWeight);
 		
-		return content >= 0 && content <= getCapacity() && validWeight;
+		return !isTorn() && content >= 0 && content <= getCapacity() && validWeight;
 	}
 	
 	/**

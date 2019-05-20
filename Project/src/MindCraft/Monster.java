@@ -27,12 +27,6 @@ import java.util.Iterator;
  * @version 1.0 - 2019
  */
 
-// TODO invariants (done)
-//		content en moveto check op capacity hero  (done)
-//		getTotalWeight en getTotalValue -> instanceof verwijderen (done)
-//		constructor bij Hero -> nog te doen, maar giveStarterGear hiervoor aanpassen
-//		constructors samenvoegen bij monster sws ... (done)
-
 public class Monster extends Character {
 	
 	/***********************
