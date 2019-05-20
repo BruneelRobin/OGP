@@ -204,9 +204,11 @@ public class Weapon extends Item {
 	 * 		| isValidDamage(this.getDamage() + amount) == true
 	 * @post The damage of the weapon is incremented with the given amount
 	 * 		| new.getDamage() == this.getDamage() + amount
-	 * 
+	 * @throws	TerminatedException
+	 * 		  	Throws this exception when this weapon is terminated.
+	 * 		 	| isTerminated()
 	 */
-	public void upgrade(int amount) {
+	public void upgrade(int amount) throws TerminatedException{
 		if (this.isTerminated()) {
 			throw new TerminatedException(this);
 		} else {
@@ -222,9 +224,11 @@ public class Weapon extends Item {
 	 * 		| isValidDamage(this.getDamage() - amount) == true
 	 * @post The damage of the weapon is decremented with the given amount
 	 * 		| new.getDamage() == this.getDamage() - amount
-	 * 
+	 * @throws	TerminatedException
+	 * 		  	Throws this exception when this weapon is terminated.
+	 * 			| isTerminated()
 	 */
-	public void downgrade(int amount) {
+	public void downgrade(int amount) throws TerminatedException {
 		if (this.isTerminated()) {
 			throw new TerminatedException(this);
 		} else {
