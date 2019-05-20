@@ -598,6 +598,8 @@ public abstract class Character {
 	/**
 	 * This character hits the given character
 	 * @post	This character hits the given character
+	 * @throws	DeadException
+	 * 			throws this exception when the current monster is dead.
 	 */
 	public abstract void hit(Character character);
 	

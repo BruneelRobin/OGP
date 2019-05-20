@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
+import qahramon.exceptions.DeadException;
 import sun.security.jca.GetInstance.Instance;
 
 import java.util.HashMap;
