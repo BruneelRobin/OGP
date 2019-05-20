@@ -3,6 +3,7 @@ package qahramon;
 import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
+import qahramon.exceptions.TornException;
 
 /**
  * A class of purses

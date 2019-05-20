@@ -1,6 +1,7 @@
-package qahramon;
+package qahramon.exceptions;
 
 import be.kuleuven.cs.som.annotate.*;
+import qahramon.Purse;
 
 /**
  * A class for signaling illegal attempts to change a purse
