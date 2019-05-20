@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
+import qahramon.exceptions.TerminatedException;
 
 /**
  * A class of backpacks
@@ -225,14 +226,14 @@ public class Backpack extends Item implements Container {
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when the given item is not found in this backpack
 	 * 			| !contains(item)
-	 * @throws	IllegalStateException
+	 * @throws	TerminatedException
 	 * 			Throws this error when this item is terminated
 	 * 			| this.isTerminated()
 	 */
 	@Raw
-	protected void removeItem(Item item) throws IllegalArgumentException, IllegalStateException {
+	protected void removeItem(Item item) throws IllegalArgumentException, TerminatedException {
 		if (this.isTerminated()) {
-			throw new IllegalStateException("This item is terminated");
+			throw new TerminatedException(this);
 		}
 		
 		if (!contains(item)) {
@@ -304,14 +305,14 @@ public class Backpack extends Item implements Container {
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when an item can't be added to this backpack
 	 * 			| !canHaveAsItem(item)
-	 * @throws	IllegalStateException
+	 * @throws	TerminatedException
 	 * 			Throws this error when this item is terminated
 	 * 			| this.isTerminated()
 	 */
 	@Raw
-	protected void addItem(Item item) throws IllegalArgumentException, IllegalStateException {
+	protected void addItem(Item item) throws IllegalArgumentException, TerminatedException {
 		if (this.isTerminated()) {
-			throw new IllegalStateException("This item is terminated");
+			throw new TerminatedException(this);
 		}
 		
 		if (!canHaveAsItem(item)) {
@@ -447,5 +448,19 @@ public class Backpack extends Item implements Container {
 		}
 		
 		return armorCount;
+	}
+	
+	/**
+	 * Terminate all weapons and armor in this backpack recursively
+	 * @post	Terminates all weapons and armor in this backpack recursively
+	 */
+	protected void terminateWeaponsAndArmor () {
+		for (Item item : getItems()) {
+			if (item.isBackpack()) {
+				((Backpack)item).terminate();
+			} else if (item.isArmor() || item.isWeapon()) {
+				item.terminate();
+			}
+		}
 	}
 }

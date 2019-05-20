@@ -6,6 +6,7 @@ import java.util.Set;
 
 
 import be.kuleuven.cs.som.annotate.*;
+import qahramon.exceptions.DeadException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,7 +28,8 @@ import java.util.HashSet;
  * @version 1.0 - 2019
  */
 
-// TODO DeadException (nog uitbreiden in testen), TerminatedException, annotations
+// TODO character, DeadException (nog uitbreiden in testen), TerminatedException, 
+//		annotations
 
 public abstract class Character {
 	

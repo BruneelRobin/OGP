@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
+import qahramon.exceptions.DeadException;
 import sun.security.jca.GetInstance.Instance;
 
 import java.util.HashMap;
@@ -315,16 +316,21 @@ public class Monster extends Character {
 		if (character.isDead()) {
 			
 			Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
+			Set<Item> terminateSet = new HashSet<Item>();
 			
 			for (Entry<Integer, Item> entry : set) {
 				Item item = entry.getValue();
 				if (wantsToTake(item)) { //iterate over all items on dead body and pickup all items you want
 					pickUp(item);
-				} else if (item.isArmor()) {
-					item.terminate();
-				} else if (item.isWeapon()) {
-					item.terminate();
+				} else if (item.isArmor() || item.isWeapon()) {
+					terminateSet.add(item);
+				} else if (item.isBackpack()) {
+					((Backpack)item).terminateWeaponsAndArmor();
 				}
+			}
+			
+			for (Item item : terminateSet) {
+				item.terminate();
 			}
 		}
 	}

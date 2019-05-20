@@ -1,5 +1,6 @@
 package qahramon.exceptions;
 
+import qahramon.Character;
 
 
 /**

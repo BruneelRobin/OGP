@@ -1,6 +1,7 @@
 package qahramon;
 
 import be.kuleuven.cs.som.annotate.*;
+import qahramon.exceptions.TerminatedException;
 
 /**
  * A class of items
@@ -372,13 +373,13 @@ public abstract class Item {
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when the given backpack can't have this item
 	 * 			| !backpack.canHaveAsItem(this)
-	 * @throws	IllegalStateException
+	 * @throws	TerminatedException
 	 * 			Throws this error when this item is terminated
 	 * 			| this.isTerminated()
 	 */
-	public void moveTo (Backpack backpack) throws IllegalArgumentException, IllegalStateException {
+	public void moveTo (Backpack backpack) throws IllegalArgumentException, TerminatedException {
 		if (this.isTerminated()) {
-			throw new IllegalStateException ("This item is terminated and can't be moved");
+			throw new TerminatedException(this);
 		}
 		else if (!backpack.canHaveAsItem(this)) {
 			throw new IllegalArgumentException ("The given backpack can't have this item");
@@ -407,7 +408,7 @@ public abstract class Item {
 	 * 		   	|this.setParentBackpack(null)
 	 * 	
 	 */
-	public void drop() throws IllegalStateException {
+	public void drop() {
 		if (this.getCharacter() != null) {
 			this.getCharacter().removeItemFromHolder(this);
 			this.setCharacter(null);

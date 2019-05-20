@@ -3,6 +3,7 @@ package qahramon;
 import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
+import qahramon.exceptions.TerminatedException;
 import qahramon.exceptions.TornException;
 
 /**
@@ -244,15 +245,15 @@ public class Purse extends Item implements Container {
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when an illegal amount (overflow or negative) is given or this purse can't have the new amount.
 	 * 			| getContent() + amount < getContent() || !canHaveAsContent(this.getContent() + amount)
-	 * @throws	IllegalStateException
+	 * @throws	TerminatedException
 	 *			Throws this error when this purse is terminated
 	 *			| this.isTerminated()
 	 */
-	public void add (int amount) throws TornException, IllegalArgumentException, IllegalStateException {
+	public void add (int amount) throws TornException, IllegalArgumentException, TerminatedException {
 		if (isTorn()) {
 			throw new TornException(this);
 		} else if (this.isTerminated()) {
-			throw new IllegalStateException ("This item is terminated");
+			throw new TerminatedException(this);
 		}
 		
 		int newAmount = getContent() + amount;
@@ -278,15 +279,15 @@ public class Purse extends Item implements Container {
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when an illegal amount (overflow or negative) is given or this purse can't have the new amount.
 	 * 			| getContent() - amount < getContent() || !canHaveAsContent(this.getContent() - amount)
-	 * @throws	IllegalStateException
+	 * @throws	TerminatedException
 	 *			Throws this error when this purse is terminated
 	 *			| this.isTerminated()
 	 */
-	public void remove (int amount) throws TornException, IllegalArgumentException, IllegalStateException {
+	public void remove (int amount) throws TornException, IllegalArgumentException, TerminatedException {
 		if (isTorn()) {
 			throw new TornException(this);
 		} else if (this.isTerminated()) {
-			throw new IllegalStateException ("This item is terminated");
+			throw new TerminatedException(this);
 		}
 		
 		int newAmount = getContent() - amount;
