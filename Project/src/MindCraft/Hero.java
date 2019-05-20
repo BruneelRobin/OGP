@@ -429,15 +429,15 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Return the amount of armor's equipped by this character
-	 * @return	Return the amount of armor's equipped by this character also looks inside anchored backpacks
+	 * Return the amount of armor's owned by this character
+	 * @return	Return the amount of armor's owned by this character, also looks inside owned backpacks
 	 */
 	public int getArmorCount () {
 		int armorCount = 0;
 		
 		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
 			Item item = entry.getValue();
-			if (item.isArmor()) { //iterate over all items on dead body and pickup all items you want
+			if (item.isArmor()) {
 				armorCount += 1;
 			} else if (item.isBackpack()) {
 				armorCount += ((Backpack)item).getArmorCount();
