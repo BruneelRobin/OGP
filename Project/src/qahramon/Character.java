@@ -28,8 +28,8 @@ import java.util.HashSet;
  * @version 1.0 - 2019
  */
 
-// TODO character, DeadException (nog uitbreiden in testen), TerminatedException, 
-//		annotations
+// TODO  
+//		annotations, monster collectTreasures in testen
 
 public abstract class Character {
 	
@@ -610,8 +610,14 @@ public abstract class Character {
 	 * @post	Collects all anchored items of the other character 
 	 * 			when the current character wants to take it
 	 * 			| wantsToTake(item)
+	 * @throws	DeadException
+	 * 			Throws this error when this character is dead
 	 */
-	public void collectTreasures(Character character) {
+	public void collectTreasures(Character character) throws DeadException {
+		if (isDead()) {
+			throw new DeadException(this);
+		}
+		
 		if (character.isDead()) {
 		
 			Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
