@@ -8,9 +8,9 @@ public class Test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		while(true) {
-			System.out.println(MathHelper.getRandomIntBetweenRange(0, 100));
-		}
+		Purse p = new Purse(10f, 10, 5);
+		
+		System.out.println(p.getTotalValue());
 	}
 
 }
