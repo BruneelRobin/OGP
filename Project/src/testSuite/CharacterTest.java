@@ -178,6 +178,13 @@ class CharacterTest {
 	}
 	
 	@Test
+	public void teshasItem() {
+		monster.equip(2, weapon1);
+		assertTrue(monster.hasItem(weapon1));
+		assertFalse(monster.hasItem(weapon2));
+	}
+	
+	@Test
 	public void testPickUp() {
 		smallMonster.pickUp(backpack);
 		smallMonster.pickUp(smallWeapon);

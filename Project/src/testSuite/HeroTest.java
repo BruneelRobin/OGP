@@ -1,6 +1,9 @@
 package testSuite;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.HashMap;
+
 import org.junit.jupiter.api.Test;
 
 import qahramon.*;
@@ -62,12 +65,30 @@ class HeroTest {
 	
 	@Test
 	public void testHeroStringIntFloatHashMap_LegalCase() {
+		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
+		items.put(AnchorType.BODY, armor1);
 		
+		Hero hero2 = new Hero ("Legalname", 50, 10.51f, items);
+		
+		assertEquals ("Legalname", hero2.getName());
+		assertEquals (AnchorType.values().length, hero2.getNumberOfAnchors());
+		assertEquals (10.51, hero2.getStrength(), 0.01);
+		assertEquals (50, hero2.getHitpoints());
+		assertEquals(true, hero2.hasItem(armor1));
 	}
 	
 	@Test
 	public void testHeroStringIntFloatHashMap_IllegalSet() {
+		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
+		items.put(AnchorType.BODY, armor1);
 		
+		Hero hero2 = new Hero ("Legalname", 50, 0f, items);
+		
+		assertEquals ("Legalname", hero2.getName());
+		assertEquals (AnchorType.values().length, hero2.getNumberOfAnchors());
+		assertEquals (0, hero2.getStrength(), 0.01);
+		assertEquals (50, hero2.getHitpoints());
+		assertEquals(false, hero2.hasItem(armor1));
 	}
 	
 	@Test
