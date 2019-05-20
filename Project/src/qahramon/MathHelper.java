@@ -82,6 +82,10 @@ public class MathHelper {
 	public static long getRandomLongBetweenRange(long min, long max){
 		Random randomNumberGenerator = new Random();
 		
+		if (max - min == 0) {
+			return min;
+		}
+		
 		return Math.abs((randomNumberGenerator.nextLong() % (max - min))) + min;
 	}
 	

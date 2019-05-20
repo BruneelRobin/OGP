@@ -27,7 +27,8 @@ import java.util.HashSet;
  * @version 1.0 - 2019
  */
 
-// TODO canHaveAsItemAt/isValidItem toevoegen
+// TODO isDeadException, isTerminatedException, alle zwaarden na doodslag monster 
+// 		terminated
 
 public abstract class Character {
 	
@@ -395,8 +396,14 @@ public abstract class Character {
 	 * @effect	When equipped the anchor of the current item will bound to this character 
 	 * 			(so bidirectional relations are recreated).
 	 * 			| item.bindCharacter(this)
+	 * @throws	IsDeadException
+	 * 			throws this exception when the current character is dead.
 	 */
-	public void equip(int anchorId, Item item) {
+	public void equip(int anchorId, Item item) throws IsDeadException {
+		if (isDead()) {
+			throw new IsDeadException(this);
+		}
+		
 		if (this.canHaveAsItemAt(anchorId, item)) {
 			if (this.getItemAt(anchorId) != null) {
 				this.unequip(anchorId);
@@ -414,8 +421,13 @@ public abstract class Character {
 	 * 			| item.moveTo(backpack)
 	 * @effect	When not put in a backpack the item will be dropped on the ground
 	 * 			| item.drop();
+	 * @throws	IsDeadException
+	 * 			throws this exception when the current character is dead.
 	 */
-	public void unequip(int anchorId) {
+	public void unequip(int anchorId) throws IsDeadException {
+		if (isDead()) {
+			throw new IsDeadException(this);
+		}
 		
 		Item item = this.getItemAt(anchorId);
 		
@@ -499,9 +511,14 @@ public abstract class Character {
 	 * @effect	If there are no available anchors and there is an anchored backpack that can take this item,
 	 * 			then the item will be put in that backpack.
 	 * 			| item.moveTo(backpack)
-	 * 			
+	 * @throws	IsDeadException
+	 * 			throws this exception when the current character is dead.			
 	 */
-	public void pickUp(Item item) {
+	public void pickUp(Item item) throws IsDeadException {
+		if (isDead()) {
+			throw new IsDeadException(this);
+		}
+		
 		if(canPickUp(item)) {
 			Set <Backpack> backpacks = new HashSet <Backpack>();
 			for(int anchorId = 0; anchorId < this.getNumberOfAnchors(); anchorId ++) {
@@ -592,12 +609,15 @@ public abstract class Character {
 	 * 			| wantsToTake(item)
 	 */
 	public void collectTreasures(Character character) {
-		Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
+		if (character.isDead()) {
 		
-		for (Entry<Integer, Item> entry : set) {
-			Item item = entry.getValue();
-			if (wantsToTake(item)) { //iterate over all items on dead body and pickup all items you want
-				pickUp(item);
+			Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
+			
+			for (Entry<Integer, Item> entry : set) {
+				Item item = entry.getValue();
+				if (wantsToTake(item)) { //iterate over all items on dead body and pickup all items you want
+					pickUp(item);
+				}
 			}
 		}
 	}

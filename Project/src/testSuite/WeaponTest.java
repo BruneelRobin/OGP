@@ -11,7 +11,7 @@ import org.junit.jupiter.api.*;
 /**
  * Testcase for the weapon class.
  * 
- * @author 	Jean-Louis Carron, Robin Bruneel, Edward Wiels
+ * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0
  *
  */

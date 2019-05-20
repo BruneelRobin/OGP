@@ -199,7 +199,7 @@ public class Purse extends Item implements Container {
 	 */
 	@Basic
 	public int getContent() {
-		return this.capacity;
+		return this.content;
 	}
 	
 	/**
