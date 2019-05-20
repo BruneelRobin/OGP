@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import qahramon.*;
+import qahramon.exceptions.DeadException;
 
 import org.junit.jupiter.api.*;
 
@@ -18,7 +19,7 @@ import org.junit.jupiter.api.*;
  */
 class CharacterTest {
 	
-	static Monster monster, smallMonster;
+	static Monster monster, smallMonster, deadMonster;
 	static Hero hero;
 	static Weapon weapon1, weapon2, heavyWeapon, smallWeapon, terminatedWeapon;
 	static Backpack backpack;
@@ -32,13 +33,16 @@ class CharacterTest {
 	@BeforeEach
 	public void setUp() {
 		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
-		smallMonster = new Monster("LegalName", 7, 1, 10, 2, 10);
+		smallMonster = new Monster("LegalName", 7, 1, 10, 2, 50);
 		hero = new Hero("LegalName", 97, 10);
 		weapon1 = new Weapon(10,5);
 		weapon2 = new Weapon(25,10);
 		heavyWeapon = new Weapon(30, 100);
 		smallWeapon = new Weapon(2,1);
 		backpack = new Backpack(100, 10, 2);
+		
+		deadMonster = new Monster("LegalName", 499, 20, 70, 10, 50);
+		deadMonster.takeDamage(499);
 	}
 
 	@Test
@@ -141,8 +145,9 @@ class CharacterTest {
 	
 	@Test
 	public void testEquip_IllegalCase() {
-		smallMonster.equip(0, weapon1);
-		smallMonster.equip(1, weapon2);
+		Monster smallMonster2 = new Monster("LegalName", 7, 1, 10, 2, 10);
+		smallMonster2.equip(0, weapon1);
+		smallMonster2.equip(1, weapon2);
 		assertEquals(weapon2.getHolder(), null);
 	}
 	
@@ -192,6 +197,8 @@ class CharacterTest {
 		assertEquals(smallMonster.getItemAt(0), backpack);
 		assertEquals(smallMonster.getItemAt(1), smallWeapon);
 		assertTrue(backpack.contains(weapon1));
+		
+		
 	}
 
 	
@@ -221,6 +228,8 @@ class CharacterTest {
 			hero.hit(smallMonster);
 		}
 		assertEquals(hero, weapon1.getHolder());
+		
+		assertThrows(DeadException.class, () -> {deadMonster.collectTreasures(smallMonster);});
 	}
 	
 }
