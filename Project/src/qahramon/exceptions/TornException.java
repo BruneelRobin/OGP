@@ -12,9 +12,6 @@ import qahramon.Purse;
  */
 public class TornException extends RuntimeException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5764443045080909434L;
 
 	/**
