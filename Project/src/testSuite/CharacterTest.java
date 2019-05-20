@@ -178,7 +178,7 @@ class CharacterTest {
 	}
 	
 	@Test
-	public void teshasItem() {
+	public void testhasItem() {
 		monster.equip(2, weapon1);
 		assertTrue(monster.hasItem(weapon1));
 		assertFalse(monster.hasItem(weapon2));
