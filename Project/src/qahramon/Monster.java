@@ -299,11 +299,48 @@ public class Monster extends Character {
 	}
 	
 	/**
-	 * This monster hits the given character.
-	 * @post	The character that was hit by this monster will take damage.
+	 * This monster collects the treasures it wants to take found on a dead body.
+	 * @post	Collects all anchored items of the other character 
+	 * 			when the current monster wants to take it
+	 * 			| wantsToTake(item)
+	 * @throws	IsDeadException
+	 * 			throws this exception when the current monster is dead.
 	 */
 	@Override
-	public void hit(Character character) {
+	public void collectTreasures(Character character) throws IsDeadException {
+		if (isDead()) {
+			throw new IsDeadException(this);
+		}
+		
+		if (character.isDead()) {
+			
+			Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
+			
+			for (Entry<Integer, Item> entry : set) {
+				Item item = entry.getValue();
+				if (wantsToTake(item)) { //iterate over all items on dead body and pickup all items you want
+					pickUp(item);
+				} else if (item.isArmor()) {
+					item.terminate();
+				} else if (item.isWeapon()) {
+					item.terminate();
+				}
+			}
+		}
+	}
+	
+	/**
+	 * This monster hits the given character.
+	 * @post	The character that was hit by this monster will take damage.
+	 * @throws	IsDeadException
+	 * 			throws this exception when the current monster is dead.
+	 */
+	@Override
+	public void hit(Character character) throws IsDeadException {
+		if (isDead()) {
+			throw new IsDeadException(this);
+		}
+		
 		int randomNumber = MathHelper.getRandomIntBetweenRange(0, 100);
 		
 		if (randomNumber > getHitpoints()) {
