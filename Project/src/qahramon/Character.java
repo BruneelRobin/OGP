@@ -426,6 +426,7 @@ public abstract class Character {
 	 * 			| item.drop();
 	 * @throws	DeadException
 	 * 			throws this exception when the current character is dead.
+	 * 			| isDead()
 	 */
 	public void unequip(int anchorId) throws DeadException {
 		if (isDead()) {
@@ -606,7 +607,7 @@ public abstract class Character {
 	 * This character hits the given character
 	 * @post	This character hits the given character
 	 * @throws	DeadException
-	 * 			throws this exception when the current monster is dead.
+	 * 			throws this exception when the current character is dead.
 	 */
 	public abstract void hit(Character character);
 	

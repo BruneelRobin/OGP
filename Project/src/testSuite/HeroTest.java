@@ -19,7 +19,7 @@ import org.junit.jupiter.api.*;
 class HeroTest {
 	
 	static Hero hero, deadHero;
-	static Monster monster, deadMonster;
+	static Monster monster, weakMonster, deadMonster;
 	static Weapon weapon1, weapon2, smallWeapon;
 	static Armor armor1, armor2, armor3;
 	static Purse purse;
@@ -34,6 +34,7 @@ class HeroTest {
 	public void setUp() {
 		hero = new Hero("LegalName", 97, 10);
 		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
+		weakMonster = new Monster("LegalName", 80, 0, 0, 5, 50);
 		weapon1 = new Weapon(10,5);
 		weapon2 = new Weapon(25,10);
 		smallWeapon = new Weapon(2,1);
@@ -195,9 +196,22 @@ class HeroTest {
 		}
 		assertEquals(monster.getHitpoints(), monster.getMaxHitpoints() - hero.getDamage());
 		assertTrue(monster.isFighting());
-		
 		assertThrows(DeadException.class, () -> { deadHero.hit(monster); });
 	}
+	
+	@Test
+	public void testHit_DeathBlow() {
+		hero.equip(AnchorType.RIGHT_HAND, weapon1);
+		weakMonster.pickUp(armor2);
+		hero.takeDamage(90);
+		while(weakMonster.getHitpoints() != 0) {
+			hero.hit(weakMonster);
+		}
+		assertFalse(hero.isFighting());
+		assertTrue(weakMonster.isDead());
+		assertTrue(hero.getHitpoints() > 7);
+		
+		}
 	
 	/**************************************************************************************
 	 * End of test of hit
