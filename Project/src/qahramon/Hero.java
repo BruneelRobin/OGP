@@ -345,15 +345,21 @@ public class Hero extends Character {
 		}
 		
 		else if (item.isBackpack()) {
-			return false;
-			
+			Backpack backpack = (Backpack) item;
+			if (backpack.getCapacity() > this.getBestBackpackCapaciy()) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 		
 		else if (item.isPurse()) {
+			Purse purse = (Purse) item;
+			if (purse.getCapacity() > this.getCapacity()) {
+				return true;
+			} else {
 			return false;
-			
-		} else {
-			return false;
+			}
 		}
 	}
 	
@@ -374,14 +380,84 @@ public class Hero extends Character {
 		if (character.isDead()) {
 		
 			Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
+			Set<Purse> purses = new HashSet<Purse>();
+			purses.add((Purse)this.getItemAt(AnchorType.BELT.getAnchorId()));
 			
 			for (Entry<Integer, Item> entry : set) {
 				Item item = entry.getValue();
-				if (wantsToTake(item)) { //iterate over all items on dead body and pickup all items you want
+				if (item.isBackpack()) {
+					Backpack backpack = (Backpack) item;
+					collectTreasures(backpack);
+				}
+				if (item.isPurse()) {
+					Purse purse = (Purse) item;
+					purses.add(purse);
+				} else {
+					if (wantsToTake(item)) { 
 					pickUp(item);
+					}
+				}
+			}
+			
+			Iterator<Purse> it = purses.iterator();
+		    while(it.hasNext()){
+		        if (wantsToTake(it.next())) {
+		        	pickUp(it.next());
+		        }
+		    }
+		    Purse thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+		    while(it.hasNext()) {
+		    	Purse nextPurse = (Purse) it.next();
+		    	if (thisPurse.canHaveAsContent(thisPurse.getContent() + nextPurse.getContent())) {
+		    		thisPurse.add(nextPurse);
+		    	}
+		    }
+		}
+	}
+	
+	/**
+	 * This hero collects the treasures it wants to take found in a backpack.
+	 * @post	Collects all items of a backpack.
+	 * 			when the current hero wants to take it
+	 * 			| wantsToTake(item)
+	 */
+	public void collectTreasures(Backpack backpack) throws DeadException {
+		if (isDead()) {
+			throw new DeadException(this);
+		}
+		
+		Set<Item> set = backpack.getItems();
+		Set<Purse> purses = new HashSet<Purse>();
+		purses.add((Purse)this.getItemAt(AnchorType.BELT.getAnchorId()));
+		
+		for (Item item : set) {
+			if (item.isBackpack()) {
+				Backpack backpack2 = (Backpack) item;
+				collectTreasures(backpack2);
+			}
+			if (item.isPurse()) {
+				Purse purse = (Purse) item;
+				purses.add(purse);
+			} else {
+				if (wantsToTake(item)) { 
+				pickUp(item);
 				}
 			}
 		}
+		
+		Iterator<Purse> it = purses.iterator();
+	    while(it.hasNext()){
+	        if (wantsToTake(it.next())) {
+	        	pickUp(it.next());
+	        }
+	    }
+	    Purse thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+	    while(it.hasNext()) {
+	    	Purse nextPurse = (Purse) it.next();
+	    	if (thisPurse.canHaveAsContent(thisPurse.getContent() + nextPurse.getContent())) {
+	    		thisPurse.add(nextPurse);
+	    	}
+	    }
 	}
 	
 	/**
