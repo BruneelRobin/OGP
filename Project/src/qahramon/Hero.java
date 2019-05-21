@@ -517,4 +517,13 @@ public class Hero extends Character {
 	
 	
 	
+	/**
+	 * Return a string containing all public data of this hero
+	 * @return Return a string containing all public data of this hero
+	 */
+	@Override
+	public String toString() {
+		return "Hero\n" + super.getString()
+				+ "\nStrength: " + getStrength() + "\n";
+	}
 }

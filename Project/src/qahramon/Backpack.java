@@ -463,4 +463,16 @@ public class Backpack extends Item implements Container {
 			}
 		}
 	}
+	
+	/**
+	 * Return a string containing all public data of this backpack
+	 * @return Return a string containing all public data of this backpack
+	 */
+	@Override
+	public String toString() {
+		return "Backpack\n" + super.getString()
+				+ "\nNumber of items: " + getItems().size() + "\nCapacity: " + getCapacity()
+				+ " kg\nTotal weight: " + 
+				getTotalWeight() + " kg\nTotal value: " + getTotalValue() + " ducates\n";
+	}
 }

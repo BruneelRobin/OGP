@@ -28,10 +28,10 @@ import java.util.HashSet;
  * @version 1.0 - 2019
  */
 
-// TODO Item legal en illegal cases, backpack ook, purse test case
+// TODO Purse test case
 //		annotations, monster collectTreasures in testen
 //		hero.collectTreasures
-//		UML
+//		UML, toString
 
 public abstract class Character {
 	
@@ -676,5 +676,22 @@ public abstract class Character {
 			}
 		}
 		return weight;
+	}
+	
+	/**
+	 * Return a string containing general data over this string
+	 * @return	Return a string containing data over its identification, value and weight
+	 */
+	protected String getString() {
+		return "Name: " + getName() 
+			+ "\nHitpoints: " + getHitpoints() 
+			+ "\nMaxHitpoints: " + getMaxHitpoints() 
+			+ "\nNumber of anchors: " + getNumberOfAnchors()
+			+ "\nEquipped items: " + getAnchorEntrySet().size()
+			+ "\nCapacity: " + getCapacity() 
+			+ "\nDamage: " + getDamage() 
+			+ "\nProtection: " + getProtection()
+			+ "\nTotal value: " + getTotalValue()
+			+ " ducates\nTotal weight: " + getTotalWeight() + " kg";
 	}
 }

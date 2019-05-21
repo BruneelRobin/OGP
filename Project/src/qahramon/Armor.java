@@ -276,5 +276,13 @@ public class Armor extends Item {
 		return super.getValue();
 	}
 	
-	
+	/**
+	 * Return a string containing all public data of this armor
+	 * @return Return a string containing all public data of this armor
+	 */
+	@Override
+	public String toString() {
+		return "Armor\n" + super.getString()
+				+ "\nProtection: " + getProtection() + "\n";
+	}
 }
