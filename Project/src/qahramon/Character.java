@@ -31,7 +31,7 @@ import java.util.HashSet;
 // TODO Purse test case
 //		annotations, monster collectTreasures in testen
 //		hero.collectTreasures
-//		UML, toString
+//		UML
 
 public abstract class Character {
 	
@@ -85,6 +85,7 @@ public abstract class Character {
 	 * 			and only contains letters, spaces and apostrophes
 	 * 			| name != null && name.matches("[A-Z][a-z' ]+")
 	 */
+	@Raw
 	public boolean canHaveAsName(String name) {
 		return (name != null && name.matches("[A-Z][A-Za-z' ]*"));
 	}
@@ -123,6 +124,7 @@ public abstract class Character {
 	 * Return the character's name
 	 * @return	Return the character's name
 	 */
+	@Basic
 	public String getName() {
 		return this.name;
 	}
@@ -141,6 +143,7 @@ public abstract class Character {
 	 * @return	Return true when the character can have the amount of hitpoints
 	 * @return	Return false when the character can't have the amount of hitpoints
 	 */
+	@Raw
 	public boolean canHaveAsHitpoints(int hitpoints) {
 		return hitpoints >= 0 && (isFighting() || MathHelper.isPrime(hitpoints));
 	}
@@ -154,6 +157,7 @@ public abstract class Character {
 	 * @post	The character's hitpoints are set to the given hitpoints.
 	 * 			| new.getHitpoints() == hitpoints
 	 */
+	@Raw
 	protected void setHitpoints(int hitpoints) {
 		this.hitpoints = hitpoints;
 	}
@@ -162,6 +166,7 @@ public abstract class Character {
 	 * Return the current amount of hitpoints
 	 * @return	Return the current amount of hitpoints
 	 */
+	@Basic
 	public int getHitpoints() {
 		return this.hitpoints;
 	}
@@ -191,6 +196,7 @@ public abstract class Character {
 	 * @post	Sets the current fighting state to the given state
 	 * 			| new.isFighting() == isFighting
 	 */
+	@Raw
 	protected void setFighting(boolean isFighting) {
 		this.isFighting = isFighting;
 	}
@@ -199,6 +205,7 @@ public abstract class Character {
 	 * Return the current fighting state of this character
 	 * @return	Return the current fighting state of this character
 	 */
+	@Basic
 	public boolean isFighting() {
 		return this.isFighting;
 	}
@@ -209,6 +216,7 @@ public abstract class Character {
 	 * @return	Return the current life state of this character.
 	 * 			| getHitpoints == 0
 	 */
+	@Raw
 	public boolean isDead() {
 		return getHitpoints() == 0;
 	}
@@ -327,6 +335,7 @@ public abstract class Character {
 	 * 			The item to set at the given anchorId
 	 * @post	Sets the item at the given anchor of this character
 	 */
+	@Raw
 	private void setItemAt(int anchorId, Item item) {
 		if (item == null) {
 			this.anchors.remove(anchorId);
@@ -341,6 +350,7 @@ public abstract class Character {
 	 * 			The anchorId of the item
 	 * @return	Return the item at the given anchorId
 	 */
+	@Basic
 	public Item getItemAt (int anchorId) {
 		return this.anchors.get(anchorId);
 	}
@@ -349,18 +359,23 @@ public abstract class Character {
 	 * Return true when the given item can be equipped in the given slot
 	 * @param 	item
 	 * 			the item to be checked
-	 * @return	Return false when the anchor id is lower than 0 and higher than the maximum anchors allowed
+	 * @return	Return false when this item is terminated
+	 * 			Return false when the anchor id is lower than 0 and higher than the maximum anchors allowed
+	 * 			Return false when the given item can't have this character
 	 * 			Return true when the item is owned by this player or the item is on the ground and able to
 	 * 			be picked up.
 	 * 			Return false otherwise
 	 * 			| result == (anchorId >= 0 && anchorId < getNumberOfAnchors()) && (item.getHolder == this
 	 * 			|			|| (item.getHolder() == null && canPickUp(item)))
 	 */
+	@Raw
 	public boolean canHaveAsItemAt(int anchorId, Item item) {
 		if (item.isTerminated()) {
 			return false;
 		}
 		else if (anchorId < 0 || anchorId >= getNumberOfAnchors()) {
+			return false;
+		} else if (!item.canHaveAsCharacter(this)) {
 			return false;
 		}
 		
@@ -482,6 +497,7 @@ public abstract class Character {
 	 * 			| result == !(item.getHolder() != null && !item.getHolder().isDead()) && 
 	 * 						!(this.getCapacity() < this.getTotalWeight() + totalWeightOfItem)
 	 */
+	@Raw
 	public boolean canPickUp(Item item) {
 		float totalWeightOfItem;
 		if(item.isContainer()) {
@@ -498,12 +514,15 @@ public abstract class Character {
 		else if(item.getHolder() != null && !item.getHolder().isDead()) {
 			return false;
 		}
+		else if(item.getHolder() == this) {
+			return false;
+		}
 		else if(this.getCapacity() < this.getTotalWeight() + totalWeightOfItem) {
 			return false;
 			
-			}
+		} else {
 		return true;
-			
+		}
 	}
 	
 	/**
@@ -548,9 +567,10 @@ public abstract class Character {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Return an entry set with all anchors attached
+	 * @return	Return an entry set with all anchors attached
 	 */
+	@Raw
 	public Set<Entry<Integer, Item>> getAnchorEntrySet () {
 		return this.anchors.entrySet();
 	}
@@ -569,7 +589,7 @@ public abstract class Character {
 	 * Return the number of anchors of this character
 	 * @return	Return the number of anchors of this character
 	 */
-	@Immutable
+	@Immutable@Basic
 	public int getNumberOfAnchors() {
 		return this.numberOfAnchors;
 	}
@@ -579,6 +599,7 @@ public abstract class Character {
 	 * @return	Return true when this item has proper items
 	 * 			Return false when this item doesn't have proper items
 	 */
+	@Raw
 	public boolean hasProperItems () {
 		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
 			if (!canHaveAsItemAt(entry.getKey(), entry.getValue())) { // false when not possible to reequip in same slot
@@ -633,6 +654,7 @@ public abstract class Character {
 	 * @return	Return the total value of this character in ducates calculated as the sum of the 
 	 * 			total values of each anchored item.
 	 */
+	@Raw
 	public int getTotalValue () {
 		int value = 0;
 		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
@@ -652,6 +674,7 @@ public abstract class Character {
 	 * @return	Return the total weight of this character in kg calculated as the sum of the
 	 * 			total weights of each anchored item.
 	 */
+	@Raw
 	public float getTotalWeight () {
 		float weight = 0;
 		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
@@ -664,6 +687,99 @@ public abstract class Character {
 			}
 		}
 		return weight;
+	}
+	
+	/**
+	 * Return the best armor of any owned armor
+	 * @return	Return the best armor of any owned armor
+	 * 		   
+	 * @note	The evaluation of the armor is based on its full protection.
+	 */
+	public Armor getBestArmor() {
+		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+		int bestFullProtection = 0;
+		Armor bestArmor = null;
+		for (Entry<Integer, Item> entry : set) {
+			Item item = entry.getValue();
+			if (item.isArmor()) {
+				Armor armor = (Armor) item;
+				int armorProtection = armor.getFullProtection();
+				if (armorProtection > bestFullProtection) {
+					bestFullProtection = armorProtection;
+					bestArmor = armor;
+				}
+			} else if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				Armor bestBackpackArmor = backpack.getBestArmor();
+				if (bestBackpackArmor != null && bestBackpackArmor.getFullProtection() > bestFullProtection) {
+					bestFullProtection = bestBackpackArmor.getFullProtection();
+					bestArmor = bestBackpackArmor;
+				}
+			}
+		}
+		return bestArmor;
+	}
+	
+	/**
+	 * Return the best armor of any owned weapon
+	 * @return	Return the best armor of any owned armor
+	 * 		   
+	 * @note	The evaluation of the weapon is based on its damage.
+	 */
+	public Weapon getBestWeapon() {
+		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+		int bestDamage = 0;
+		Weapon bestWeapon = null;
+		for (Entry<Integer, Item> entry : set) {
+			Item item = entry.getValue();
+			if (item.isWeapon()) {
+				Weapon weapon = (Weapon) item;
+				int weaponDamage = weapon.getDamage();
+				if (weaponDamage > bestDamage) {
+					bestDamage = weaponDamage;
+					bestWeapon = weapon;
+				}
+			} else if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				Weapon bestBackpackWeapon = backpack.getBestWeapon();
+				if (bestBackpackWeapon != null && bestBackpackWeapon.getDamage() > bestDamage) {
+					bestDamage = bestBackpackWeapon.getDamage();
+					bestWeapon = bestBackpackWeapon;
+				}
+			}
+		}
+		return bestWeapon;
+	}
+	
+	/**
+	 * Return the best backpack of any owned armor
+	 * @return	Return the best backpack of any owned armor
+	 * 		   
+	 * @note	The evaluation of the backpack is based on its capacity.
+	 */
+	public Backpack getBestBackpack() {
+		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+		float bestCapacity = 0;
+		Backpack bestBackpack = null;
+		for (Entry<Integer, Item> entry : set) {
+			Item item = entry.getValue();
+			if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				float backpackCapacity = backpack.getCapacity();
+				if (backpackCapacity > bestCapacity) {
+					bestCapacity = backpackCapacity;
+					bestBackpack = backpack;
+				}
+			} else if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				Backpack bestBackpackBackpack = backpack.getBestBackpack();
+				if (bestBackpackBackpack != null && bestBackpackBackpack.getCapacity() > bestCapacity) {
+					bestCapacity = bestBackpackBackpack.getCapacity();
+					bestBackpack = bestBackpackBackpack;
+				}
+			}
+		}
+		return bestBackpack;
 	}
 	
 	/**

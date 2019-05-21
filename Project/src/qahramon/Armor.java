@@ -44,7 +44,7 @@ public class Armor extends Item {
 	
 	public Armor(long identification, int protection, float weight, int fullValue) {
 		super(identification, weight, fullValue);
-		this.currentProtection = protection;
+		setProtection(protection);
 		this.fullProtection = protection;
 		armorIds.add(getIdentification());
 	}
@@ -58,6 +58,7 @@ public class Armor extends Item {
 	 * @return	Always return true since this item is an armor
 	 * 			| result == true
 	 */
+	@Basic@Immutable@Override@Raw
 	public boolean isArmor () {
 		return true;
 	}
@@ -70,7 +71,7 @@ public class Armor extends Item {
 	 * Return a valid identification number for this class
 	 * @return	Return a random valid identification number for this class
 	 */
-	@Override
+	@Override@Raw
 	protected long generateIdentification() {
 		long prime = MathHelper.getRandomPrime();
 		
@@ -90,7 +91,7 @@ public class Armor extends Item {
 	 * 			Return false when this armor can't have the given identification number
 	 * 			| result == MathHelper.isPrime(identification)
 	 */
-	@Override
+	@Override@Raw
 	public boolean canHaveAsIdentification(long identification) {
 		return (MathHelper.isPrime(identification) && identification>0);
 	}
@@ -103,7 +104,7 @@ public class Armor extends Item {
 	 * 			| result == canHaveAsIdentification (identification) 
 	 * 							&& !armorIds.contains(identification)
 	 */
-	@Override
+	@Override@Raw
 	public boolean canHaveAsNewIdentification (long identification) {
 		return canHaveAsIdentification (identification) && !armorIds.contains(identification);
 	}
@@ -133,7 +134,7 @@ public class Armor extends Item {
 	 * @return Returns the fullProtection of an armor
 	 * 		   | result == this.fullProtection
 	 */
-	@Basic
+	@Basic@Immutable
 	public int getFullProtection() {
 		return this.fullProtection;
 	}
@@ -160,7 +161,7 @@ public class Armor extends Item {
 	 */
 	@Raw
 	private void setProtection(int protection) {
-		currentProtection = protection;
+		this.currentProtection = protection;
 	
 	}
 	
@@ -171,6 +172,7 @@ public class Armor extends Item {
 	 * @return	Return true when the given protection lies between MIN_PROTECTION and its fullProtection
 	 * 			
 	 */
+	@Raw
 	public boolean canHaveAsProtection (int protection) {
 		return (protection >= MIN_PROTECTION && protection <= this.getFullProtection());
 	}
@@ -240,7 +242,7 @@ public class Armor extends Item {
 	 * Return the maximum value for this item
 	 * @return	Return the maximum value for this item
 	 */
-	@Immutable@Override
+	@Immutable@Override@Basic@Raw
 	public int getMaxValue () {
 		return 1000;
 	}
@@ -249,7 +251,7 @@ public class Armor extends Item {
 	 * Return the minimum value for this item
 	 * @return	Return the minimum value for this item
 	 */
-	@Immutable@Override
+	@Immutable@Override@Basic@Raw
 	public int getMinValue () {
 		return 0;
 	}
@@ -261,7 +263,7 @@ public class Armor extends Item {
 	 * 		   the current protection percentage of the armor. 
 	 * 		   | result == this.getValue()*(this.getProtection()/this.getFullProtection())
 	 */
-	@Override
+	@Override@Raw
 	public int getValue() { 
 		return (int)((float)this.getFullValue()*((float)this.getProtection()/(float)this.getFullProtection()));
 	}
@@ -272,6 +274,7 @@ public class Armor extends Item {
 	 * @return return the fullValue of the armor
 	 * 		   | result == super.getValue()
 	 */
+	@Basic@Immutable
 	public int getFullValue() {
 		return super.getValue();
 	}

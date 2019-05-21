@@ -77,6 +77,7 @@ public class Weapon extends Item {
 	 * @return	Always return true since this item is a weapon
 	 * 			| result == true
 	 */
+	@Basic@Immutable@Override@Raw
 	public boolean isWeapon () {
 		return true;
 	}
@@ -91,7 +92,7 @@ public class Weapon extends Item {
 	 * @return Returns a unique, positive long, divisible by 6.
 	 * 		   
 	 */
-	@Override
+	@Override@Raw
 	protected long generateIdentification() {
 		long flooredMax = Long.MAX_VALUE/6;
 		long generatedNumber = MathHelper.getRandomLongBetweenRange(0, flooredMax);
@@ -114,7 +115,7 @@ public class Weapon extends Item {
 	 * @note Uniqueness is always considered true, the chance of colliding is not zero, but neglectable (6.5*10^(-19)).
 	 * 			
 	 */
-	@Override
+	@Override@Raw
 	public boolean canHaveAsIdentification(long identification) {
 		return ((identification > -1) && (identification%6 == 0));
 
@@ -128,7 +129,7 @@ public class Weapon extends Item {
 	 * 			| result == canHaveAsIdentification (identification) 
 	 * 							&& !weaponIds.contains(identification)
 	 */
-	@Override
+	@Override@Raw
 	public boolean canHaveAsNewIdentification (long identification) {
 		return canHaveAsIdentification (identification) && !weaponIds.contains(identification);
 	}
@@ -184,6 +185,7 @@ public class Weapon extends Item {
 	 * @post	The damage is set to the given damage.
 	 * 			| new.getDamage() == damage
 	 */
+	@Raw
 	private void setDamage(int damage) {
 		this.damage = damage;
 	}
@@ -192,6 +194,7 @@ public class Weapon extends Item {
 	 * Return the damage of this weapon.
 	 * @return	Return the damage of this weapon.
 	 */
+	@Basic
 	public int getDamage() {
 		return this.damage;
 	}
@@ -246,7 +249,7 @@ public class Weapon extends Item {
 	 * Return the maximum value for this item
 	 * @return	Return the maximum value for this item
 	 */
-	@Immutable@Override
+	@Immutable@Override@Basic@Raw
 	public int getMaxValue () {
 		return 200;
 	}
@@ -255,7 +258,7 @@ public class Weapon extends Item {
 	 * Return the minimum value for this item
 	 * @return	Return the minimum value for this item
 	 */
-	@Immutable@Override
+	@Immutable@Override@Basic@Raw
 	public int getMinValue () {
 		return 0;
 	}
@@ -271,7 +274,7 @@ public class Weapon extends Item {
 	 * 		   the defined value factor. Clamp the result to make sure it lies between the MIN_VALUE and MAX_VALUE.
 	 * 		   | result == this.getDamage()*VALUE_FACTOR
 	 */
-	@Override
+	@Override@Raw
 	public int getValue() {
 		if(hasGivenValue == false) {
 		return MathHelper.clamp(this.getDamage()*VALUE_FACTOR, getMinValue(), getMaxValue()); 

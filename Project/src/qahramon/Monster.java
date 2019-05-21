@@ -49,20 +49,12 @@ public class Monster extends Character {
 	 * 			The number of anchors of this monster.
 	 * @param 	capacity
 	 * 			The carry capacity of this monster.
-	 * @effect	The new monster is set as a character with a given name, amount of hitpoints
-	 * 			and a number of anchors.
-	 * 			| super(name, hitpoints, numberOfAnchors)
-	 * @effect	The new monster is initialized with the given damage and protection
-	 * 			| initialize(damage, protection)
-	 * @post	The capacity of this monster is set to the given capacity or 0 when the given capacity is negative.
+	 * @effect	The new monster is set as a character with a given name, amount of hitpoints, a number of anchors
+	 * 			and no items attached
+	 * 			| this(name, hitpoints, damage, protection, numberOfAnchors, capacity, new HashSet<Item>())
 	 */
 	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity) throws IllegalArgumentException {
-		super(name, hitpoints, numberOfAnchors);
-		this.initialize(damage, protection);
-		if (capacity < 0) {
-			capacity = 0;
-		}
-		this.capacity = capacity;
+		this(name, hitpoints, damage, protection, numberOfAnchors, capacity, new HashSet<Item>());
 	}
 	
 	/**
@@ -81,22 +73,30 @@ public class Monster extends Character {
 	 * @param 	capacity
 	 * 			The carry capacity of this monster.
 	 * @param	items
+	 * @pre		The given damage is valid
+	 * 			| isValidDamage(damage)
+	 * @pre		The given protection is valid
+	 * 			| isValidProtection(protection)
 	 * 			The given set of items for this monster to carry.
 	 * @pre		The given number of anchors is equal to or higher than the amount of items to equip
 	 * 			| numberOfAnchors >= items.size()
 	 * @effect	The new monster is set as a character with a given name, amount of hitpoints
 	 * 			and a number of anchors.
 	 * 			| super(name, hitpoints, numberOfAnchors)
-	 * @effect	The new monster is initialized with the given damage and protection
-	 * 			| initialize(damage, protection)
 	 * @post	The capacity of this monster is set to the given capacity, if the capacity 
 	 * 			can handle the total weight of the given items. If not the capacity is set
 	 * 			to the total weight of the given items.
 	 * @post	Each item given in this constructor will be equipped, since all items are given in a set no order can be guaranteed
+	 * @post	The damage of this monster is set to the given damage.
+	 * 			| new.getDamage() == damage
+	 * @post	The protection of this monster is set to the given protection.
+	 * 			| new.getProtection() == protection
 	 */
 	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity, HashSet<Item> items) throws IllegalArgumentException {
 		super(name, hitpoints, numberOfAnchors);
-		this.initialize(damage, protection);
+		
+		this.damage = damage;
+		this.protection = protection;
 		
 		float totalWeight = 0;
 	    for (Item item : items) {
@@ -119,27 +119,6 @@ public class Monster extends Character {
 	        this.equip(anchorId, it.next());
 	        anchorId ++;
 	    }
-	
-	}
-	
-	/**
-	 * Initialize this monster with the given damage and protection
-	 * @param 	damage
-	 * 			The damage of this monster
-	 * @param 	protection
-	 * 			The protection of this monster
-	 * @pre		The given damage is valid
-	 * 			| isValidDamage(damage)
-	 * @pre		The given protection is valid
-	 * 			| isValidProtection(protection)
-	 * @post	The damage of this monster is set to the given damage.
-	 * 			| new.getDamage() == damage
-	 * @post	The protection of this monster is set to the given protection.
-	 * 			| new.getProtection() == protection
-	 */
-	private void initialize (int damage, int protection) {
-		setDamage(damage);
-		setProtection(protection);
 	}
 
 	
@@ -150,18 +129,7 @@ public class Monster extends Character {
 	/**
 	 * Variable referencing the damage of a monster.
 	 */
-	private int damage = 0;
-	
-	/**
-	 * Set the damage of a monster to a given amount of damage.
-	 * 
-	 * @param	damage
-	 * 			The new damage.
-	 * @post	The damage is set to the given damage.
-	 */
-	private void setDamage(int damage) {
-		this.damage = damage;
-	}
+	private final int damage;
 	
 	/**
 	 * Return true when the given damage is valid
@@ -178,6 +146,7 @@ public class Monster extends Character {
 	 * Return the damage of this monster.
 	 * @return	Return the damage of this monster.
 	 */
+	@Basic@Override
 	public int getDamage() {
 		return this.damage;
 	}
@@ -190,20 +159,8 @@ public class Monster extends Character {
 	/**
 	 * Variable referencing the protection of a monster.
 	 */
-	private int protection = 0;
+	private final int protection;
 	private static final int MAX_PROTECTION = 100;
-	
-	/**
-	 * Set the protection of a monster to a given amount of protection.
-	 * 
-	 * @param	protection
-	 * 			The new protection.
-	 * @post	The protection is set to the given protection.
-	 */
-	private void setProtection(int protection) {
-		this.protection = protection;
-	}
-	
 	
 	/**
 	 * Return true when the given protection is valid
@@ -220,7 +177,7 @@ public class Monster extends Character {
 	 * Return the protection of the monster
 	 * @return	Return the protection of the monster
 	 */
-	@Override
+	@Override@Basic
 	public int getProtection() {
 		return this.protection;
 	}
@@ -235,6 +192,7 @@ public class Monster extends Character {
 	 * Return the monster's capacity
 	 * @return Return the monster's capacity
 	 */
+	@Basic@Override@Immutable
 	public float getCapacity() {
 		return this.capacity;
 	}
