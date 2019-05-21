@@ -279,21 +279,14 @@ public class Weapon extends Item {
 		return super.getValue();
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	/**
+	 * Return a string containing all public data of this purse
+	 * @return Return a string containing all public data of this purse
+	 */
+	@Override
+	public String toString() {
+		return "Weapon\n" + super.getString()
+				+ "\nDamage: " + getDamage() + "\n";
+	}
 	
 }

@@ -41,45 +41,56 @@ class ItemTest {
 	}
 	
 	@Test
-	public void testClassTypes () {
+	public void testClassTypes_LegalCase () {
 		assertTrue(weapon.isWeapon());
+		
+		assertTrue(armor.isArmor());
+		
+		assertTrue(purse.isPurse());
+		
+		assertTrue(backpack.isBackpack());
+	}
+	
+	@Test
+	public void testClassTypes_IllegalCase () {
 		assertFalse(armor.isWeapon());
 		assertFalse(purse.isWeapon());
 		assertFalse(backpack.isWeapon());
 		
 		assertFalse(weapon.isArmor());
-		assertTrue(armor.isArmor());
 		assertFalse(purse.isArmor());
 		assertFalse(backpack.isArmor());
 		
 		assertFalse(weapon.isPurse());
 		assertFalse(armor.isPurse());
-		assertTrue(purse.isPurse());
 		assertFalse(backpack.isPurse());
 		
 		assertFalse(weapon.isBackpack());
 		assertFalse(armor.isBackpack());
 		assertFalse(purse.isBackpack());
-		assertTrue(backpack.isBackpack());
 	}
 	
 	@Test
 	public void testTerminate () {
 		assertFalse(weapon.isTerminated());
-		
 		assertTrue(terminatedWeapon.isTerminated());
+		
 		assertEquals(terminatedWeapon.getCharacter(), null);
 		assertEquals(terminatedWeapon.getHolder(), null);
 	}
 	
 	@Test
-	public void testIsValidWeight () {
-		assertFalse(Item.isValidWeight(-10f));
+	public void testIsValidWeight_LegalCase () {
 		assertTrue(Item.isValidWeight(10f));
 	}
 	
 	@Test
-	public void testAnchor () {
+	public void testIsValidWeight_IllegalCase () {
+		assertFalse(Item.isValidWeight(-10f));
+	}
+	
+	@Test
+	public void testCharacter () {
 		assertEquals(weapon.getCharacter(), null);
 		monster.equip(2,weapon);
 		assertEquals(weapon.getCharacter(), monster);
@@ -92,14 +103,32 @@ class ItemTest {
 		assertEquals(weapon.getParentBackpack(), backpack);
 	}
 	
+	
+	/**************************************************************************************
+	 * Test of adding an object to a backpack
+	 ***************************************************************************************/
+	
+	
 	@Test
-	public void testMoveTo () {
+	public void testMoveTo_LegalCase () {
 		assertEquals(weapon.getParentBackpack(), null);
 		weapon.moveTo(backpack);
 		assertEquals(weapon.getParentBackpack(), backpack);
-		
+	}
+	
+	@Test
+	public void testMoveTo_IllegalCase () {
 		assertThrows(TerminatedException.class, () -> { terminatedWeapon.moveTo(backpack); });
 	}
+	
+	/**************************************************************************************
+	 * End of test of adding an object to a backpack
+	 ***************************************************************************************/
+	
+	
+	/**************************************************************************************
+	 * Test of taking away an item from an anchor
+	 ***************************************************************************************/
 	
 	@Test
 	public void testDrop () {
@@ -117,6 +146,10 @@ class ItemTest {
 		assertEquals(weapon.getCharacter(), null);
 		assertFalse(monster.hasItem(weapon));
 	}
+	
+	/**************************************************************************************
+	 * End of test of taking away an item from an anchor
+	 ***************************************************************************************/
 	
 	@Test
 	public void testGetHolder () {

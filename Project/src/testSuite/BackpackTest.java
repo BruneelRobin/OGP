@@ -66,8 +66,12 @@ class BackpackTest {
 	}
 	
 	@Test
-	public void testIsValidCapacity() {
+	public void testIsValidCapacity_LegalCase() {
 		assertTrue(Backpack.isValidCapacity(10f));
+	}
+	
+	@Test
+	public void testIsValidCapacity_IllegalCase() {
 		assertFalse(Backpack.isValidCapacity(-10f));
 	}
 	
@@ -80,7 +84,12 @@ class BackpackTest {
 	}
 	
 	@Test
-	public void testCanHaveAsItem() {
+	public void testCanHaveAsItem_LegalCase() {
+		assertTrue(backpack.canHaveAsItem(weapon));
+	}
+	
+	@Test
+	public void testCanHaveAsItem_IllegalCase() {
 		assertFalse(backpack.canHaveAsItem(terminatedWeapon));
 		assertFalse(terminatedBackpack.canHaveAsItem(weapon));
 		assertFalse(backpack.canHaveAsItem(purse));
