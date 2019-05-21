@@ -60,6 +60,7 @@ public class Purse extends Item implements Container {
 	 * @return	Always return true since this item is a purse
 	 * 			| result == true
 	 */
+	@Basic@Immutable@Override@Raw
 	public boolean isPurse () {
 		return true;
 	}
@@ -76,7 +77,7 @@ public class Purse extends Item implements Container {
 	 * 		   The uniqueness of the generated long is always considered true
 	 * 		   The chance of colliding is not zero, but neglectable (5.4*10^(-20))
 	 */
-	@Override
+	@Override@Raw
 	protected long generateIdentification() {
 		long candidate = MathHelper.getRandomLong();
 		
@@ -95,7 +96,7 @@ public class Purse extends Item implements Container {
 	 * 			Return false when this item can't have the given identification number
 	 * 			| result == true
 	 */
-	@Override
+	@Override@Raw
 	public boolean canHaveAsIdentification(long identification) {
 		return true;
 	}
@@ -108,7 +109,7 @@ public class Purse extends Item implements Container {
 	 * 			| result == canHaveAsIdentification (identification) 
 	 * 							&& ids.contains(identification) == false
 	 */
-	@Override
+	@Override@Raw
 	public boolean canHaveAsNewIdentification (long identification) {
 		return canHaveAsIdentification (identification) && ids.contains(identification) == false;
 	}
@@ -132,7 +133,7 @@ public class Purse extends Item implements Container {
 	 * Return the capacity of this container
 	 * @return	Return the capacity of this container
 	 */
-	@Basic
+	@Basic@Immutable@Raw
 	public int getCapacity() {
 		return this.capacity;
 	}
@@ -159,7 +160,7 @@ public class Purse extends Item implements Container {
 	 * Return the torn state of this container
 	 * @return	Return the torn state of this container
 	 */
-	@Basic
+	@Basic@Raw
 	public boolean isTorn() {
 		return this.isTorn;
 	}
@@ -171,6 +172,7 @@ public class Purse extends Item implements Container {
 	 * @post	the new torn state is set to the given state
 	 * 			| new.isTorn() == isTorn
 	 */
+	@Raw
 	private void setTorn (boolean isTorn) {
 		this.isTorn = isTorn;
 	}
@@ -198,7 +200,7 @@ public class Purse extends Item implements Container {
 	 * Return the content of this container
 	 * @return	Return the content of this container
 	 */
-	@Basic
+	@Basic@Raw
 	public int getContent() {
 		return this.content;
 	}
@@ -224,6 +226,7 @@ public class Purse extends Item implements Container {
 	 * 			| result == content >= 0 && content <= getCapacity() && (this.getHolder() == null || 
 	 * 						this.getHolder().getCapacity() - this.getHolder().getTotalWeight() >= (content - getContent())*getDucateWeight())
 	 */
+	@Raw
 	public boolean canHaveAsContent (int content) {
 		float newWeight = (content - getContent())*getDucateWeight();
 		boolean validWeight =  (this.getHolder() == null || this.getHolder().getCapacity() - this.getHolder().getTotalWeight() >= newWeight);
@@ -341,6 +344,7 @@ public class Purse extends Item implements Container {
 	 * Return the weight of one ducate
 	 * @return	Return the weight of one ducate
 	 */
+	@Basic@Immutable@Raw
 	public static float getDucateWeight () {
 		return DUCATE_WEIGHT;
 	}
@@ -350,6 +354,7 @@ public class Purse extends Item implements Container {
 	 * @return	Return the total weight this purse: weight of the purse combined with weiht of its content.
 	 * 			| result == (this.getContent() * DUCATE_WEIGHT) + this.getWeight()
 	 */
+	@Raw
 	public float getTotalWeight() {
 		return ((float)(this.getContent())*DUCATE_WEIGHT + this.getWeight());
 	}
@@ -358,7 +363,7 @@ public class Purse extends Item implements Container {
 	 * Return the maximum value for this item
 	 * @return	Return the maximum value for this item
 	 */
-	@Immutable@Override
+	@Immutable@Override@Basic@Raw
 	public int getMaxValue () {
 		return 0;
 	}
@@ -367,7 +372,7 @@ public class Purse extends Item implements Container {
 	 * Return the minimum value for this item
 	 * @return	Return the minimum value for this item
 	 */
-	@Immutable@Override
+	@Immutable@Override@Basic@Raw
 	public int getMinValue () {
 		return 0;
 	}
@@ -377,6 +382,7 @@ public class Purse extends Item implements Container {
 	 * @return	Return the total value of this purse in ducates
 	 * 			| result == this.getContent()
 	 */
+	@Raw
 	public int getTotalValue() {
 		return this.getContent();
 	}

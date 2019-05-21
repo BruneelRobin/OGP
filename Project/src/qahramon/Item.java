@@ -12,6 +12,10 @@ import qahramon.exceptions.TerminatedException;
  * 			| isValidWeight(getWeight())
  * @invar	Each item must have a valid value
  * 			| canHaveAsValue(getValue())
+ * @invar	Each item must have a proper character when bound
+ * 			| getCharacter() == null || hasProperCharacter()
+ * @invar	Each item must have a proper parent backpack when bound
+ * 			| getParentBackpack() == null || hasProperParentBackpack()
  * 
  * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
@@ -100,6 +104,7 @@ public abstract class Item {
 	 * @return	Return true when this item is a weapon
 	 * 			Return false otherwise
 	 */
+	@Basic@Immutable@Raw
 	public boolean isWeapon () {
 		return false;
 	}
@@ -109,6 +114,7 @@ public abstract class Item {
 	 * @return	Return true when this item is an armor
 	 * 			Return false otherwise
 	 */
+	@Basic@Immutable@Raw
 	public boolean isArmor () {
 		return false;
 	}
@@ -118,6 +124,7 @@ public abstract class Item {
 	 * @return	Return true when this item is a backpack
 	 * 			Return false otherwise
 	 */
+	@Basic@Immutable@Raw
 	public boolean isBackpack () {
 		return false;
 	}
@@ -127,6 +134,7 @@ public abstract class Item {
 	 * @return	Return true when this item is a purse
 	 * 			Return false otherwise
 	 */
+	@Basic@Immutable@Raw
 	public boolean isPurse () {
 		return false;
 	}
@@ -135,6 +143,7 @@ public abstract class Item {
 	 * Return true when this item is a purse or backpack
 	 * @return 	Return true when this item is a purse or backpack
 	 */
+	@Immutable@Raw
 	public boolean isContainer () {
 		return isBackpack() || isPurse();
 	}
@@ -150,7 +159,7 @@ public abstract class Item {
 	 * @return	Return true when this item is terminated
 	 * 			Return false otherwise
 	 */
-	@Basic
+	@Basic@Raw
 	public boolean isTerminated() {
 		return this.isTerminated;
 	}
@@ -176,7 +185,7 @@ public abstract class Item {
 	 * Return the item's identification
 	 * @return Return the item's identification
 	 */
-	@Immutable
+	@Immutable@Basic@Raw
 	public long getIdentification() {
 		return this.identification;
 	}
@@ -190,6 +199,7 @@ public abstract class Item {
 	 * @return	Return true when this class can have this id as identification where id doesn't have to be 
 	 * 			unique
 	 */
+	@Raw
 	public abstract boolean canHaveAsIdentification(long identification);
 	
 	/**
@@ -197,12 +207,14 @@ public abstract class Item {
 	 * @return	Return true when this class can have this id as identification where the given id has to 
 	 * 			be unique
 	 */
+	@Raw
 	public abstract boolean canHaveAsNewIdentification(long identification);
 	
 	/**
 	 * Return a valid id for this item
 	 * @return	Return a valid id for this item
 	 */
+	@Raw
 	protected abstract long generateIdentification();
 
 	
@@ -216,6 +228,7 @@ public abstract class Item {
 	 * Returns the item's weight
 	 * @return Returns the item's weight
 	 */
+	@Basic@Immutable@Raw
 	public float getWeight() {
 		return this.weight;
 	}
@@ -236,7 +249,7 @@ public abstract class Item {
 	 * Return the default weight
 	 * @return	Return the default weight
 	 */
-	@Immutable
+	@Immutable@Basic
 	public float getDefaultWeight () {
 		return 100f;
 	}
@@ -253,20 +266,21 @@ public abstract class Item {
 	 * Return the maximum value for this item
 	 * @return	Return the maximum value for this item
 	 */
-	@Immutable
+	@Immutable@Basic
 	public abstract int getMaxValue ();
 	
 	/**
 	 * Return the minimum value for this item
 	 * @return	Return the minimum value for this item
 	 */
-	@Immutable
+	@Immutable@Basic
 	public abstract int getMinValue ();
 	
 	/**
 	 * Returns the item's value 
 	 * @return Returns the item's value
 	 */
+	@Basic@Raw
 	public int getValue() {
 		return this.value;
 	}
@@ -291,6 +305,7 @@ public abstract class Item {
 	 * @return returns false if the given value does not lie between the minimum and maximum.
 	 * 
 	 */
+	@Raw
 	public boolean canHaveAsValue(int value) {
 		return (value >= getMinValue() && value <= getMaxValue());
 	}
@@ -305,6 +320,7 @@ public abstract class Item {
 	 * Returns the item's character
 	 * @return Returns the item's character
 	 */
+	@Basic
 	public Character getCharacter() {
 		return this.character;
 	}
@@ -316,6 +332,7 @@ public abstract class Item {
 	 * @post  The character is set to the given character
 	 * 		  | new.getCharacter() == anchor
 	 */
+	@Raw
 	private void setCharacter(Character character) {
 		this.character = character;
 	}
@@ -341,6 +358,28 @@ public abstract class Item {
 		
 	}
 	
+	/**
+	 * Return true when this item has a proper character
+	 * @return	Return true when this item has a proper character
+	 * 			| result == canHaveAsCharacter(getCharacter()) && getCharacter().hasItem(this)
+	 */
+	@Raw
+	public boolean hasProperCharacter () {
+		return canHaveAsCharacter(getCharacter()) && getCharacter().hasItem(this);
+	}
+	
+	/**
+	 * Return true when this item can have the given character
+	 * @param 	character
+	 * 			The character to check
+	 * @return	Return true when the given character is not null
+	 * 			| result == character != null
+	 */
+	@Raw
+	public boolean canHaveAsCharacter (Character character) {
+		return character != null;
+	}
+	
 	/***********************
 	 * ParentBackpack
 	 ***********************/
@@ -350,6 +389,7 @@ public abstract class Item {
 	 * Returns the item's parentBackpack
 	 * @return Returns the item's parentBackpack
 	 */
+	@Basic
 	public Backpack getParentBackpack() {
 		return this.parentBackpack;
 	}
@@ -361,8 +401,31 @@ public abstract class Item {
 	 * @post  The parentBackpack is set to the given parentBackpack
 	 * 		  | new.getParentBackpack() == backpack
 	 */
+	@Raw
 	private void setParentBackpack(Backpack backpack) {
 		this.parentBackpack = backpack;
+	}
+	
+	/**
+	 * Return true when this item has a proper backpack
+	 * @return	Return true when this item has a proper backpack
+	 * 			| result == canHaveAsParentBackpack(getParentBackpack()) && getParentBackpack().contains(this)
+	 */
+	@Raw
+	public boolean hasProperParentBackpack () {
+		return canHaveAsParentBackpack(getParentBackpack()) && getParentBackpack().contains(this);
+	}
+	
+	/**
+	 * Return true when this item can have the given backpack
+	 * @param 	backpack
+	 * 			The backpack to check
+	 * @return	Return true when the given backpack is not null
+	 * 			| result == backpack != null
+	 */
+	@Raw
+	public boolean canHaveAsParentBackpack (Backpack backpack) {
+		return backpack != null && backpack.canHaveAsItem(this);
 	}
 	
 	/**
@@ -382,7 +445,7 @@ public abstract class Item {
 		if (this.isTerminated()) {
 			throw new TerminatedException(this);
 		}
-		else if (!backpack.canHaveAsItem(this)) {
+		else if (!canHaveAsParentBackpack(backpack)) {
 			throw new IllegalArgumentException ("The given backpack can't have this item");
 		}
 		

@@ -47,7 +47,7 @@ public class Backpack extends Item implements Container {
 	public Backpack (float capacity, float weight, int value) {
 		super(weight, value);
 		
-		setCapacity(capacity);
+		this.capacity = capacity;
 		backpackCount ++;
 	}
 	
@@ -60,6 +60,7 @@ public class Backpack extends Item implements Container {
 	 * @return	Always return true since this item is a backpack
 	 * 			| result == true
 	 */
+	@Basic@Immutable@Override@Raw
 	public boolean isBackpack () {
 		return true;
 	}
@@ -74,7 +75,7 @@ public class Backpack extends Item implements Container {
 	 * 			coefficients in the nth row with n the backpack count after creating this class.
 	 * 			| result == 2^(backpackCount+1)
 	 */
-	@Override
+	@Override@Raw
 	protected long generateIdentification() {
 		long n = backpackCount+1;
 		/*long prev = 1L;
@@ -94,7 +95,7 @@ public class Backpack extends Item implements Container {
 	 * 			Return false when this item can't have the given identification number
 	 * 			| result == identification % 2 == 0
 	 */
-	@Override
+	@Override@Raw
 	public boolean canHaveAsIdentification(long identification) {
 		return identification % 2 == 0;
 	}
@@ -107,40 +108,24 @@ public class Backpack extends Item implements Container {
 	 * 			| result == canHaveAsIdentification (identification) 
 	 * 							&& identification == generateIdentification()
 	 */
-	@Override
+	@Override@Raw
 	public boolean canHaveAsNewIdentification (long identification) {
 		return canHaveAsIdentification (identification) && identification == generateIdentification();
 	}
-	
-
-	
-	
-	
 	
 	/*******************************
 	 * Capacity - total programming
 	 *******************************/
 	
-	private float capacity;
+	private final float capacity;
 	
 	/**
 	 * Return the capacity of this container
 	 * @return	Return the capacity of this container
 	 */
-	@Basic
+	@Basic@Immutable@Raw
 	public float getCapacity() {
 		return this.capacity;
-	}
-	
-	/**
-	 * Set the capacity of this container
-	 * @param 	capacity
-	 * 			the new capacity
-	 * @post	the new capacity is set to the given capacity
-	 * 			| new.getCapacity() == capacity
-	 */
-	private void setCapacity(float capacity) {
-		this.capacity = capacity;
 	}
 	
 	/**
@@ -178,6 +163,7 @@ public class Backpack extends Item implements Container {
 	 * @param 	list
 	 * 			the value used in the dictionary
 	 */
+	@Raw
 	private void setContent (long id, HashSet<Item> list) {
 		this.content.put(id, list);
 	}
@@ -188,6 +174,7 @@ public class Backpack extends Item implements Container {
 	 * 			The key of the dictionary
 	 * @return	Return the list at the given id
 	 */
+	@Basic@Raw
 	private HashSet<Item> getListAt (long id) {
 		return this.content.get(id);
 	}
@@ -255,9 +242,9 @@ public class Backpack extends Item implements Container {
 	 * 			Return false when the given item is a direct or indirect parent backpack of this backpack
 	 * 			Return false when the weight of the backpack with this item is higher than the capacity 
 	 * 			of this backpack.
-	 * 			Return true otherwise.
-	 * 			
+	 * 			Return true otherwise.		
 	 */
+	@Raw
 	public boolean canHaveAsItem (Item item) {
 		if (this.isTerminated() || item.isTerminated()) {
 			return false;
@@ -284,6 +271,7 @@ public class Backpack extends Item implements Container {
 	 * @return	Return true when the given backpack is a direct or indirect parent backpack of this backpack
 	 * 			Return false when the given backpack is not a direct or indirect parent backpack of this backpack
 	 */
+	@Raw
 	public boolean isDirectOrIndirectSubBackpackOf (Backpack backpack) {
 		Backpack parent = this.getParentBackpack();
 		while (parent != null) {
@@ -333,6 +321,7 @@ public class Backpack extends Item implements Container {
 	 * Return a set with all the item of this backpack
 	 * @return Return a set with all the item of this backpack
 	 */
+	@Raw
 	public Set<Item> getItems () {
 		HashSet<Item> itemSet = new HashSet<Item> ();
 		
@@ -350,6 +339,7 @@ public class Backpack extends Item implements Container {
 	 * @Return	Return true when this backpack has proper items
 	 * 			Return false when this backpack doesn't have proper items
 	 */
+	@Raw
 	public boolean hasProperItems () {
 		for (Item item : getItems()) {
 			if (!canHaveAsItem(item)) {
@@ -366,7 +356,7 @@ public class Backpack extends Item implements Container {
 	 * Return the maximum value for this item
 	 * @return	Return the maximum value for this item
 	 */
-	@Immutable@Override
+	@Immutable@Override@Basic@Raw
 	public int getMaxValue () {
 		return 500;
 	}
@@ -375,7 +365,7 @@ public class Backpack extends Item implements Container {
 	 * Return the minimum value for this item
 	 * @return	Return the minimum value for this item
 	 */
-	@Immutable@Override
+	@Immutable@Override@Basic@Raw
 	public int getMinValue () {
 		return 0;
 	}
@@ -401,6 +391,7 @@ public class Backpack extends Item implements Container {
 	 * @return	Return the total weight of this backpack, this is calculated using the own weight
 	 * 			of this backpack and the weight of all descendants in this backpack
 	 */
+	@Raw
 	public float getTotalWeight() {
 		float totalWeight = getWeight();
 		for (Item item : getItems()) {
@@ -420,6 +411,7 @@ public class Backpack extends Item implements Container {
 	 * @return	Return the total value of this purse in ducates
 	 * 			| result == this.getContent()
 	 */
+	@Raw
 	public int getTotalValue() {
 		int totalValue = getValue();
 		for (Item item : getItems()) {
@@ -431,7 +423,7 @@ public class Backpack extends Item implements Container {
 		}
 		
 		return totalValue;
-		}
+	}
 	
 	/**
 	 * Return the amount of armor's in this backpack

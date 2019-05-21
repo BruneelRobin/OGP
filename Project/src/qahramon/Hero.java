@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import be.kuleuven.cs.som.annotate.*;
 import qahramon.exceptions.DeadException;
 
 import java.util.Map.Entry;
@@ -38,28 +39,12 @@ public class Hero extends Character {
 	 * 			The amount of hitpoints of this hero.
 	 * @param 	strength
 	 * 			The strength of this hero.
-	 * @effect	The new hero is set as a character with a given name, amount of hitpoints
-	 * 			and a default number of anchors.
-	 * 			| super(name, hitpoints, AnchorTypes.values().length)
-	 * @post	The strength of this hero is set to the given strength
-	 * 			| new.getStrength() == strength
-	 * @effect	Gives starter gear to this hero
-	 * 			| giveStarterGear()
-	 * @throws	IllegalArgumentException
-	 * 			Throws this exception when the given name is not valid
-	 * 			| !isValidName(name)
+	 * @effect	The new hero is set as a character with a given name, amount of hitpoints,
+	 * 			a default number of anchors and starter gear
+	 * 			| this(name, hitpoints, strength, getStarterGear())
 	 */
 	public Hero(String name, int hitpoints, float strength) throws IllegalArgumentException {
-		super(name, hitpoints, AnchorType.values().length); // length of anchortypes
-		
-		if(!isValidStrength(strength)) {
-			setStrength(0);
-		}
-		else {
-			setStrength(strength);
-		}
-		
-		giveStarterGear();
+		this(name, hitpoints, strength, getStarterGear());
 	}
 	
 	/**
@@ -75,7 +60,9 @@ public class Hero extends Character {
 	 * @effect	The new hero is set as a character with a given name, amount of hitpoints
 	 * 			and a default number of anchors.
 	 * 			| super(name, hitpoints, AnchorTypes.values().length)
-	 * @post	The strength of this hero is set to the given strength
+	 * @post	When the given strength is higher than the default strength, the hero's
+	 * 			strength is set to the given strength,
+	 * 			otherwise the default strength is set.
 	 * 			| new.getStrength() == strength
 	 * @post	Equips the given items on the given slots of this hero
 	 * 			Only equips what this hero can wear, all other items are dropped.
@@ -87,7 +74,7 @@ public class Hero extends Character {
 		super(name, hitpoints, AnchorType.values().length); // length of anchortypes
 		
 		if(!isValidStrength(strength)) {
-			setStrength(0);
+			setStrength(getDefaultStrength());
 		}
 		else {
 			setStrength(strength);
@@ -113,7 +100,7 @@ public class Hero extends Character {
 	 * @note	Matches the given characters starting with a capital letter and returns false when it 
 	 * 			contains a : without a space or 3 apostrophes
 	 */
-	@Override
+	@Override@Raw
 	public boolean canHaveAsName(String name) {
 		return (name != null && name.matches("(?![^:]*:([^ ]|$))(?![^']*'[^']*'[^']*')[A-Z][A-Za-z' :]*"));
 	}
@@ -124,14 +111,15 @@ public class Hero extends Character {
 	 *******************************/
 	
 	private int strengthInteger;
-	private static float strengthPrecision = 0.01f;
+	private final static float STRENGTH_PRECISION = 0.01f;
 	
 	/**
 	 * Return the internal precision of the float strength
 	 * @return	Return the internal precision of the float strength
 	 */
+	@Basic@Immutable
 	public static float getStrengthPrecision () {
-		return strengthPrecision;
+		return STRENGTH_PRECISION;
 	}
 	
 	/**
@@ -142,13 +130,14 @@ public class Hero extends Character {
 	 * 			| strength >= 0
 	 */
 	public static boolean isValidStrength(float strength) {
-		return strength >= 0;
+		return strength >= getDefaultStrength();
 	}
 	
 	/**
 	 * Returns the character's strength
 	 * @return Returns the character's strength
 	 */
+	@Basic
 	public float getStrength() {
 		return ((float)strengthInteger) * getStrengthPrecision();
 	}
@@ -178,7 +167,7 @@ public class Hero extends Character {
 			factor = 1;
 		}
 		this.setStrength(this.getStrength()*factor);
-		}
+	}
 	
 	/**
 	 * Decrease the hero's strength, by dividing by the given divisor.
@@ -194,8 +183,17 @@ public class Hero extends Character {
 			divisor = 1;
 		}
 		this.setStrength(this.getStrength()/divisor);
-		}
+	}
 	
+	private static final float DEFAULT_STRENGTH = 0.5f;
+	
+	/**
+	 * Return the default strenght of this character
+	 * @return	Return the default strength of this character
+	 */
+	public static float getDefaultStrength () {
+		return DEFAULT_STRENGTH;
+	}
 	
 	/***********************
 	 * Capacity
@@ -208,6 +206,7 @@ public class Hero extends Character {
 	 * Return the hero's capacity
 	 * @return Return the hero's capacity
 	 */
+	@Override
 	public float getCapacity() {
 		return CAPACITY_FACTOR*this.getStrength();
 	}
@@ -315,6 +314,7 @@ public class Hero extends Character {
 	 * @throws	DeadException
 	 * 			throws this exception when the current hero is dead.
 	 */
+	@Override
 	public void hit(Character character) throws DeadException {
 		if (isDead()) {
 			throw new DeadException(this);
@@ -418,7 +418,7 @@ public class Hero extends Character {
 	 * @return	Return true when the given item can be equipped
 	 * 			| ...
 	 */
-	@Override
+	@Override@Raw
 	public boolean canHaveAsItemAt(int anchorId, Item item) {
 		if (super.canHaveAsItemAt(anchorId, item)) {
 			if (AnchorType.getTypeFromId(anchorId).holdsPurse() == true) {
@@ -463,6 +463,7 @@ public class Hero extends Character {
 	 * Return the amount of armor's equipped by this character
 	 * @return	Return the amount of armor's equipped by this character also looks inside anchored backpacks
 	 */
+	@Raw
 	public int getArmorCount () {
 		int armorCount = 0;
 		
@@ -478,33 +479,30 @@ public class Hero extends Character {
 	}
 	
 	private static final int DEFAULT_ARMOR_PROTECTION = 15;
-	private static final int DEFAULT_ARMOR_WEIGHTPERCENTAGE = 10;
+	private static final float DEFAULT_ARMOR_WEIGHT = 4f;
 	private static final int DEFAULT_FULLVALUE = 100;
 	
 	private static final int DEFAULT_PURSE_CAPACITY = 100;
 	private static final float DEFAULT_PURSE_WEIGHT = 0.5f;
 	
 	/**
-	 * Generate and equip the starter gear for a hero.
-	 * @post	Equips a starter armor and starter purse to this hero, the weights of these items will
+	 * Return the starter gear for a hero.
+	 * @return	Return a starter armor and starter purse for this hero, the weights of these items will
 	 * 			be scaled so this hero can always equip the gear
-	 * @throws	DeadException
-	 * 			throws this exception when the current character is dead.
 	 */
-	private void giveStarterGear() throws DeadException {
-		if (isDead()) {
-			throw new DeadException(this);
-		}
+	private static HashMap<AnchorType, Item> getStarterGear() {
 		
-		float armorWeight = this.getCapacity()/DEFAULT_ARMOR_WEIGHTPERCENTAGE;
-		Armor starterArmor = new Armor(MathHelper.getRandomPrime(), DEFAULT_ARMOR_PROTECTION, armorWeight, DEFAULT_FULLVALUE);
+		Armor starterArmor = new Armor(MathHelper.getRandomPrime(), DEFAULT_ARMOR_PROTECTION, DEFAULT_ARMOR_WEIGHT, DEFAULT_FULLVALUE);
 		
-		int maxContent = (int)(((float)this.getCapacity() - armorWeight - DEFAULT_PURSE_WEIGHT)/Purse.getDucateWeight());
-		int randomContent = MathHelper.getRandomIntBetweenRange(0, Math.min(maxContent, DEFAULT_PURSE_CAPACITY)); 
+		//int maxContent = (int)(((float)this.getCapacity() - armorWeight - DEFAULT_PURSE_WEIGHT)/Purse.getDucateWeight());
+		int randomContent = MathHelper.getRandomIntBetweenRange(0, DEFAULT_PURSE_CAPACITY); 
 		Purse starterPurse = new Purse(DEFAULT_PURSE_WEIGHT, DEFAULT_PURSE_CAPACITY , randomContent);
 		
-		this.equip(AnchorType.BODY, starterArmor);
-		this.equip(AnchorType.BELT, starterPurse);
+		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
+		items.put(AnchorType.BODY, starterArmor);
+		items.put(AnchorType.BELT, starterPurse);
+		
+		return items;
 	}
 	
 	/**
