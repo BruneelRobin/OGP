@@ -123,9 +123,34 @@ class ItemTest {
 		armor.moveTo(smallBackpack);
 		assertTrue(smallBackpack.contains(armor));
 		assertThrows(IllegalArgumentException.class, () -> {weapon.moveTo(smallBackpack);});
-		
-		
 	}
+		
+	@Test
+	public void testMoveTo_TerminatedBackpack() {
+		backpack.terminate();
+		assertTrue(backpack.isTerminated());
+		assertThrows(IllegalArgumentException.class, () -> {weapon.moveTo(backpack);});
+	}
+	
+	@Test
+	public void testMoveTo_Purse() {
+		assertThrows(IllegalArgumentException.class, () -> {purse.moveTo(backpack);});
+	}
+	
+	@Test
+	public void testMoveTo_ToChild() {
+		backpack2.moveTo(backpack);
+		assertTrue(backpack.contains(backpack2));
+		assertThrows(IllegalArgumentException.class, () -> {backpack.moveTo(backpack2);});
+	}
+	
+	@Test
+	public void testMoveTo_InItself() {
+		assertThrows(IllegalArgumentException.class, () -> {backpack.moveTo(backpack);});
+	}
+		
+		
+	
 	
 	@Test
 	public void testMoveTo_IllegalCase () {
