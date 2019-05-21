@@ -28,10 +28,8 @@ import java.util.HashSet;
  * @version 1.0 - 2019
  */
 
-// TODO Purse test case
-//		annotations, monster collectTreasures in testen
-//		hero.collectTreasures
-//		UML
+// TODO annotations?, monster collectTreasures in testen
+//		UML, alle coding rules
 
 public abstract class Character {
 	
@@ -602,7 +600,7 @@ public abstract class Character {
 	@Raw
 	public boolean hasProperItems () {
 		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
-			if (!canHaveAsItemAt(entry.getKey(), entry.getValue())) { // false when not possible to reequip in same slot
+			if (!canHaveAsItemAt(entry.getKey(), entry.getValue()) || entry.getValue().getCharacter() != this) { // false when not possible to reequip in same slot
 				return false;
 			}
 		}

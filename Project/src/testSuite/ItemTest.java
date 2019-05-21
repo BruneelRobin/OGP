@@ -22,7 +22,7 @@ class ItemTest {
 	static Weapon weapon, terminatedWeapon;
 	static Armor armor;
 	static Purse purse;
-	static Backpack backpack, backpack2;
+	static Backpack backpack, backpack2, smallBackpack;
 	
 	@BeforeAll
 	public static void setUpBeforeClass() {
@@ -39,6 +39,7 @@ class ItemTest {
 		purse = new Purse(2, 500, 20);
 		backpack = new Backpack(100, 10, 2);
 		backpack2 = new Backpack(50, 1, 3);
+		smallBackpack = new Backpack(10, 1, 2);
 	}
 	
 	@Test
@@ -109,13 +110,47 @@ class ItemTest {
 	 * Test of adding an object to a backpack
 	 ***************************************************************************************/
 	
-	
 	@Test
 	public void testMoveTo_LegalCase () {
 		assertEquals(weapon.getParentBackpack(), null);
 		weapon.moveTo(backpack);
 		assertEquals(weapon.getParentBackpack(), backpack);
+		assertTrue(backpack.contains(weapon));
 	}
+	
+	@Test
+	public void testMoveTo_BackpackFull() {
+		armor.moveTo(smallBackpack);
+		assertTrue(smallBackpack.contains(armor));
+		assertThrows(IllegalArgumentException.class, () -> {weapon.moveTo(smallBackpack);});
+	}
+		
+	@Test
+	public void testMoveTo_TerminatedBackpack() {
+		backpack.terminate();
+		assertTrue(backpack.isTerminated());
+		assertThrows(IllegalArgumentException.class, () -> {weapon.moveTo(backpack);});
+	}
+	
+	@Test
+	public void testMoveTo_Purse() {
+		assertThrows(IllegalArgumentException.class, () -> {purse.moveTo(backpack);});
+	}
+	
+	@Test
+	public void testMoveTo_ToChild() {
+		backpack2.moveTo(backpack);
+		assertTrue(backpack.contains(backpack2));
+		assertThrows(IllegalArgumentException.class, () -> {backpack.moveTo(backpack2);});
+	}
+	
+	@Test
+	public void testMoveTo_InItself() {
+		assertThrows(IllegalArgumentException.class, () -> {backpack.moveTo(backpack);});
+	}
+		
+		
+	
 	
 	@Test
 	public void testMoveTo_IllegalCase () {
@@ -178,6 +213,20 @@ class ItemTest {
 		assertEquals(weapon.getHolder(), monster);
 		weapon.drop();
 		assertEquals(weapon.getHolder(), null);
+	}
+	
+	@Test
+	public void testCanHaveAsParentBackpack () {
+		assertTrue(weapon.canHaveAsParentBackpack(backpack));
+		backpack.terminate();
+		assertFalse(weapon.canHaveAsParentBackpack(backpack));
+		assertFalse(weapon.canHaveAsParentBackpack(null));
+	}
+	
+	@Test
+	public void testCanHaveAsCharacter () {
+		assertTrue(weapon.canHaveAsCharacter(hero));
+		assertFalse(weapon.canHaveAsCharacter(null));
 	}
 
 }
