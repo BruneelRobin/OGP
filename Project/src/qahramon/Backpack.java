@@ -343,7 +343,7 @@ public class Backpack extends Item implements Container {
 	@Raw
 	public boolean hasProperItems () {
 		for (Item item : getItems()) {
-			if (!canHaveAsItem(item)) {
+			if (!canHaveAsItem(item) || item.getParentBackpack() != this) {
 				return false;
 			}
 		}

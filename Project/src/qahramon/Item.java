@@ -425,7 +425,7 @@ public abstract class Item {
 	 */
 	@Raw
 	public boolean canHaveAsParentBackpack (Backpack backpack) {
-		return backpack != null && backpack.canHaveAsItem(this);
+		return backpack != null && !backpack.isTerminated() && backpack.canHaveAsItem(this);
 	}
 	
 	/**

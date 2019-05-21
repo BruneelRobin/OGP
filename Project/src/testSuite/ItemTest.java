@@ -161,5 +161,19 @@ class ItemTest {
 		weapon.drop();
 		assertEquals(weapon.getHolder(), null);
 	}
+	
+	@Test
+	public void testCanHaveAsParentBackpack () {
+		assertTrue(weapon.canHaveAsParentBackpack(backpack));
+		backpack.terminate();
+		assertFalse(weapon.canHaveAsParentBackpack(backpack));
+		assertFalse(weapon.canHaveAsParentBackpack(null));
+	}
+	
+	@Test
+	public void testCanHaveAsCharacter () {
+		assertTrue(weapon.canHaveAsCharacter(hero));
+		assertFalse(weapon.canHaveAsCharacter(null));
+	}
 
 }
