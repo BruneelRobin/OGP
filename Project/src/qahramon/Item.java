@@ -312,7 +312,7 @@ public abstract class Item {
 	
 	
 	/***********************
-	 * Anchor
+	 * Character
 	 ***********************/
 	private Character character;
 	
@@ -425,36 +425,8 @@ public abstract class Item {
 	 */
 	@Raw
 	public boolean canHaveAsParentBackpack (Backpack backpack) {
-		return backpack != null && backpack.canHaveAsItem(this);
+		return backpack != null && !backpack.isTerminated() && backpack.canHaveAsItem(this);
 	}
-	
-	/**
-	 * Moves this item to the given backpack
-	 * @param	backpack
-	 * 			The backpack to move this item to
-	 * @post	Moves this item to the given backpack
-	 * 			| backpack.containsItem(this)
-	 * @throws	IllegalArgumentException
-	 * 			Throws this error when the given backpack can't have this item
-	 * 			| !backpack.canHaveAsItem(this)
-	 * @throws	TerminatedException
-	 * 			Throws this error when this item is terminated
-	 * 			| this.isTerminated()
-	 */
-	public void moveTo (Backpack backpack) throws IllegalArgumentException, TerminatedException {
-		if (this.isTerminated()) {
-			throw new TerminatedException(this);
-		}
-		else if (!canHaveAsParentBackpack(backpack)) {
-			throw new IllegalArgumentException ("The given backpack can't have this item");
-		}
-		
-		drop(); // break all previous associations
-		
-		backpack.addItem(this);
-		setParentBackpack(backpack);
-	}
-	
 	
 	/***********************
 	 * Other Methods
@@ -495,6 +467,33 @@ public abstract class Item {
 		} else {
 			return null;
 		}
+	}
+	
+	/**
+	 * Moves this item to the given backpack
+	 * @param	backpack
+	 * 			The backpack to move this item to
+	 * @post	Moves this item to the given backpack
+	 * 			| backpack.containsItem(this)
+	 * @throws	IllegalArgumentException
+	 * 			Throws this error when the given backpack can't have this item
+	 * 			| !backpack.canHaveAsItem(this)
+	 * @throws	TerminatedException
+	 * 			Throws this error when this item is terminated
+	 * 			| this.isTerminated()
+	 */
+	public void moveTo (Backpack backpack) throws IllegalArgumentException, TerminatedException {
+		if (this.isTerminated()) {
+			throw new TerminatedException(this);
+		}
+		else if (!canHaveAsParentBackpack(backpack)) {
+			throw new IllegalArgumentException ("The given backpack can't have this item");
+		}
+		
+		drop(); // break all previous associations
+		
+		backpack.addItem(this);
+		setParentBackpack(backpack);
 	}
 	
 	/**

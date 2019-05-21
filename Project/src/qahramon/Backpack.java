@@ -259,7 +259,7 @@ public class Backpack extends Item implements Container {
 			return false;
 		} else if (item.isBackpack() && this.isDirectOrIndirectSubBackpackOf((Backpack)item)) {
 			return false;
-		} else if (this.getTotalWeight() + item.getWeight() > this.getCapacity()) {
+		} else if (this.getTotalWeight() + item.getWeight() - this.getWeight() > this.getCapacity()) {
 			return false;
 		}
 		return true;
@@ -343,7 +343,7 @@ public class Backpack extends Item implements Container {
 	@Raw
 	public boolean hasProperItems () {
 		for (Item item : getItems()) {
-			if (!canHaveAsItem(item)) {
+			if (!canHaveAsItem(item) || item.getParentBackpack() != this) {
 				return false;
 			}
 		}
