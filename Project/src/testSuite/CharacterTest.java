@@ -160,7 +160,9 @@ class CharacterTest {
 		hero.equip(AnchorType.BACK, backpack);
 		hero.equip(AnchorType.RIGHT_HAND, weapon1);
 		hero.unequip(AnchorType.RIGHT_HAND);
+		hero.unequip(AnchorType.LEFT_HAND);
 		assertTrue(backpack.contains(weapon1));
+		assertEquals(null, hero.getItemAt(AnchorType.LEFT_HAND.getAnchorId()));
 	}
 	
 	@Test
@@ -169,6 +171,15 @@ class CharacterTest {
 		hero.unequip(AnchorType.RIGHT_HAND);
 		assertEquals(weapon1.getHolder(), null);
 	}
+	
+	@Test
+	public void testUnequip_IllegalCase() {
+		hero.equip(AnchorType.LEFT_HAND,weapon1);
+		hero.takeDamage(97);
+		assertThrows(DeadException.class, () -> {hero.unequip(AnchorType.LEFT_HAND);});
+	}
+	
+	
 	
 	
 	/**************************************************************************************

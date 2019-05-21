@@ -433,6 +433,9 @@ public abstract class Character {
 		}
 		
 		Item item = this.getItemAt(anchorId);
+		if(item == null) {
+			return;
+		}
 		
 		for (Map.Entry<Integer, Item> entry : this.anchors.entrySet()) {
 		    int key = entry.getKey();
