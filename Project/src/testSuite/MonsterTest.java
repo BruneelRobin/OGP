@@ -20,13 +20,14 @@ import org.junit.jupiter.api.*;
  */
 class MonsterTest {
 	
-	static Monster monster, deadMonster;
+	static Monster monster, weakMonster, deadMonster;
 	static Hero hero;
 	static Armor armor;
 
 	@BeforeEach
 	public void setUp() {
 		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
+		weakMonster = new Monster("LegalName", 80, 0, 30, 5, 50);
 		hero = new Hero("LegalName", 97, 10);
 		armor = new Armor(7, 70, 50, 200);
 		deadMonster = new Monster("LegalName", 499, 20, 70, 10, 50);
@@ -156,12 +157,26 @@ class MonsterTest {
 		}
 		assertEquals(hero.getHitpoints(), hero.getMaxHitpoints() - monster.getDamage());
 		assertTrue(hero.isFighting());
+		assertThrows(DeadException.class, () -> { deadMonster.hit(monster); });
+	}
+	
+	@Test
+	public void testHit_HeroHighProtection() {
 		hero.equip(AnchorType.BODY, armor);
 		monster.takeDamage(450);
 		monster.hit(hero);
-		assertEquals(hero.getHitpoints(), hero.getMaxHitpoints() - monster.getDamage());
-		
-		assertThrows(DeadException.class, () -> { deadMonster.hit(monster); });
+		assertEquals(hero.getHitpoints(), hero.getMaxHitpoints());
+	}
+	
+	@Test
+	public void testHit_DeathBlow() {
+		weakMonster.pickUp(armor);
+		while(weakMonster.getHitpoints() != 0) {
+			monster.hit(weakMonster);
+			}
+		assertTrue(weakMonster.isDead());
+		assertFalse(monster.isFighting());
+		assertTrue(monster.hasItem(armor));
 	}
 	
 	/**************************************************************************************

@@ -464,8 +464,8 @@ public abstract class Item {
 	 * Drops the item to the ground
 	 * @effect 	When this item is anchored, the holder of the item is set to null(= on the ground).
 	 * 		   	Since this is a bidirectional relation, the item is also removed from the holder.
-	 * 			|this.getAnchor().removeItemFromHolder(this)
-	 * 		   	|this.setAnchor(null)
+	 * 			|this.getCharacter().removeItemFromHolder(this)
+	 * 		   	|this.setCharacter(null)
 	 * @effect 	When this item is in a backpack, the parent backpack of this item is set to null
 	 * 			and since this is a bidirectional, the item is also removed from the backpack.
 	 * 			|this.getParentBackpack().removeItem(this)

@@ -19,7 +19,7 @@ import org.junit.jupiter.api.*;
 class HeroTest {
 	
 	static Hero hero, deadHero;
-	static Monster monster, smallMonster, deadMonster;
+	static Monster monster, smallMonster, weakMonster, deadMonster;
 	static Weapon weapon1, weapon2, smallWeapon;
 	static Armor armor1, armor2, armor3;
 	static Purse purse1, purse2;
@@ -35,10 +35,10 @@ class HeroTest {
 
 	@BeforeEach
 	public void setUp() {
-		HashMap<AnchorType, Item> emptyMap = new HashMap<AnchorType, Item>();
-		hero = new Hero("LegalName", 97, 10, emptyMap);
-		monster = new Monster("LegalName", 499, 20, 70, 10, 100);
+		hero = new Hero("LegalName", 97, 10);
+		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
 		smallMonster = new Monster("LegalName", 7, 1, 10, 2, 50);
+		weakMonster = new Monster("LegalName", 80, 0, 0, 5, 50);
 		weapon1 = new Weapon(10,5);
 		weapon2 = new Weapon(25,10);
 		smallWeapon = new Weapon(2,1);
@@ -74,7 +74,7 @@ class HeroTest {
 		
 		assertEquals ("Legalname", hero2.getName());
 		assertEquals (AnchorType.values().length, hero2.getNumberOfAnchors());
-		assertEquals (0, hero2.getStrength(), 0.01);
+		assertEquals (Hero.getDefaultStrength(), hero2.getStrength(), 0.01);
 		assertEquals (50, hero2.getHitpoints());
 	}
 	
@@ -100,15 +100,15 @@ class HeroTest {
 	@Test
 	public void testHeroStringIntFloatHashMap_IllegalSet() {
 		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
-		items.put(AnchorType.BODY, armor1);
+		items.put(AnchorType.BODY, armor2);
 		
 		Hero hero2 = new Hero ("Legalname", 50, 0f, items);
 		
 		assertEquals ("Legalname", hero2.getName());
 		assertEquals (AnchorType.values().length, hero2.getNumberOfAnchors());
-		assertEquals (0, hero2.getStrength(), 0.01);
+		assertEquals (Hero.getDefaultStrength(), hero2.getStrength(), 0.01);
 		assertEquals (50, hero2.getHitpoints());
-		assertEquals(false, hero2.hasItem(armor1));
+		assertEquals(false, hero2.hasItem(armor2));
 	}
 	
 	/**************************************************************************************
@@ -201,9 +201,22 @@ class HeroTest {
 		}
 		assertEquals(monster.getHitpoints(), monster.getMaxHitpoints() - hero.getDamage());
 		assertTrue(monster.isFighting());
-		
 		assertThrows(DeadException.class, () -> { deadHero.hit(monster); });
 	}
+	
+	@Test
+	public void testHit_DeathBlow() {
+		hero.equip(AnchorType.RIGHT_HAND, weapon1);
+		weakMonster.pickUp(armor2);
+		hero.takeDamage(90);
+		while(weakMonster.getHitpoints() != 0) {
+			hero.hit(weakMonster);
+		}
+		assertFalse(hero.isFighting());
+		assertTrue(weakMonster.isDead());
+		assertTrue(hero.getHitpoints() > 7);
+		
+		}
 	
 	/**************************************************************************************
 	 * End of test of hit

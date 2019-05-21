@@ -22,7 +22,7 @@ class ItemTest {
 	static Weapon weapon, terminatedWeapon;
 	static Armor armor;
 	static Purse purse;
-	static Backpack backpack;
+	static Backpack backpack, backpack2;
 	
 	@BeforeAll
 	public static void setUpBeforeClass() {
@@ -38,6 +38,7 @@ class ItemTest {
 		armor = new Armor(7, 20, 10, 15);
 		purse = new Purse(2, 500, 20);
 		backpack = new Backpack(100, 10, 2);
+		backpack2 = new Backpack(50, 1, 3);
 	}
 	
 	@Test
@@ -131,20 +132,37 @@ class ItemTest {
 	 ***************************************************************************************/
 	
 	@Test
-	public void testDrop () {
+	public void testDrop_FromBackpack () {
 		weapon.moveTo(backpack);
 		assertEquals(weapon.getParentBackpack(), backpack);
 		assertTrue(backpack.contains(weapon));
 		weapon.drop();
 		assertEquals(weapon.getParentBackpack(), null);
+		assertEquals(weapon.getHolder(),null);
 		assertFalse(backpack.contains(weapon));
-		//
+	}
+	
+	@Test
+	public void testDrop_FromCharacter() {
 		monster.equip(2,weapon);
 		assertEquals(weapon.getCharacter(), monster);
 		assertTrue(monster.hasItem(weapon));
 		weapon.drop();
 		assertEquals(weapon.getCharacter(), null);
+		assertEquals(weapon.getHolder(),null);
 		assertFalse(monster.hasItem(weapon));
+	}
+	
+	@Test
+	public void testDrop_FromBackpackInBackpackOnCharacter() {
+		weapon.moveTo(backpack2);
+		backpack2.moveTo(backpack);
+		hero.equip(AnchorType.BACK, backpack);
+		weapon.drop();
+		assertEquals(weapon.getParentBackpack(), null);
+		assertEquals(weapon.getHolder(),null);
+		assertFalse(backpack.contains(weapon));
+		assertFalse(backpack2.contains(weapon));
 	}
 	
 	/**************************************************************************************
