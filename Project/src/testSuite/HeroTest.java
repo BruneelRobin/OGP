@@ -19,7 +19,7 @@ import org.junit.jupiter.api.*;
 class HeroTest {
 	
 	static Hero hero, deadHero;
-	static Monster monster, smallMonster, weakMonster deadMonster;
+	static Monster monster, smallMonster, weakMonster, deadMonster;
 	static Weapon weapon1, weapon2, smallWeapon;
 	static Armor armor1, armor2, armor3;
 	static Purse purse1, purse2;
@@ -74,7 +74,7 @@ class HeroTest {
 		
 		assertEquals ("Legalname", hero2.getName());
 		assertEquals (AnchorType.values().length, hero2.getNumberOfAnchors());
-		assertEquals (0, hero2.getStrength(), 0.01);
+		assertEquals (Hero.getDefaultStrength(), hero2.getStrength(), 0.01);
 		assertEquals (50, hero2.getHitpoints());
 	}
 	
@@ -100,15 +100,15 @@ class HeroTest {
 	@Test
 	public void testHeroStringIntFloatHashMap_IllegalSet() {
 		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
-		items.put(AnchorType.BODY, armor1);
+		items.put(AnchorType.BODY, armor2);
 		
 		Hero hero2 = new Hero ("Legalname", 50, 0f, items);
 		
 		assertEquals ("Legalname", hero2.getName());
 		assertEquals (AnchorType.values().length, hero2.getNumberOfAnchors());
-		assertEquals (0, hero2.getStrength(), 0.01);
+		assertEquals (Hero.getDefaultStrength(), hero2.getStrength(), 0.01);
 		assertEquals (50, hero2.getHitpoints());
-		assertEquals(false, hero2.hasItem(armor1));
+		assertEquals(false, hero2.hasItem(armor2));
 	}
 	
 	/**************************************************************************************
