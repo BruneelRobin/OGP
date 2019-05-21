@@ -231,11 +231,49 @@ public class Hero extends Character {
 		
 	}
 	
+	/***********************
+	 * Starter gear
+	 ***********************/
+	
+	
+	private static final int DEFAULT_ARMOR_PROTECTION = 15;
+	private static final int DEFAULT_ARMOR_WEIGHTPERCENTAGE = 10;
+	private static final int DEFAULT_FULLVALUE = 100;
+	
+	private static final int DEFAULT_PURSE_CAPACITY = 100;
+	private static final float DEFAULT_PURSE_WEIGHT = 0.5f;
+	
+	/**
+	 * Generate and equip the starter gear for a hero.
+	 * @post	Equips a starter armor and starter purse to this hero, the weights of these items will
+	 * 			be scaled so this hero can always equip the gear
+	 * @throws	DeadException
+	 * 			throws this exception when the current character is dead.
+	 */
+	private void giveStarterGear() throws DeadException {
+		if (isDead()) {
+			throw new DeadException(this);
+		}
+		
+		float armorWeight = this.getCapacity()/DEFAULT_ARMOR_WEIGHTPERCENTAGE;
+		Armor starterArmor = new Armor(MathHelper.getRandomPrime(), DEFAULT_ARMOR_PROTECTION, armorWeight, DEFAULT_FULLVALUE);
+		
+		int maxContent = (int)(((float)this.getCapacity() - armorWeight - DEFAULT_PURSE_WEIGHT)/Purse.getDucateWeight());
+		int randomContent = MathHelper.getRandomIntBetweenRange(0, Math.min(maxContent, DEFAULT_PURSE_CAPACITY)); 
+		Purse starterPurse = new Purse(DEFAULT_PURSE_WEIGHT, DEFAULT_PURSE_CAPACITY , randomContent);
+		
+		this.equip(AnchorType.BODY, starterArmor);
+		this.equip(AnchorType.BELT, starterPurse);
+	}
+	
 	
 	
 	/***********************
 	 * Other methods
 	 ***********************/
+	
+	
+	
 	
 	
 	/**
@@ -246,9 +284,10 @@ public class Hero extends Character {
 	 */
 	@Override
 	public boolean wantsToTake(Item item) { 
+		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+
 		if (item.isArmor()) {
 			Armor armor = (Armor) item;
-			Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
 			int bestFullProtection = 0;
 			
 			for (Entry<Integer, Item> entry : set) {
@@ -272,9 +311,7 @@ public class Hero extends Character {
 		
 		else if (item.isWeapon()) {
 			Weapon weapon = (Weapon) item;
-			Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
 			int bestDamage = 0;
-			
 			for (Entry<Integer, Item> entry : set) {
 				Item heroItem = entry.getValue();
 				if (heroItem.isWeapon()) {
@@ -476,37 +513,6 @@ public class Hero extends Character {
 		}
 		return armorCount;
 	}
-	
-	private static final int DEFAULT_ARMOR_PROTECTION = 15;
-	private static final int DEFAULT_ARMOR_WEIGHTPERCENTAGE = 10;
-	private static final int DEFAULT_FULLVALUE = 100;
-	
-	private static final int DEFAULT_PURSE_CAPACITY = 100;
-	private static final float DEFAULT_PURSE_WEIGHT = 0.5f;
-	
-	/**
-	 * Generate and equip the starter gear for a hero.
-	 * @post	Equips a starter armor and starter purse to this hero, the weights of these items will
-	 * 			be scaled so this hero can always equip the gear
-	 * @throws	DeadException
-	 * 			throws this exception when the current character is dead.
-	 */
-	private void giveStarterGear() throws DeadException {
-		if (isDead()) {
-			throw new DeadException(this);
-		}
-		
-		float armorWeight = this.getCapacity()/DEFAULT_ARMOR_WEIGHTPERCENTAGE;
-		Armor starterArmor = new Armor(MathHelper.getRandomPrime(), DEFAULT_ARMOR_PROTECTION, armorWeight, DEFAULT_FULLVALUE);
-		
-		int maxContent = (int)(((float)this.getCapacity() - armorWeight - DEFAULT_PURSE_WEIGHT)/Purse.getDucateWeight());
-		int randomContent = MathHelper.getRandomIntBetweenRange(0, Math.min(maxContent, DEFAULT_PURSE_CAPACITY)); 
-		Purse starterPurse = new Purse(DEFAULT_PURSE_WEIGHT, DEFAULT_PURSE_CAPACITY , randomContent);
-		
-		this.equip(AnchorType.BODY, starterArmor);
-		this.equip(AnchorType.BELT, starterPurse);
-	}
-	
 	
 	
 	
