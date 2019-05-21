@@ -344,6 +344,33 @@ public class Hero extends Character {
 	}
 	
 	/**
+	 * This hero collects the treasures it wants to take found on a dead body.
+	 * @post	Collects all anchored items of the other character 
+	 * 			when the current hero wants to take it
+	 * 			| wantsToTake(item)
+	 * @throws	DeadException
+	 * 			Throws this error when this hero is dead
+	 */
+	@Override
+	public void collectTreasures(Character character) throws DeadException {
+		if (isDead()) {
+			throw new DeadException(this);
+		}
+		
+		if (character.isDead()) {
+		
+			Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
+			
+			for (Entry<Integer, Item> entry : set) {
+				Item item = entry.getValue();
+				if (wantsToTake(item)) { //iterate over all items on dead body and pickup all items you want
+					pickUp(item);
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Makes the character hit the given character
 	 * @post	A random number between 0 and 100 is generated, when this number is higher than the 
 	 * 			character's protection, the character takes the damage of this hero. When this number is

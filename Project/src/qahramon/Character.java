@@ -615,23 +615,7 @@ public abstract class Character {
 	 * @throws	DeadException
 	 * 			Throws this error when this character is dead
 	 */
-	public void collectTreasures(Character character) throws DeadException {
-		if (isDead()) {
-			throw new DeadException(this);
-		}
-		
-		if (character.isDead()) {
-		
-			Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
-			
-			for (Entry<Integer, Item> entry : set) {
-				Item item = entry.getValue();
-				if (wantsToTake(item)) { //iterate over all items on dead body and pickup all items you want
-					pickUp(item);
-				}
-			}
-		}
-	}
+	public abstract void collectTreasures(Character character) throws DeadException;
 	
 	/**
 	 * Return a boolean whether the character wants to take this item

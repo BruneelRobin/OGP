@@ -28,6 +28,9 @@ class CharacterTest {
 	public static void setUpBeforeAll() {
 		terminatedWeapon = new Weapon(20, 15);
 		terminatedWeapon.terminate();
+		
+		deadMonster = new Monster("LegalName", 499, 20, 70, 10, 50);
+		deadMonster.takeDamage(499);
 	}
 	
 	@BeforeEach
@@ -40,9 +43,6 @@ class CharacterTest {
 		heavyWeapon = new Weapon(30, 100);
 		smallWeapon = new Weapon(2,1);
 		backpack = new Backpack(100, 10, 2);
-		
-		deadMonster = new Monster("LegalName", 499, 20, 70, 10, 50);
-		deadMonster.takeDamage(499);
 	}
 
 	@Test

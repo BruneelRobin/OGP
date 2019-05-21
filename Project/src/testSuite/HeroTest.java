@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
 
-import org.junit.jupiter.api.Test;
-
 import qahramon.*;
 import qahramon.exceptions.DeadException;
 
@@ -21,10 +19,16 @@ import org.junit.jupiter.api.*;
 class HeroTest {
 	
 	static Hero hero, deadHero;
-	static Monster monster;
+	static Monster monster, deadMonster;
 	static Weapon weapon1, weapon2, smallWeapon;
 	static Armor armor1, armor2, armor3;
 	static Purse purse;
+	
+	@BeforeAll
+	public static void setUpBeforeAll() {
+	deadMonster = new Monster("LegalName", 499, 20, 70, 10, 50);
+	deadMonster.takeDamage(499);
+	}
 
 	@BeforeEach
 	public void setUp() {
@@ -207,6 +211,18 @@ class HeroTest {
 		assertTrue(hero.canHaveAsItemAt(2, purse));
 		assertFalse(hero.canHaveAsItemAt(2, weapon1));
 		assertFalse(hero.canHaveAsItemAt(1, purse));
+	}
+	
+	@Test
+	public void testCollectTreasures() {
+		monster.pickUp(weapon1);
+		hero.equip(AnchorType.RIGHT_HAND, smallWeapon);
+		while (monster.isDead() == false) {
+			hero.hit(monster);
+		}
+		assertEquals(hero, weapon1.getHolder());
+		
+		assertThrows(DeadException.class, () -> {deadMonster.collectTreasures(monster);});
 	}
 
 }
