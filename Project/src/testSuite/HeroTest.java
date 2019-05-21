@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
 
-import org.junit.jupiter.api.Test;
-
 import qahramon.*;
 import qahramon.exceptions.DeadException;
 
@@ -21,24 +19,36 @@ import org.junit.jupiter.api.*;
 class HeroTest {
 	
 	static Hero hero, deadHero;
-	static Monster monster;
+	static Monster monster, smallMonster, deadMonster;
 	static Weapon weapon1, weapon2, smallWeapon;
 	static Armor armor1, armor2, armor3;
-	static Purse purse;
+	static Purse purse1, purse2;
+	static Backpack backpack1, backpack2;
+	
+	@BeforeAll
+	public static void setUpBeforeAll() {
+	deadMonster = new Monster("LegalName", 499, 20, 70, 10, 50);
+	deadMonster.takeDamage(499);
+	deadHero = new Hero("LegalName", 97, 10);
+	deadHero.takeDamage(97);
+	}
 
 	@BeforeEach
 	public void setUp() {
-		hero = new Hero("LegalName", 97, 10);
-		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
+		HashMap<AnchorType, Item> emptyMap = new HashMap<AnchorType, Item>();
+		hero = new Hero("LegalName", 97, 10, emptyMap);
+		monster = new Monster("LegalName", 499, 20, 70, 10, 100);
+		smallMonster = new Monster("LegalName", 7, 1, 10, 2, 50);
 		weapon1 = new Weapon(10,5);
 		weapon2 = new Weapon(25,10);
 		smallWeapon = new Weapon(2,1);
 		armor1 = new Armor(7, 20, 10, 15);
 		armor2 = new Armor(11, 50, 30, 50);
 		armor3 = new Armor(13, 10, 5, 10);
-		purse = new Purse(2, 500, 20);
-		deadHero = new Hero("LegalName", 97, 10);
-		deadHero.takeDamage(97);
+		purse1 = new Purse(2, 500, 20);
+		purse2 = new Purse(3, 700, 30);
+		backpack1 = new Backpack(100, 10, 2);
+		backpack2 = new Backpack(200, 20, 4);
 	}
 	
 	@Test
@@ -155,6 +165,22 @@ class HeroTest {
 	}
 	
 	@Test
+	public void testGetBestArmor() {
+		hero.equip(AnchorType.BODY, armor3);
+		hero.pickUp(armor1);
+		assertEquals(20, hero.getBestArmor().getFullProtection());
+	}
+	
+	@Test
+	public void testGetBestWeapon() {
+		hero.pickUp(weapon1);
+		hero.pickUp(smallWeapon);
+		assertEquals(10, hero.getBestWeapon().getDamage());
+	}
+	
+
+	
+	@Test
 	public void testWantsToTake() {
 		hero.pickUp(weapon1);
 		assertTrue(hero.wantsToTake(weapon2));
@@ -204,9 +230,35 @@ class HeroTest {
 	
 	@Test
 	public void testCanHaveAsItemAt_PurseCase() {
-		assertTrue(hero.canHaveAsItemAt(2, purse));
+		assertTrue(hero.canHaveAsItemAt(2, purse1));
 		assertFalse(hero.canHaveAsItemAt(2, weapon1));
-		assertFalse(hero.canHaveAsItemAt(1, purse));
+		assertFalse(hero.canHaveAsItemAt(1, purse1));
+	}
+	
+	@Test
+	public void testCollectTreasures_Purse() {
+		smallMonster.pickUp(purse2);
+		hero.equip(AnchorType.BELT, purse1);
+		hero.equip(AnchorType.RIGHT_HAND, weapon1);
+		smallMonster.takeDamage(smallMonster.getHitpoints());
+		hero.collectTreasures(smallMonster);
+		assertEquals(hero, purse2.getHolder());
+		assertEquals(50, purse2.getContent());
+	}
+	
+	@Test
+	public void testCollectTreasures_Backpack() {
+		weapon2.moveTo(backpack1);
+		armor2.moveTo(backpack1);
+		backpack2.moveTo(backpack1);
+		monster.pickUp(backpack1);
+		hero.equip(AnchorType.RIGHT_HAND, weapon1);
+		monster.takeDamage(monster.getHitpoints());
+		hero.collectTreasures(monster);
+		assertEquals(hero, weapon1.getHolder());
+		assertEquals(hero, armor2.getHolder());
+		assertEquals(hero, backpack2.getHolder());
+		assertEquals(monster, backpack1.getHolder());
 	}
 
 }

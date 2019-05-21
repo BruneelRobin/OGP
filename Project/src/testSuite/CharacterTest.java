@@ -28,6 +28,9 @@ class CharacterTest {
 	public static void setUpBeforeAll() {
 		terminatedWeapon = new Weapon(20, 15);
 		terminatedWeapon.terminate();
+		
+		deadMonster = new Monster("LegalName", 499, 20, 70, 10, 50);
+		deadMonster.takeDamage(499);
 	}
 	
 	@BeforeEach
@@ -40,9 +43,6 @@ class CharacterTest {
 		heavyWeapon = new Weapon(30, 100);
 		smallWeapon = new Weapon(2,1);
 		backpack = new Backpack(100, 10, 2);
-		
-		deadMonster = new Monster("LegalName", 499, 20, 70, 10, 50);
-		deadMonster.takeDamage(499);
 	}
 
 	@Test
@@ -160,7 +160,9 @@ class CharacterTest {
 		hero.equip(AnchorType.BACK, backpack);
 		hero.equip(AnchorType.RIGHT_HAND, weapon1);
 		hero.unequip(AnchorType.RIGHT_HAND);
+		hero.unequip(AnchorType.LEFT_HAND);
 		assertTrue(backpack.contains(weapon1));
+		assertEquals(null, hero.getItemAt(AnchorType.LEFT_HAND.getAnchorId()));
 	}
 	
 	@Test
@@ -169,6 +171,15 @@ class CharacterTest {
 		hero.unequip(AnchorType.RIGHT_HAND);
 		assertEquals(weapon1.getHolder(), null);
 	}
+	
+	@Test
+	public void testUnequip_IllegalCase() {
+		hero.equip(AnchorType.LEFT_HAND,weapon1);
+		hero.takeDamage(97);
+		assertThrows(DeadException.class, () -> {hero.unequip(AnchorType.LEFT_HAND);});
+	}
+	
+	
 	
 	
 	/**************************************************************************************

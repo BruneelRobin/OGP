@@ -448,6 +448,9 @@ public abstract class Character {
 		}
 		
 		Item item = this.getItemAt(anchorId);
+		if(item == null) {
+			return;
+		}
 		
 		for (Map.Entry<Integer, Item> entry : this.anchors.entrySet()) {
 		    int key = entry.getKey();
@@ -510,12 +513,15 @@ public abstract class Character {
 		else if(item.getHolder() != null && !item.getHolder().isDead()) {
 			return false;
 		}
+		else if(item.getHolder() == this) {
+			return false;
+		}
 		else if(this.getCapacity() < this.getTotalWeight() + totalWeightOfItem) {
 			return false;
 			
-			}
+		} else {
 		return true;
-			
+		}
 	}
 	
 	/**
@@ -633,23 +639,7 @@ public abstract class Character {
 	 * @throws	DeadException
 	 * 			Throws this error when this character is dead
 	 */
-	public void collectTreasures(Character character) throws DeadException {
-		if (isDead()) {
-			throw new DeadException(this);
-		}
-		
-		if (character.isDead()) {
-		
-			Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
-			
-			for (Entry<Integer, Item> entry : set) {
-				Item item = entry.getValue();
-				if (wantsToTake(item)) { //iterate over all items on dead body and pickup all items you want
-					pickUp(item);
-				}
-			}
-		}
-	}
+	public abstract void collectTreasures(Character character) throws DeadException;
 	
 	/**
 	 * Return a boolean whether the character wants to take this item
@@ -696,6 +686,99 @@ public abstract class Character {
 			}
 		}
 		return weight;
+	}
+	
+	/**
+	 * Return the best armor of any owned armor
+	 * @return	Return the best armor of any owned armor
+	 * 		   
+	 * @note	The evaluation of the armor is based on its full protection.
+	 */
+	public Armor getBestArmor() {
+		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+		int bestFullProtection = 0;
+		Armor bestArmor = null;
+		for (Entry<Integer, Item> entry : set) {
+			Item item = entry.getValue();
+			if (item.isArmor()) {
+				Armor armor = (Armor) item;
+				int armorProtection = armor.getFullProtection();
+				if (armorProtection > bestFullProtection) {
+					bestFullProtection = armorProtection;
+					bestArmor = armor;
+				}
+			} else if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				Armor bestBackpackArmor = backpack.getBestArmor();
+				if (bestBackpackArmor != null && bestBackpackArmor.getFullProtection() > bestFullProtection) {
+					bestFullProtection = bestBackpackArmor.getFullProtection();
+					bestArmor = bestBackpackArmor;
+				}
+			}
+		}
+		return bestArmor;
+	}
+	
+	/**
+	 * Return the best armor of any owned weapon
+	 * @return	Return the best armor of any owned armor
+	 * 		   
+	 * @note	The evaluation of the weapon is based on its damage.
+	 */
+	public Weapon getBestWeapon() {
+		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+		int bestDamage = 0;
+		Weapon bestWeapon = null;
+		for (Entry<Integer, Item> entry : set) {
+			Item item = entry.getValue();
+			if (item.isWeapon()) {
+				Weapon weapon = (Weapon) item;
+				int weaponDamage = weapon.getDamage();
+				if (weaponDamage > bestDamage) {
+					bestDamage = weaponDamage;
+					bestWeapon = weapon;
+				}
+			} else if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				Weapon bestBackpackWeapon = backpack.getBestWeapon();
+				if (bestBackpackWeapon != null && bestBackpackWeapon.getDamage() > bestDamage) {
+					bestDamage = bestBackpackWeapon.getDamage();
+					bestWeapon = bestBackpackWeapon;
+				}
+			}
+		}
+		return bestWeapon;
+	}
+	
+	/**
+	 * Return the best backpack of any owned armor
+	 * @return	Return the best backpack of any owned armor
+	 * 		   
+	 * @note	The evaluation of the backpack is based on its capacity.
+	 */
+	public Backpack getBestBackpack() {
+		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+		float bestCapacity = 0;
+		Backpack bestBackpack = null;
+		for (Entry<Integer, Item> entry : set) {
+			Item item = entry.getValue();
+			if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				float backpackCapacity = backpack.getCapacity();
+				if (backpackCapacity > bestCapacity) {
+					bestCapacity = backpackCapacity;
+					bestBackpack = backpack;
+				}
+			} else if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				Backpack bestBackpackBackpack = backpack.getBestBackpack();
+				if (bestBackpackBackpack != null && bestBackpackBackpack.getCapacity() > bestCapacity) {
+					bestCapacity = bestBackpackBackpack.getCapacity();
+					bestBackpack = bestBackpackBackpack;
+				}
+			}
+		}
+		return bestBackpack;
 	}
 	
 	/**

@@ -230,62 +230,71 @@ public class Hero extends Character {
 		
 	}
 	
+	/***********************
+	 * Starter gear
+	 ***********************/
+	
+	
+	private static final int DEFAULT_ARMOR_PROTECTION = 15;
+	private static final int DEFAULT_ARMOR_WEIGHTPERCENTAGE = 10;
+	private static final int DEFAULT_FULLVALUE = 100;
+	
+	private static final int DEFAULT_PURSE_CAPACITY = 100;
+	private static final float DEFAULT_PURSE_WEIGHT = 0.5f;
+	
+	/**
+	 * Generate and equip the starter gear for a hero.
+	 * @post	Equips a starter armor and starter purse to this hero, the weights of these items will
+	 * 			be scaled so this hero can always equip the gear
+	 * @throws	DeadException
+	 * 			throws this exception when the current character is dead.
+	 */
+	private void giveStarterGear() throws DeadException {
+		if (isDead()) {
+			throw new DeadException(this);
+		}
+		
+		float armorWeight = this.getCapacity()/DEFAULT_ARMOR_WEIGHTPERCENTAGE;
+		Armor starterArmor = new Armor(MathHelper.getRandomPrime(), DEFAULT_ARMOR_PROTECTION, armorWeight, DEFAULT_FULLVALUE);
+		
+		int maxContent = (int)(((float)this.getCapacity() - armorWeight - DEFAULT_PURSE_WEIGHT)/Purse.getDucateWeight());
+		int randomContent = MathHelper.getRandomIntBetweenRange(0, Math.min(maxContent, DEFAULT_PURSE_CAPACITY)); 
+		Purse starterPurse = new Purse(DEFAULT_PURSE_WEIGHT, DEFAULT_PURSE_CAPACITY , randomContent);
+		
+		this.equip(AnchorType.BODY, starterArmor);
+		this.equip(AnchorType.BELT, starterPurse);
+	}
+	
 	
 	
 	/***********************
 	 * Other methods
 	 ***********************/
 	
-	
 	/**
-	 * Returns whether or not the hero wants to take an item
+	 * Return whether or not the hero wants to take an item
 	 * 
-	 * @return Returns true when the hero wants to take the item
-	 * @return Returns false when the hero does not want to take the item
+	 * @return Return true when the hero wants to take the item
+	 * @return Return false when the hero does not want to take the item
 	 */
 	@Override
 	public boolean wantsToTake(Item item) { 
+
 		if (item.isArmor()) {
-			Armor armor = (Armor) item;
-			Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
-			int bestFullProtection = 0;
-			
-			for (Entry<Integer, Item> entry : set) {
-				Item heroItem = entry.getValue();
-				if (heroItem.isArmor()) {
-					Armor heroArmor = (Armor) heroItem;
-					int heroArmorProtection = heroArmor.getFullProtection();
-					if (heroArmorProtection > bestFullProtection) {
-						bestFullProtection = heroArmorProtection;
-					}
+			Armor armor = (Armor)(item);
+			Armor bestArmor = getBestArmor();
+			if (bestArmor == null || armor.getFullProtection() > bestArmor.getFullProtection()) {
+				return true;
+			} 
+		else {
+			return false;
 				}
 			}
-			
-			if (armor.getFullProtection() > bestFullProtection) {
-				return true;
-			} else {
-				return false;
-			}
-			
-		}
 		
 		else if (item.isWeapon()) {
 			Weapon weapon = (Weapon) item;
-			Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
-			int bestDamage = 0;
-			
-			for (Entry<Integer, Item> entry : set) {
-				Item heroItem = entry.getValue();
-				if (heroItem.isWeapon()) {
-					Weapon heroWeapon = (Weapon) heroItem;
-					int heroWeaponDamage = heroWeapon.getDamage();
-					if (heroWeaponDamage > bestDamage) {
-						bestDamage = heroWeaponDamage;
-					}
-				}
-			}
-			
-			if (weapon.getDamage() > bestDamage) {
+			Weapon bestWeapon = getBestWeapon();
+			if (bestWeapon == null || weapon.getDamage() > bestWeapon.getDamage()) {
 				return true;
 			} else {
 				return false;
@@ -293,16 +302,125 @@ public class Hero extends Character {
 		}
 		
 		else if (item.isBackpack()) {
-			return false;
-			
+			Backpack backpack = (Backpack) item;
+			Backpack bestBackpack = getBestBackpack();
+			if (bestBackpack == null || backpack.getCapacity() > bestBackpack.getCapacity()) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 		
 		else if (item.isPurse()) {
+			Purse purse = (Purse) item;
+			Purse thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+			if (purse.getCapacity() > thisPurse.getCapacity()) {
+				return true;
+			} else {
 			return false;
-			
+			}
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+	 * This hero collects the treasures it wants to take found on a dead body.
+	 * @post	Collects all anchored items of the other character 
+	 * 			when the current hero wants to take it
+	 * 			| wantsToTake(item)
+	 * @throws	DeadException
+	 * 			Throws this error when this hero is dead
+	 */
+	@Override
+	public void collectTreasures(Character character) throws DeadException {
+		if (isDead()) {
+			throw new DeadException(this);
+		}
+		
+		if (character.isDead()) {
+		
+			Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
+			Set<Purse> purses = new HashSet<Purse>();
+			Purse thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+			if (thisPurse != null) {
+			purses.add(thisPurse);
+			}
+			
+			for (Entry<Integer, Item> entry : set) {
+				Item item = entry.getValue();
+				if (item.isBackpack()) {
+					Backpack backpack = (Backpack) item;
+					collectTreasures(backpack);
+				}
+				if (item.isPurse()) {
+					Purse purse = (Purse) item;
+					purses.add(purse);
+				} else {
+					if (wantsToTake(item)) { 
+					pickUp(item);
+					}
+				}
+			}
+			
+		    for (Purse purse : purses){
+		        if (wantsToTake(purse)) {
+		        	equip(AnchorType.BELT,purse);
+		        }
+		    }
+		    thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+		    for(Purse purse : purses) {
+		    	if (thisPurse.canHaveAsContent(thisPurse.getContent() + purse.getContent()) && thisPurse != purse) {
+		    		thisPurse.add(purse);
+		    	}
+		    }
+		}
+	}
+	
+	/**
+	 * This hero collects the treasures it wants to take found in a backpack.
+	 * @post	Collects all items of a backpack.
+	 * 			when the current hero wants to take it
+	 * 			| wantsToTake(item)
+	 */
+	public void collectTreasures(Backpack backpack) throws DeadException {
+		if (isDead()) {
+			throw new DeadException(this);
+		}
+		
+		Set<Item> set = backpack.getItems();
+		Set<Purse> purses = new HashSet<Purse>();
+		Purse thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+		if (thisPurse != null) {
+		purses.add(thisPurse);
+		}
+		
+		for (Item item : set) {
+			if (item.isBackpack()) {
+				Backpack backpack2 = (Backpack) item;
+				collectTreasures(backpack2);
+			}
+			if (item.isPurse()) {
+				Purse purse = (Purse) item;
+				purses.add(purse);
+			} else {
+				if (wantsToTake(item)) { 
+				pickUp(item);
+				}
+			}
+		}
+		
+		for (Purse purse : purses){
+	        if (wantsToTake(purse)) {
+	        	equip(AnchorType.BELT,purse);
+	        }
+	    }
+	    thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+	    for(Purse purse : purses) {
+	    	if (thisPurse.canHaveAsContent(thisPurse.getContent() + purse.getContent()) && thisPurse != purse) {
+	    		thisPurse.add(purse);
+	    	}
+	    }
 	}
 	
 	/**
@@ -432,12 +550,12 @@ public class Hero extends Character {
 	}
 		
 	/**
-	 * Equips an item in the given anchor
+	 * Equip an item in the given anchor
 	 * @param 	anchorType
 	 * 			The anchor to equip an item in
 	 * @param 	item
 	 * 			The item to equip
-	 * @effect	Equips an item in the given anchor
+	 * @effect	Equip an item in the given anchor
 	 * 			| equip(anchorType.getAnchorId())
 	 * @note	This method has been overloaded in order to use our enumerator
 	 */
@@ -447,10 +565,10 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Unequips an item in the given anchor
+	 * Unequip an item in the given anchor
 	 * @param 	anchorType
 	 * 			The anchor to unequip an item from
-	 * @effect	Unequips an item in the given anchor
+	 * @effect	Unequip an item in the given anchor
 	 * 			| unequip(anchorType.getAnchorId())
 	 * @note	This method has been overloaded in order to use our enumerator
 	 */
@@ -482,8 +600,6 @@ public class Hero extends Character {
 	private static final float DEFAULT_ARMOR_WEIGHT = 4f;
 	private static final int DEFAULT_FULLVALUE = 100;
 	
-	private static final int DEFAULT_PURSE_CAPACITY = 100;
-	private static final float DEFAULT_PURSE_WEIGHT = 0.5f;
 	
 	/**
 	 * Return the starter gear for a hero.
