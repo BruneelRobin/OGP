@@ -273,23 +273,15 @@ public class Hero extends Character {
 	 ***********************/
 	
 	
-	
-	
-	
 	/**
-	 * Returns whether or not the hero wants to take an item
+	 * Returns the best fullProtection of any owned armor
+	 * @return	Return the best fullProtection of any owned armor
+	 * 		   
 	 * 
-	 * @return Returns true when the hero wants to take the item
-	 * @return Returns false when the hero does not want to take the item
 	 */
-	@Override
-	public boolean wantsToTake(Item item) { 
+	public int getBestFullProtection() {
 		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
-
-		if (item.isArmor()) {
-			Armor armor = (Armor) item;
 			int bestFullProtection = 0;
-			
 			for (Entry<Integer, Item> entry : set) {
 				Item heroItem = entry.getValue();
 				if (heroItem.isArmor()) {
@@ -300,30 +292,52 @@ public class Hero extends Character {
 					}
 				}
 			}
-			
-			if (armor.getFullProtection() > bestFullProtection) {
-				return true;
-			} else {
-				return false;
+			return bestFullProtection;
 			}
-			
+	
+	/**
+	 * Returns the best damage of any owned weapon
+	 * @return	Return the best damage of any owned weapon
+	 * 				
+	 */
+	public int getBestWeaponDamage() {
+		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+		int bestDamage = 0;
+		for (Entry<Integer, Item> entry : set) {
+			Item heroItem = entry.getValue();
+			if (heroItem.isWeapon()) {
+				Weapon heroWeapon = (Weapon) heroItem;
+				int heroWeaponDamage = heroWeapon.getDamage();
+				if (heroWeaponDamage > bestDamage) {
+					bestDamage = heroWeaponDamage;
+				}
+			}
 		}
+		return bestDamage;
+	}
+	
+	/**
+	 * Returns whether or not the hero wants to take an item
+	 * 
+	 * @return Returns true when the hero wants to take the item
+	 * @return Returns false when the hero does not want to take the item
+	 */
+	@Override
+	public boolean wantsToTake(Item item) { 
+
+		if (item.isArmor()) {
+			Armor armor = (Armor)(item);
+			if (armor.getFullProtection() > this.getBestFullProtection()) {
+				return true;
+			} 
+		else {
+			return false;
+				}
+			}
 		
 		else if (item.isWeapon()) {
 			Weapon weapon = (Weapon) item;
-			int bestDamage = 0;
-			for (Entry<Integer, Item> entry : set) {
-				Item heroItem = entry.getValue();
-				if (heroItem.isWeapon()) {
-					Weapon heroWeapon = (Weapon) heroItem;
-					int heroWeaponDamage = heroWeapon.getDamage();
-					if (heroWeaponDamage > bestDamage) {
-						bestDamage = heroWeaponDamage;
-					}
-				}
-			}
-			
-			if (weapon.getDamage() > bestDamage) {
+			if (weapon.getDamage() > this.getBestWeaponDamage()) {
 				return true;
 			} else {
 				return false;

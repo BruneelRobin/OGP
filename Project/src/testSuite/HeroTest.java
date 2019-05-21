@@ -155,6 +155,22 @@ class HeroTest {
 	}
 	
 	@Test
+	public void testGetBestFullProtection() {
+		hero.equip(AnchorType.BODY, armor3);
+		hero.pickUp(armor1);
+		assertEquals(20, hero.getBestFullProtection());
+	}
+	
+	@Test
+	public void testGetBestWeaponDamage() {
+		hero.pickUp(weapon1);
+		hero.pickUp(smallWeapon);
+		assertEquals(10, hero.getBestWeaponDamage());
+	}
+	
+
+	
+	@Test
 	public void testWantsToTake() {
 		hero.pickUp(weapon1);
 		assertTrue(hero.wantsToTake(weapon2));
