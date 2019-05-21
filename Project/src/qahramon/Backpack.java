@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import be.kuleuven.cs.som.annotate.*;
 import qahramon.exceptions.TerminatedException;
@@ -474,5 +475,90 @@ public class Backpack extends Item implements Container {
 				+ "\nNumber of items: " + getItems().size() + "\nCapacity: " + getCapacity()
 				+ " kg\nTotal weight: " + 
 				getTotalWeight() + " kg\nTotal value: " + getTotalValue() + " ducates\n";
+	}
+	
+	/**
+	 * Return the best armor in a backpack
+	 * @return	Return the best armor of a backpack
+	 * 		   
+	 * 
+	 */
+	public Armor getBestArmor() {
+		int bestFullProtection = 0;
+		Armor bestArmor = null;
+		for (Item item: getItems()) {
+			if (item.isArmor()) {
+				Armor armor = (Armor) item;
+				int armorProtection = armor.getFullProtection();
+				if (armorProtection > bestFullProtection) {
+					bestFullProtection = armorProtection;
+					bestArmor = armor;
+				}
+			} else if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				Armor bestBackpackArmor = backpack.getBestArmor();
+				if (bestBackpackArmor != null && bestBackpackArmor.getFullProtection() > bestFullProtection) {
+					bestFullProtection = bestBackpackArmor.getFullProtection();
+					bestArmor = bestBackpackArmor;
+				}
+			}
+		}
+		return bestArmor;
+	}
+	
+	/**
+	 * Return the best weapon in a backpack
+	 * @return	Return the best weapon of a backpack
+	 * 		   
+	 * 
+	 */
+	public Weapon getBestWeapon() {
+		int bestDamage = 0;
+		Weapon bestWeapon = null;
+		for (Item item: getItems()) {
+			if (item.isWeapon()) {
+				Weapon weapon = (Weapon) item;
+				int weaponDamage = weapon.getDamage();
+				if (weaponDamage > bestDamage) {
+					bestDamage = weaponDamage;
+					bestWeapon = weapon;
+				}
+			} else if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				Weapon bestBackpackWeapon = backpack.getBestWeapon();
+				if (bestBackpackWeapon != null && bestBackpackWeapon.getDamage() > bestDamage) {
+					bestDamage = bestBackpackWeapon.getDamage();
+					bestWeapon = bestBackpackWeapon;
+				}
+			}
+		}
+		return bestWeapon;
+	}
+	
+	/**
+	 * Return the best backpack in a backpack
+	 * @return	Return the best backpack of a backpack		   
+	 * 
+	 */
+	public Backpack getBestBackpack() {
+		float bestCapacity = 0;
+		Backpack bestBackpack = null;
+		for (Item item: getItems()) {
+			if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				float backpackCapacity = backpack.getCapacity();
+				if (backpackCapacity > bestCapacity) {
+					bestCapacity = backpackCapacity;
+					bestBackpack = backpack;
+				}
+				
+				Backpack bestBackpackBackpack = backpack.getBestBackpack();
+				if (bestBackpackBackpack != null && bestBackpackBackpack.getCapacity() > bestCapacity) {
+					bestCapacity = bestBackpackBackpack.getCapacity();
+					bestBackpack = bestBackpackBackpack;
+				}
+			}
+		}
+		return bestBackpack;
 	}
 }

@@ -272,62 +272,19 @@ public class Hero extends Character {
 	 * Other methods
 	 ***********************/
 	
-	
 	/**
-	 * Returns the best fullProtection of any owned armor
-	 * @return	Return the best fullProtection of any owned armor
-	 * 		   
+	 * Return whether or not the hero wants to take an item
 	 * 
-	 */
-	public int getBestFullProtection() {
-		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
-			int bestFullProtection = 0;
-			for (Entry<Integer, Item> entry : set) {
-				Item heroItem = entry.getValue();
-				if (heroItem.isArmor()) {
-					Armor heroArmor = (Armor) heroItem;
-					int heroArmorProtection = heroArmor.getFullProtection();
-					if (heroArmorProtection > bestFullProtection) {
-						bestFullProtection = heroArmorProtection;
-					}
-				}
-			}
-			return bestFullProtection;
-			}
-	
-	/**
-	 * Returns the best damage of any owned weapon
-	 * @return	Return the best damage of any owned weapon
-	 * 				
-	 */
-	public int getBestWeaponDamage() {
-		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
-		int bestDamage = 0;
-		for (Entry<Integer, Item> entry : set) {
-			Item heroItem = entry.getValue();
-			if (heroItem.isWeapon()) {
-				Weapon heroWeapon = (Weapon) heroItem;
-				int heroWeaponDamage = heroWeapon.getDamage();
-				if (heroWeaponDamage > bestDamage) {
-					bestDamage = heroWeaponDamage;
-				}
-			}
-		}
-		return bestDamage;
-	}
-	
-	/**
-	 * Returns whether or not the hero wants to take an item
-	 * 
-	 * @return Returns true when the hero wants to take the item
-	 * @return Returns false when the hero does not want to take the item
+	 * @return Return true when the hero wants to take the item
+	 * @return Return false when the hero does not want to take the item
 	 */
 	@Override
 	public boolean wantsToTake(Item item) { 
 
 		if (item.isArmor()) {
 			Armor armor = (Armor)(item);
-			if (armor.getFullProtection() > this.getBestFullProtection()) {
+			Armor bestArmor = getBestArmor();
+			if (bestArmor == null || armor.getFullProtection() > bestArmor.getFullProtection()) {
 				return true;
 			} 
 		else {
@@ -337,7 +294,8 @@ public class Hero extends Character {
 		
 		else if (item.isWeapon()) {
 			Weapon weapon = (Weapon) item;
-			if (weapon.getDamage() > this.getBestWeaponDamage()) {
+			Weapon bestWeapon = getBestWeapon();
+			if (bestWeapon == null || weapon.getDamage() > bestWeapon.getDamage()) {
 				return true;
 			} else {
 				return false;
@@ -346,7 +304,8 @@ public class Hero extends Character {
 		
 		else if (item.isBackpack()) {
 			Backpack backpack = (Backpack) item;
-			if (backpack.getCapacity() > this.getBestBackpackCapaciy()) {
+			Backpack bestBackpack = getBestBackpack();
+			if (bestBackpack == null || backpack.getCapacity() > bestBackpack.getCapacity()) {
 				return true;
 			} else {
 				return false;
@@ -355,11 +314,14 @@ public class Hero extends Character {
 		
 		else if (item.isPurse()) {
 			Purse purse = (Purse) item;
-			if (purse.getCapacity() > this.getCapacity()) {
+			Purse thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+			if (purse.getCapacity() > thisPurse.getCapacity()) {
 				return true;
 			} else {
 			return false;
 			}
+		} else {
+			return false;
 		}
 	}
 	
@@ -381,7 +343,10 @@ public class Hero extends Character {
 		
 			Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
 			Set<Purse> purses = new HashSet<Purse>();
-			purses.add((Purse)this.getItemAt(AnchorType.BELT.getAnchorId()));
+			Purse thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+			if (thisPurse != null) {
+			purses.add(thisPurse);
+			}
 			
 			for (Entry<Integer, Item> entry : set) {
 				Item item = entry.getValue();
@@ -399,17 +364,15 @@ public class Hero extends Character {
 				}
 			}
 			
-			Iterator<Purse> it = purses.iterator();
-		    while(it.hasNext()){
-		        if (wantsToTake(it.next())) {
-		        	pickUp(it.next());
+		    for (Purse purse : purses){
+		        if (wantsToTake(purse)) {
+		        	equip(AnchorType.BELT,purse);
 		        }
 		    }
-		    Purse thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
-		    while(it.hasNext()) {
-		    	Purse nextPurse = (Purse) it.next();
-		    	if (thisPurse.canHaveAsContent(thisPurse.getContent() + nextPurse.getContent())) {
-		    		thisPurse.add(nextPurse);
+		    thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+		    for(Purse purse : purses) {
+		    	if (thisPurse.canHaveAsContent(thisPurse.getContent() + purse.getContent()) && thisPurse != purse) {
+		    		thisPurse.add(purse);
 		    	}
 		    }
 		}
@@ -428,7 +391,10 @@ public class Hero extends Character {
 		
 		Set<Item> set = backpack.getItems();
 		Set<Purse> purses = new HashSet<Purse>();
-		purses.add((Purse)this.getItemAt(AnchorType.BELT.getAnchorId()));
+		Purse thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+		if (thisPurse != null) {
+		purses.add(thisPurse);
+		}
 		
 		for (Item item : set) {
 			if (item.isBackpack()) {
@@ -445,17 +411,15 @@ public class Hero extends Character {
 			}
 		}
 		
-		Iterator<Purse> it = purses.iterator();
-	    while(it.hasNext()){
-	        if (wantsToTake(it.next())) {
-	        	pickUp(it.next());
+		for (Purse purse : purses){
+	        if (wantsToTake(purse)) {
+	        	equip(AnchorType.BELT,purse);
 	        }
 	    }
-	    Purse thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
-	    while(it.hasNext()) {
-	    	Purse nextPurse = (Purse) it.next();
-	    	if (thisPurse.canHaveAsContent(thisPurse.getContent() + nextPurse.getContent())) {
-	    		thisPurse.add(nextPurse);
+	    thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+	    for(Purse purse : purses) {
+	    	if (thisPurse.canHaveAsContent(thisPurse.getContent() + purse.getContent()) && thisPurse != purse) {
+	    		thisPurse.add(purse);
 	    	}
 	    }
 	}
@@ -586,12 +550,12 @@ public class Hero extends Character {
 	}
 		
 	/**
-	 * Equips an item in the given anchor
+	 * Equip an item in the given anchor
 	 * @param 	anchorType
 	 * 			The anchor to equip an item in
 	 * @param 	item
 	 * 			The item to equip
-	 * @effect	Equips an item in the given anchor
+	 * @effect	Equip an item in the given anchor
 	 * 			| equip(anchorType.getAnchorId())
 	 * @note	This method has been overloaded in order to use our enumerator
 	 */
@@ -601,10 +565,10 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Unequips an item in the given anchor
+	 * Unequip an item in the given anchor
 	 * @param 	anchorType
 	 * 			The anchor to unequip an item from
-	 * @effect	Unequips an item in the given anchor
+	 * @effect	Unequip an item in the given anchor
 	 * 			| unequip(anchorType.getAnchorId())
 	 * @note	This method has been overloaded in order to use our enumerator
 	 */

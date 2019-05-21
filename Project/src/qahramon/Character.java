@@ -494,12 +494,15 @@ public abstract class Character {
 		else if(item.getHolder() != null && !item.getHolder().isDead()) {
 			return false;
 		}
+		else if(item.getHolder() == this) {
+			return false;
+		}
 		else if(this.getCapacity() < this.getTotalWeight() + totalWeightOfItem) {
 			return false;
 			
-			}
+		} else {
 		return true;
-			
+		}
 	}
 	
 	/**
@@ -660,6 +663,99 @@ public abstract class Character {
 			}
 		}
 		return weight;
+	}
+	
+	/**
+	 * Return the best armor of any owned armor
+	 * @return	Return the best armor of any owned armor
+	 * 		   
+	 * @note	The evaluation of the armor is based on its full protection.
+	 */
+	public Armor getBestArmor() {
+		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+		int bestFullProtection = 0;
+		Armor bestArmor = null;
+		for (Entry<Integer, Item> entry : set) {
+			Item item = entry.getValue();
+			if (item.isArmor()) {
+				Armor armor = (Armor) item;
+				int armorProtection = armor.getFullProtection();
+				if (armorProtection > bestFullProtection) {
+					bestFullProtection = armorProtection;
+					bestArmor = armor;
+				}
+			} else if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				Armor bestBackpackArmor = backpack.getBestArmor();
+				if (bestBackpackArmor != null && bestBackpackArmor.getFullProtection() > bestFullProtection) {
+					bestFullProtection = bestBackpackArmor.getFullProtection();
+					bestArmor = bestBackpackArmor;
+				}
+			}
+		}
+		return bestArmor;
+	}
+	
+	/**
+	 * Return the best armor of any owned weapon
+	 * @return	Return the best armor of any owned armor
+	 * 		   
+	 * @note	The evaluation of the weapon is based on its damage.
+	 */
+	public Weapon getBestWeapon() {
+		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+		int bestDamage = 0;
+		Weapon bestWeapon = null;
+		for (Entry<Integer, Item> entry : set) {
+			Item item = entry.getValue();
+			if (item.isWeapon()) {
+				Weapon weapon = (Weapon) item;
+				int weaponDamage = weapon.getDamage();
+				if (weaponDamage > bestDamage) {
+					bestDamage = weaponDamage;
+					bestWeapon = weapon;
+				}
+			} else if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				Weapon bestBackpackWeapon = backpack.getBestWeapon();
+				if (bestBackpackWeapon != null && bestBackpackWeapon.getDamage() > bestDamage) {
+					bestDamage = bestBackpackWeapon.getDamage();
+					bestWeapon = bestBackpackWeapon;
+				}
+			}
+		}
+		return bestWeapon;
+	}
+	
+	/**
+	 * Return the best backpack of any owned armor
+	 * @return	Return the best backpack of any owned armor
+	 * 		   
+	 * @note	The evaluation of the backpack is based on its capacity.
+	 */
+	public Backpack getBestBackpack() {
+		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
+		float bestCapacity = 0;
+		Backpack bestBackpack = null;
+		for (Entry<Integer, Item> entry : set) {
+			Item item = entry.getValue();
+			if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				float backpackCapacity = backpack.getCapacity();
+				if (backpackCapacity > bestCapacity) {
+					bestCapacity = backpackCapacity;
+					bestBackpack = backpack;
+				}
+			} else if (item.isBackpack()) {
+				Backpack backpack = (Backpack) item;
+				Backpack bestBackpackBackpack = backpack.getBestBackpack();
+				if (bestBackpackBackpack != null && bestBackpackBackpack.getCapacity() > bestCapacity) {
+					bestCapacity = bestBackpackBackpack.getCapacity();
+					bestBackpack = bestBackpackBackpack;
+				}
+			}
+		}
+		return bestBackpack;
 	}
 	
 	/**
