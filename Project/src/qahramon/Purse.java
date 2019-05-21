@@ -380,4 +380,14 @@ public class Purse extends Item implements Container {
 	public int getTotalValue() {
 		return this.getContent();
 	}
+	
+	/**
+	 * Return a string containing all public data of this purse
+	 * @return Return a string containing all public data of this purse
+	 */
+	@Override
+	public String toString() {
+		return "Purse\n" + super.getString()
+				+ "\nContent: " + getContent() + " ducates\nCapacity: " + getCapacity() + " ducates\n";
+	}
 }

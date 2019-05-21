@@ -367,4 +367,13 @@ public class Monster extends Character {
 			}
 		}
 	}
+	
+	/**
+	 * Return a string containing all public data of this monster
+	 * @return Return a string containing all public data of this monster
+	 */
+	@Override
+	public String toString() {
+		return "Monster\n" + super.getString() + "\n";
+	}
 }

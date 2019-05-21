@@ -434,32 +434,13 @@ public abstract class Item {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	/**
+	 * Return a string containing general data over this string
+	 * @return	Return a string containing data over its identification, value and weight
+	 */
+	protected String getString() {
+		return "Identification: " + getIdentification()
+			+ "\nValue: " + getValue() + " ducates\nWeight: " + getWeight() + " kg";
+	}
 	
 }
