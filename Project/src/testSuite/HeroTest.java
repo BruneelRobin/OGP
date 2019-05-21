@@ -14,7 +14,7 @@ import org.junit.jupiter.api.*;
 /**
  * Testcase for the hero class.
  * 
- * @author 	Robin Bruneel, Jean-Louis Carron Edward Wiels
+ * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0
  *
  */

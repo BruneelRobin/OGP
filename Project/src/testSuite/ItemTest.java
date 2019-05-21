@@ -103,6 +103,12 @@ class ItemTest {
 		assertEquals(weapon.getParentBackpack(), backpack);
 	}
 	
+	
+	/**************************************************************************************
+	 * Test of adding an object to a backpack
+	 ***************************************************************************************/
+	
+	
 	@Test
 	public void testMoveTo_LegalCase () {
 		assertEquals(weapon.getParentBackpack(), null);
@@ -114,6 +120,15 @@ class ItemTest {
 	public void testMoveTo_IllegalCase () {
 		assertThrows(TerminatedException.class, () -> { terminatedWeapon.moveTo(backpack); });
 	}
+	
+	/**************************************************************************************
+	 * End of test of adding an object to a backpack
+	 ***************************************************************************************/
+	
+	
+	/**************************************************************************************
+	 * Test of taking away an item from an anchor
+	 ***************************************************************************************/
 	
 	@Test
 	public void testDrop () {
@@ -131,6 +146,10 @@ class ItemTest {
 		assertEquals(weapon.getCharacter(), null);
 		assertFalse(monster.hasItem(weapon));
 	}
+	
+	/**************************************************************************************
+	 * End of test of taking away an item from an anchor
+	 ***************************************************************************************/
 	
 	@Test
 	public void testGetHolder () {

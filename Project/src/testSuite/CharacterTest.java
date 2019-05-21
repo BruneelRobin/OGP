@@ -151,6 +151,10 @@ class CharacterTest {
 		assertEquals(weapon2.getHolder(), null);
 	}
 	
+	/**************************************************************************************
+	 * Test of taking away an item from an anchor
+	 ***************************************************************************************/
+	
 	@Test
 	public void testUnequip_ToBackpack() {
 		hero.equip(AnchorType.BACK, backpack);
@@ -165,6 +169,11 @@ class CharacterTest {
 		hero.unequip(AnchorType.RIGHT_HAND);
 		assertEquals(weapon1.getHolder(), null);
 	}
+	
+	
+	/**************************************************************************************
+	 * End of test of taking away an item from an anchor
+	 ***************************************************************************************/
 	
 	@Test
 	public void testcanPickUp_LegalCase() {
