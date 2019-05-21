@@ -234,35 +234,32 @@ public class Hero extends Character {
 	 * Starter gear
 	 ***********************/
 	
-	
-	private static final int DEFAULT_ARMOR_PROTECTION = 15;
-	private static final int DEFAULT_ARMOR_WEIGHTPERCENTAGE = 10;
-	private static final int DEFAULT_FULLVALUE = 100;
-	
 	private static final int DEFAULT_PURSE_CAPACITY = 100;
 	private static final float DEFAULT_PURSE_WEIGHT = 0.5f;
 	
+	private static final int DEFAULT_ARMOR_PROTECTION = 15;
+	private static final float DEFAULT_ARMOR_WEIGHT = 4f;
+	private static final int DEFAULT_FULLVALUE = 100;
+	
+	
 	/**
-	 * Generate and equip the starter gear for a hero.
-	 * @post	Equips a starter armor and starter purse to this hero, the weights of these items will
+	 * Return the starter gear for a hero.
+	 * @return	Return a starter armor and starter purse for this hero, the weights of these items will
 	 * 			be scaled so this hero can always equip the gear
-	 * @throws	DeadException
-	 * 			throws this exception when the current character is dead.
 	 */
-	private void giveStarterGear() throws DeadException {
-		if (isDead()) {
-			throw new DeadException(this);
-		}
+	private static HashMap<AnchorType, Item> getStarterGear() {
 		
-		float armorWeight = this.getCapacity()/DEFAULT_ARMOR_WEIGHTPERCENTAGE;
-		Armor starterArmor = new Armor(MathHelper.getRandomPrime(), DEFAULT_ARMOR_PROTECTION, armorWeight, DEFAULT_FULLVALUE);
+		Armor starterArmor = new Armor(MathHelper.getRandomPrime(), DEFAULT_ARMOR_PROTECTION, DEFAULT_ARMOR_WEIGHT, DEFAULT_FULLVALUE);
 		
-		int maxContent = (int)(((float)this.getCapacity() - armorWeight - DEFAULT_PURSE_WEIGHT)/Purse.getDucateWeight());
-		int randomContent = MathHelper.getRandomIntBetweenRange(0, Math.min(maxContent, DEFAULT_PURSE_CAPACITY)); 
+		//int maxContent = (int)(((float)this.getCapacity() - armorWeight - DEFAULT_PURSE_WEIGHT)/Purse.getDucateWeight());
+		int randomContent = MathHelper.getRandomIntBetweenRange(0, DEFAULT_PURSE_CAPACITY); 
 		Purse starterPurse = new Purse(DEFAULT_PURSE_WEIGHT, DEFAULT_PURSE_CAPACITY , randomContent);
 		
-		this.equip(AnchorType.BODY, starterArmor);
-		this.equip(AnchorType.BELT, starterPurse);
+		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
+		items.put(AnchorType.BODY, starterArmor);
+		items.put(AnchorType.BELT, starterPurse);
+		
+		return items;
 	}
 	
 	
@@ -594,31 +591,6 @@ public class Hero extends Character {
 			}
 		}
 		return armorCount;
-	}
-	
-	private static final int DEFAULT_ARMOR_PROTECTION = 15;
-	private static final float DEFAULT_ARMOR_WEIGHT = 4f;
-	private static final int DEFAULT_FULLVALUE = 100;
-	
-	
-	/**
-	 * Return the starter gear for a hero.
-	 * @return	Return a starter armor and starter purse for this hero, the weights of these items will
-	 * 			be scaled so this hero can always equip the gear
-	 */
-	private static HashMap<AnchorType, Item> getStarterGear() {
-		
-		Armor starterArmor = new Armor(MathHelper.getRandomPrime(), DEFAULT_ARMOR_PROTECTION, DEFAULT_ARMOR_WEIGHT, DEFAULT_FULLVALUE);
-		
-		//int maxContent = (int)(((float)this.getCapacity() - armorWeight - DEFAULT_PURSE_WEIGHT)/Purse.getDucateWeight());
-		int randomContent = MathHelper.getRandomIntBetweenRange(0, DEFAULT_PURSE_CAPACITY); 
-		Purse starterPurse = new Purse(DEFAULT_PURSE_WEIGHT, DEFAULT_PURSE_CAPACITY , randomContent);
-		
-		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
-		items.put(AnchorType.BODY, starterArmor);
-		items.put(AnchorType.BELT, starterPurse);
-		
-		return items;
 	}
 	
 	/**
