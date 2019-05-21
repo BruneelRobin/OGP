@@ -148,12 +148,16 @@ class ItemTest {
 	public void testMoveTo_InItself() {
 		assertThrows(IllegalArgumentException.class, () -> {backpack.moveTo(backpack);});
 	}
-		
-		
-	
 	
 	@Test
-	public void testMoveTo_IllegalCase () {
+	public void testMoveTo_AnchoredItem() {
+		monster.pickUp(armor);
+		assertTrue(monster.hasItem(armor));
+		assertThrows(IllegalArgumentException.class, () -> {armor.moveTo(backpack);});
+	}
+		
+	@Test
+	public void testMoveTo_TerminatedItem () {
 		assertThrows(TerminatedException.class, () -> { terminatedWeapon.moveTo(backpack); });
 	}
 	
