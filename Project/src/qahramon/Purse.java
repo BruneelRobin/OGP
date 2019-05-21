@@ -312,21 +312,21 @@ public class Purse extends Item implements Container {
 	 * @throws	TornException
 	 * 			throws this error when you try to take ducates from a torn purse
 	 * 			| purse.isTorn()
-	 * @throws	IllegalArgumentException
+	 * @throws	TerminatedException
 	 *			Throws this error when the given purse is terminated
 	 *			| purse.isTerminated()
 	 */
-	public void add (Purse purse) throws TornException, IllegalArgumentException {
+	public void add (Purse purse) throws TornException, TerminatedException {
 		if (purse.isTerminated()) {
-			throw new IllegalArgumentException ("The given purse is terminated");
+			throw new TerminatedException(purse);
 		} else if (purse.isTorn()) {
 			throw new TornException(purse); 
 		}
 		
-		int c = purse.getContent();
+		int content = purse.getContent();
 		
-		purse.remove(c);
-		this.add(c);
+		purse.remove(content);
+		this.add(content);
 		
 		purse.drop();
 	}
