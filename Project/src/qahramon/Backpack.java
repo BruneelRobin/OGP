@@ -236,7 +236,7 @@ public class Backpack extends Item implements Container {
 	 * Checks whether this backpack can have an item
 	 * @param 	item
 	 * 			The item to check
-	 * @return	Return false when the item is terminated or this backpack is terminated
+	 * @return	Return false when the given item is this backpack or the item is terminated or this backpack is terminated
 	 * 			Return false when the item is a purse
 	 * 			Return false when the item is held by another non dead character than the holder of this backpack
 	 * 			Return false when the item can't be picked up by the holder of this backpack
@@ -247,7 +247,7 @@ public class Backpack extends Item implements Container {
 	 */
 	@Raw
 	public boolean canHaveAsItem (Item item) {
-		if (this.isTerminated() || item.isTerminated()) {
+		if (item == this || this.isTerminated() || item.isTerminated()) {
 			return false;
 		}
 		else if (item.isPurse()) {
