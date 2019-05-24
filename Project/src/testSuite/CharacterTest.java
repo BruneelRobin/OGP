@@ -235,7 +235,7 @@ class CharacterTest {
 	
 	@Test
 	public void testIsValidNumberOfAnchors_IllegalCase() {
-		assertFalse(Monster.isValidNumberOfAnchors(0));
+		assertFalse(Monster.isValidNumberOfAnchors(-1));
 	}
 	
 	// hasProperItems testen of niet?
