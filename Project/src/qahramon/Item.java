@@ -339,13 +339,19 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Binds a character to this anchor
+	 * Binds a character to this anchored item
 	 * @param 	anchor
 	 * 			The character to set as anchor
 	 * @pre		This item is not terminated
 	 * 			| !this.isTerminated()
-	 * @post	Binds a character to this anchor, when this item is in a backpack it will be removed
+	 * @post	Binds a character to this anchored item
 	 * 			| getParentBackpack() == null && getAnchor() == anchor
+	 * @post	When this item is in a backpack it will be removed from that backpack
+	 * 			| getParentBackpack().removeItem(this);
+				| setParentBackpack(null);
+	 * @post	When this item is already anchored to the character, 
+	 * 			it will be removed from the character
+	 * 			| getCharacter().removeItemFromHolder(this);
 	 */
 	@Raw
 	protected void bindCharacter (Character character) {
@@ -353,6 +359,8 @@ public abstract class Item {
 			if (getParentBackpack() != null) {
 				getParentBackpack().removeItem(this);
 				setParentBackpack(null);
+			} else if (getCharacter() != null) {
+				getCharacter().removeItemFromHolder(this);
 			}
 			setCharacter(character);
 		//}
