@@ -15,9 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * A class of Heroes. 
+ * A class of heroes as special kinds of characters involving strength.
  * 
- * @invar	Each hero must have a valid strength
+ * @invar	Each hero must have a valid strength.
  * 			| isValidStrength(getStrength())
  * 
  * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
@@ -33,14 +33,15 @@ public class Hero extends Character {
 	
 	/**
 	 * Create a hero with a given name, amount of hitpoints and strength.
+	 * 
 	 * @param 	name
-	 * 			The name of this hero.
+	 * 			The name of this hero
 	 * @param 	hitpoints
-	 * 			The amount of hitpoints of this hero.
+	 * 			The amount of hitpoints of this hero
 	 * @param 	strength
-	 * 			The strength of this hero.
+	 * 			The strength of this hero
 	 * @effect	The new hero is set as a character with a given name, amount of hitpoints,
-	 * 			a default number of anchors and starter gear
+	 * 			a default number of anchors and starter gear.
 	 * 			| this(name, hitpoints, strength, getStarterGear())
 	 */
 	public Hero(String name, int hitpoints, float strength) throws IllegalArgumentException {
@@ -49,14 +50,15 @@ public class Hero extends Character {
 	
 	/**
 	 * Create a hero with a given name, amount of hitpoints, strength and gear.
+	 * 
 	 * @param 	name
-	 * 			The name of this hero.
+	 * 			The name of this hero
 	 * @param 	hitpoints
-	 * 			The amount of hitpoints of this hero.
+	 * 			The amount of hitpoints of this hero
 	 * @param 	strength
-	 * 			The strength of this hero.
+	 * 			The strength of this hero
 	 * @param	items
-	 * 			The initial gear of this hero.
+	 * 			The initial gear of this hero
 	 * @effect	The new hero is set as a character with a given name, amount of hitpoints
 	 * 			and a default number of anchors.
 	 * 			| super(name, hitpoints, AnchorTypes.values().length)
@@ -64,10 +66,10 @@ public class Hero extends Character {
 	 * 			strength is set to the given strength,
 	 * 			otherwise the default strength is set.
 	 * 			| new.getStrength() == strength
-	 * @post	Equips the given items on the given slots of this hero
-	 * 			Only equips what this hero can wear, all other items are dropped.
+	 * @post	Equip the given items on the given slots of this hero.
+	 * 			Only what this hero can wear is equipped, all other items are dropped.
 	 * @throws	IllegalArgumentException
-	 * 			Throws this exception when the given name is not valid
+	 * 			Throws this exception when the given name is not valid.
 	 * 			| !isValidName(name)
 	 */
 	public Hero(String name, int hitpoints, float strength, HashMap<AnchorType, Item> items) throws IllegalArgumentException {
@@ -92,13 +94,14 @@ public class Hero extends Character {
 	 ********************************/
 	
 	/**
-	 * Checks if a hero can have the given name as name
+	 * Check if a hero can have the given name as name.
+	 * 
 	 * @return	Return true when the given name starts with a capital letter, only contains letters,
 	 * 			maximum two apostrophes, spaces and colons followed by spaces.
-	 * 			Otherwise return false
+	 * 			Otherwise return false.
 	 * 
-	 * @note	Matches the given characters starting with a capital letter and returns false when it 
-	 * 			contains a : without a space or 3 apostrophes
+	 * @note	Match the given characters starting with a capital letter and returns false when it 
+	 * 			contains a : without a space or 3 apostrophes.
 	 */
 	@Override@Raw
 	public boolean canHaveAsName(String name) {
@@ -114,8 +117,9 @@ public class Hero extends Character {
 	private final static float STRENGTH_PRECISION = 0.01f;
 	
 	/**
-	 * Return the internal precision of the float strength
-	 * @return	Return the internal precision of the float strength
+	 * Return the internal precision of the float strength.
+	 * 
+	 * @return	Return the internal precision of the float strength.
 	 */
 	@Basic@Immutable
 	public static float getStrengthPrecision () {
@@ -123,10 +127,11 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Return true when a hero can have the given strength
+	 * Return true when a hero can have the given strength.
+	 * 
 	 * @param	strength
 	 * 			The strength to check
-	 * @return 	true when the given strength is positive
+	 * @return 	Return true when the given strength is positive.
 	 * 			| strength >= 0
 	 */
 	public static boolean isValidStrength(float strength) {
@@ -134,8 +139,9 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Returns the character's strength
-	 * @return Returns the character's strength
+	 * Return the character's strength.
+	 * 
+	 * @return Return the character's strength.
 	 */
 	@Basic
 	public float getStrength() {
@@ -143,11 +149,13 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Sets the strength to the given strength
-	 * @param strength
-	 * 		  the new value of the hero's strength
-	 * @post  The strength is set to the given strength, the strength is rounded with the static precision
-	 * 		  | new.getStrength() == strength
+	 * Set the strength to the given strength.
+	 * 
+	 * @param 	strength
+	 * 		  	the new value of the hero's strength
+	 * @post  	The strength is set to the given strength, the strength is rounded
+	 * 			with the static precision.
+	 * 		  	| new.getStrength() == strength
 	 */
 	private void setStrength(float strength) {
 		this.strengthInteger = (int)(strength/getStrengthPrecision());
@@ -155,12 +163,14 @@ public class Hero extends Character {
 	
 	/**
 	 * Increase the hero's strength, by multiplying with the given factor.
-	 * @param factor
-	 * 		  factor to multiply the strength with
-	 * @post  If the given factor is positive, the strength of the hero is multiplied by the given factor.
-	 * 		  | new.getStrength() == this.getStrength()*factor
-	 * @post  If the given factor is smaller than zero, the strength remains the same value.
-	 * 		  | new.getStrength() == this.getStrength()
+	 * 
+	 * @param 	factor
+	 * 		  	factor to multiply the strength with
+	 * @post  	If the given factor is positive, the strength of the hero
+	 * 			is multiplied by the given factor.
+	 * 		  	| new.getStrength() == this.getStrength()*factor
+	 * @post  	If the given factor is smaller than zero, the strength remains the same value.
+	 * 		  	| new.getStrength() == this.getStrength()
 	 */
 	public void multiplyStrength(int factor) {
 		if(factor < 0) {
@@ -171,12 +181,14 @@ public class Hero extends Character {
 	
 	/**
 	 * Decrease the hero's strength, by dividing by the given divisor.
-	 * @param divisor
-	 * 		  the divisor to divide the strength by
-	 * @post  If the given divisor is larger than zero, the strength of the hero is divided by the given divisor.
-	 * 		  | new.getStrength() == this.getStrength()/divisor
-	 * @post  If the given divisor is negative, the strength remains the same value.
-	 * 		  | new.getStrength() == this.getStrength()
+	 * 
+	 * @param 	divisor
+	 * 		  	the divisor to divide the strength by
+	 * @post  	If the given divisor is larger than zero, the strength of the hero
+	 * 			is divided by the given divisor.
+	 * 		  	| new.getStrength() == this.getStrength()/divisor
+	 * @post  	If the given divisor is negative, the strength remains the same value.
+	 * 		  	| new.getStrength() == this.getStrength()
 	 */
 	public void divideStrength(int divisor) {
 		if(divisor <= 0) {
@@ -188,8 +200,9 @@ public class Hero extends Character {
 	private static final float DEFAULT_STRENGTH = 0.5f;
 	
 	/**
-	 * Return the default strenght of this character
-	 * @return	Return the default strength of this character
+	 * Return the default strength of this character.
+	 * 
+	 * @return	Return the default strength of this character.
 	 */
 	public static float getDefaultStrength () {
 		return DEFAULT_STRENGTH;
@@ -203,8 +216,9 @@ public class Hero extends Character {
 	private static final float CAPACITY_FACTOR = 20f;
 	
 	/**
-	 * Return the hero's capacity
-	 * @return Return the hero's capacity
+	 * Return the hero's capacity.
+	 * 
+	 * @return Return the hero's capacity.
 	 */
 	@Override
 	public float getCapacity() {
@@ -218,8 +232,9 @@ public class Hero extends Character {
 	private static final int DEFAULT_PROTECTION = 10;
 	
 	/**
-	 * Return the protection of the hero
-	 * @return	Return the protection of the hero based on default protection value and armor
+	 * Return the protection of the hero.
+	 * 
+	 * @return	Return the protection of the hero based on default protection value and armor.
 	 * 			| result == DEFAULT_PROTECTION + ((Armor)(this.getItemAt(AnchorType.BODY.getAnchorId()))).getProtection()
 	 */
 	@Override
@@ -244,8 +259,9 @@ public class Hero extends Character {
 	
 	/**
 	 * Return the starter gear for a hero.
+	 * 
 	 * @return	Return a starter armor and starter purse for this hero, the weights of these items will
-	 * 			be scaled so this hero can always equip the gear
+	 * 			be scaled so this hero can always equip the gear.
 	 */
 	private static HashMap<AnchorType, Item> getStarterGear() {
 		
@@ -269,10 +285,10 @@ public class Hero extends Character {
 	 ***********************/
 	
 	/**
-	 * Return whether or not the hero wants to take an item
+	 * Check whether or not the hero wants to take an item.
 	 * 
-	 * @return Return true when the hero wants to take the item
-	 * @return Return false when the hero does not want to take the item
+	 * @return 	Return true when the hero wants to take the item.
+	 * @return 	Return false when the hero does not want to take the item.
 	 */
 	@Override
 	public boolean wantsToTake(Item item) { 
@@ -323,11 +339,12 @@ public class Hero extends Character {
 	
 	/**
 	 * This hero collects the treasures it wants to take found on a dead body.
-	 * @post	Collects all anchored items of the other character 
-	 * 			when the current hero wants to take it
+	 * 
+	 * @post	Collect all anchored items of the other character
+	 * 			when the current hero wants to take it.
 	 * 			| wantsToTake(item)
 	 * @throws	DeadException
-	 * 			Throws this error when this hero is dead
+	 * 			Throws this error when this hero is dead.
 	 */
 	@Override
 	public void collectTreasures(Character character) throws DeadException {
@@ -376,8 +393,9 @@ public class Hero extends Character {
 	
 	/**
 	 * This hero collects the treasures it wants to take found in a backpack.
-	 * @post	Collects all items of a backpack.
-	 * 			when the current hero wants to take it
+	 * 
+	 * @post	Collect all items of a backpack
+	 * 			when the current hero wants to take it.
 	 * 			| wantsToTake(item)
 	 */
 	public void collectTreasures(Backpack backpack) throws DeadException {
@@ -421,7 +439,8 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Makes the character hit the given character
+	 * Make the character hit the given character.
+	 * 
 	 * @post	A random number between 0 and 100 is generated, when this number is higher than the 
 	 * 			character's protection, the character takes the damage of this hero. When this number is
 	 * 			lower than the character's protection, nothing happens.
@@ -452,7 +471,8 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Heals the hero by adding hitpoints
+	 * Heal the hero by adding hitpoints.
+	 * 
 	 * @post	The hero's new hp is a random prime number between its current health and its max health.
 	 * 			| MathHelper.isPrime(getHitpoints())
 	 * @throws	DeadException
@@ -474,7 +494,8 @@ public class Hero extends Character {
 
 	
 	/**
-	 * Return the damage of the hero
+	 * Return the damage of the hero.
+	 * 
 	 * @return	Return the damage of the hero as the sum of his weapons and strength minus ten and divided by two.
 	 * 			When this result is negative, zero is returned.
 	 * 			| result = (int)((float)(AnchorType.RIGHT_HAND.getAnchorId() + AnchorType.LEFT_HAND.getAnchorId() + this.getStrength() -10)/2)
@@ -512,7 +533,16 @@ public class Hero extends Character {
 	}
 	
 	/**
+	 * Check whether an item can be picked up.
 	 * 
+	 * @param 	item
+	 * 			The item to be picked up
+	 * @return	Return false when the holder of the item is not null and not dead.
+	 * 			Return false when the new weight of this hero will exceed 
+	 * 			the capacity of this hero.
+	 * 			Return true otherwise.
+	 * 			| result == !(item.getHolder() != null && !item.getHolder().isDead()) && 
+	 * 						!(this.getCapacity() < this.getTotalWeight() + totalWeightOfItem)
 	 */
 	@Override
 	public boolean canPickUp(Item item) {
@@ -527,19 +557,20 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Return true when the given item can be equipped
+	 * Check whether the given item can be equipped.
+	 * 
 	 * @param 	item
 	 * 			the item to be checked
-	 * @return	Return true when the given item can be equipped
+	 * @return	Return true when the given item can be equipped.
 	 * 			| ...
 	 */
 	@Override@Raw
 	public boolean canHaveAsItemAt(int anchorId, Item item) {
 		if (super.canHaveAsItemAt(anchorId, item)) {
 			if (AnchorType.getTypeFromId(anchorId).holdsPurse() == true) {
-				return item.isPurse(); // true als purse, false als geen purse
+				return item.isPurse();
 			} else {
-				return !(item.isPurse()); // true als geen purse, false als purse
+				return !(item.isPurse());
 			}
 		} else {
 			return false;
@@ -547,14 +578,15 @@ public class Hero extends Character {
 	}
 		
 	/**
-	 * Equip an item in the given anchor
+	 * Equip an item in the given anchor.
+	 * 
 	 * @param 	anchorType
 	 * 			The anchor to equip an item in
 	 * @param 	item
 	 * 			The item to equip
-	 * @effect	Equip an item in the given anchor
+	 * @effect	Equip an item in the given anchor.
 	 * 			| equip(anchorType.getAnchorId())
-	 * @note	This method has been overloaded in order to use our enumerator
+	 * @note	This method has been overloaded in order to use our enumerator.
 	 */
 	public void equip(AnchorType anchorType, Item item) {
 		int anchorId = anchorType.getAnchorId();
@@ -562,12 +594,13 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Unequip an item in the given anchor
+	 * Unequip an item in the given anchor.
+	 * 
 	 * @param 	anchorType
 	 * 			The anchor to unequip an item from
-	 * @effect	Unequip an item in the given anchor
+	 * @effect	Unequip an item in the given anchor.
 	 * 			| unequip(anchorType.getAnchorId())
-	 * @note	This method has been overloaded in order to use our enumerator
+	 * @note	This method has been overloaded in order to use our enumerator.
 	 */
 	public void unequip(AnchorType anchorType) {
 		int anchorId = anchorType.getAnchorId();
@@ -575,8 +608,10 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Return the amount of armor's equipped by this character
-	 * @return	Return the amount of armor's equipped by this character also looks inside anchored backpacks
+	 * Return the amount of armor's equipped by this character.
+	 * 
+	 * @return	Return the amount of armor's equipped by this character also
+	 * 			looks inside anchored backpacks.
 	 */
 	@Raw
 	public int getArmorCount () {
@@ -594,8 +629,9 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Return a string containing all public data of this hero
-	 * @return Return a string containing all public data of this hero
+	 * Return a string containing all public data of this hero.
+	 * 
+	 * @return Return a string containing all public data of this hero.
 	 */
 	@Override
 	public String toString() {
