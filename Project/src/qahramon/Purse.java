@@ -7,7 +7,9 @@ import qahramon.exceptions.TerminatedException;
 import qahramon.exceptions.TornException;
 
 /**
- * A class of purses
+ * A class of purses as special kinds of items
+ * involving capacity, content and isTorn.
+ * This class implements the interface 'Container'.
  * 
  * @invar	Each purse must have a valid capacity
  * 			| isValidCapacity(getCapacity())
