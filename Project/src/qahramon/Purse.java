@@ -50,7 +50,7 @@ public class Purse extends Item implements Container {
 		super(weight, 0);
 		this.capacity = capacity;
 		setContent(content);
-		ids.add(getIdentification());
+		purseIds.add(getIdentification());
 	}
 	
 	/***********************
@@ -109,26 +109,29 @@ public class Purse extends Item implements Container {
 	 * @return	Return true when this purse can have the given identification number that has to be unique
 	 * 			Return false when this purse can't
 	 * 			| result == canHaveAsIdentification (identification) 
-	 * 							&& ids.contains(identification) == false
+	 * 							&& purseIds.contains(identification) == false
 	 */
 	@Override@Raw
 	public boolean canHaveAsNewIdentification (long identification) {
-		return canHaveAsIdentification (identification) && ids.contains(identification) == false;
+		return canHaveAsIdentification (identification) && purseIds.contains(identification) == false;
 	}
 	
 	/**
-	 * Variable referencing a set with all ids of this class. 
+	 * Variable referencing a set with all purseIds of this class. 
 	 * 
 	 * @invar Each non null element in the hashset references an effective item. 
-	 *        | for (Item item : ids)
+	 *        | for (Item item : purseIds)
 	 *        | 	item != null
 	 */
-	private static final HashSet<Long> ids = new HashSet<Long>();
+	private static final HashSet<Long> purseIds = new HashSet<Long>();
 	
 	/*******************************
 	 * Capacity - total programming
 	 *******************************/
 	
+	/**
+	 * Variable referencing the amount of ducates a purse can hold.
+	 */
 	private final int capacity;
 	
 	/**
@@ -155,7 +158,9 @@ public class Purse extends Item implements Container {
 	/***********************
 	 * Torn
 	 ***********************/
-	
+	/**
+	 * Variable referencing whether or not the purse is torn.
+	 */
 	private boolean isTorn = false;
 	
 	/**
@@ -196,6 +201,9 @@ public class Purse extends Item implements Container {
 	 * Content - defensive programming
 	 **********************************/
 	
+	/**
+	 * Variable referencing the amount of ducates currently in the purse.
+	 */
 	private int content;
 	
 	/**
@@ -339,7 +347,9 @@ public class Purse extends Item implements Container {
 	/***********************
 	 * Other Methods
 	 ***********************/
-	
+	/**
+	 * Variable referencing the weight of a ducate.
+	 */
 	private final static float DUCATE_WEIGHT = 0.05f;
 	
 	/**
