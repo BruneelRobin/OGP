@@ -315,13 +315,15 @@ public abstract class Character {
 	 * This class has a bidirectional relation with the class Item. An item can be anchored using the function equip/unequip
 	 * or the protected function removeItemFromHolder.
 	 * 
-	 * @invar Each non null element in the hashmap references an effective item. 
-	 *        | for (HashMap.Entry<Integer,Item> entry : anchors.entrySet())
-	 *        | 	entry.getValue() != null
-	 * @invar Each element in the hashmap references an item that references
-	 *        back to this character.
-	 *        | for (HashMap.Entry<Integer,Item> entry : anchors.entrySet())
-	 *        | 	entry.getValue().getHolder() == this
+	 * @invar	The dictionary must be effective.
+	 * 			| anchors != null
+	 * @invar 	Each non null element in the hashmap references an effective item. 
+	 *        	| for (HashMap.Entry<Integer,Item> entry : anchors.entrySet())
+	 *        	| 	entry.getValue() != null
+	 * @invar 	Each element in the hashmap references an item that references
+	 *        	back to this character.
+	 *        	| for (HashMap.Entry<Integer,Item> entry : anchors.entrySet())
+	 *        	| 	entry.getValue().getCharacter() == this
 	 */	
 	private final HashMap<Integer, Item> anchors = new HashMap<Integer, Item>();
 	
@@ -351,6 +353,16 @@ public abstract class Character {
 	@Basic
 	public Item getItemAt (int anchorId) {
 		return this.anchors.get(anchorId);
+	}
+	
+	/**
+	 * Return the number of anchored items.
+	 * @return 	Return the number of anchored items.
+	 * 			| result == getAnchorEntrySet().size()
+	 */
+	@Basic
+	public int getNbItems () {
+		return getAnchorEntrySet().size();
 	}
 	
 	/**

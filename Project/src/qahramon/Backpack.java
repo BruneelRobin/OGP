@@ -11,6 +11,7 @@ import qahramon.exceptions.TerminatedException;
 
 /**
  * A class of backpacks as special kinds of items involving a capacity and content.
+ * This class implements the interface 'Container'.
  * 
  * @invar	Each backpack must have a valid capacity
  * 			| isValidCapacity(getCapacity())
@@ -150,10 +151,12 @@ public class Backpack extends Item implements Container {
 	 * This class has a bidirectional relation with the class Item.
 	 * An item can be added/removed using addItem()/removeItem()
 	 * 
-	 * @invar Each item in this structure must be an effective item. 
-	 *        | item != null
-	 * @invar Each item references back to this backpack (bidirectional relation)
-	 *        | item.getParentBackpack() == this
+	 * @invar	The dictionary must be effective.
+	 * 			| content != null
+	 * @invar 	Each item in this structure must be an effective item. 
+	 *        	| item != null
+	 * @invar 	Each item references back to this backpack (bidirectional relation)
+	 *        	| item.getParentBackpack() == this
 	 */	
 	private final HashMap<Long, HashSet<Item>> content = new HashMap<Long, HashSet<Item>>();
 	
@@ -192,6 +195,16 @@ public class Backpack extends Item implements Container {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Return the number of items in this backpack.
+	 * @return	Return the number of items in this backpack.
+	 * 			| result == getItems().size()
+	 */
+	@Basic
+	public int getNbItems() {
+		return getItems().size();
 	}
 	
 	/**
