@@ -4,7 +4,8 @@ import be.kuleuven.cs.som.annotate.*;
 import qahramon.exceptions.TerminatedException;
 
 /**
- * A class of items
+ * A class of items involving an identification, a class type, a termination state,
+ * an identification, a weight, a value, a character and a parent backpack
  * 
  * @invar 	Each item must have a unique and valid identification number
  * 			| canHaveAsIdentification(getIdentification())

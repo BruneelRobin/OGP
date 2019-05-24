@@ -3,7 +3,7 @@ package qahramon;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
- * An interface for containers
+ * An interface for containers involving a total weight and total value
  * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  *

@@ -6,7 +6,8 @@ import be.kuleuven.cs.som.annotate.*;
 import qahramon.exceptions.TerminatedException;
 
 /**
- * A class of armors.
+ * A class of armors as special kinds of items involving a protection 
+ * and full protection.
  * 
  * @invar	Each armor must have a valid full protection
  * 			| isValidFullProtection(getFullProtection())

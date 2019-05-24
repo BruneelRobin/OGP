@@ -10,7 +10,7 @@ import be.kuleuven.cs.som.annotate.*;
 import qahramon.exceptions.TerminatedException;
 
 /**
- * A class of backpacks
+ * A class of backpacks as special kinds of items involving a capacity and content.
  * 
  * @invar	Each backpack must have a valid capacity
  * 			| isValidCapacity(getCapacity())
