@@ -15,13 +15,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * A class of monsters.
+ * A class of monsters as special kinds of characters involving capacity, 
+ * protection and damage.
  * 
- * @invar	Each monster must have a valid damage
+ * @invar	Each monster must have a valid damage.
  * 			| isValidDamage(getDamage())
- * @invar	Each monster must have a valid protection
+ * @invar	Each monster must have a valid protection.
  * 			| isValidProtection(getProtection())
- * @invar	Each monster must have a valid capacity
+ * @invar	Each monster must have a valid capacity.
  * 			| isValidCapacity(getCapacity())
  * 
  * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
@@ -37,20 +38,21 @@ public class Monster extends Character {
 	/**
 	 * Create a monster with a given name, amount of hitpoints, damage, protection,
 	 * number of anchors and capacity.
+	 * 
 	 * @param 	name
-	 *			The name of this monster.
+	 *			The name of this monster
 	 * @param 	hitpoints
-	 * 			The maximum amount of hitpoints of this monster.
+	 * 			The maximum amount of hitpoints of this monster
 	 * @param 	damage
-	 * 			The damage of this monster.
+	 * 			The damage of this monster
 	 * @param 	protection
-	 * 			The protection of this monster.
+	 * 			The protection of this monster
 	 * @param 	numberOfAnchors
-	 * 			The number of anchors of this monster.
+	 * 			The number of anchors of this monster
 	 * @param 	capacity
-	 * 			The carry capacity of this monster.
-	 * @effect	The new monster is set as a character with a given name, amount of hitpoints, a number of anchors
-	 * 			and no items attached
+	 * 			The carry capacity of this monster
+	 * @effect	The new monster is set as a character with a given name, amount of hitpoints,
+	 * 			a number of anchors and no items attached.
 	 * 			| this(name, hitpoints, damage, protection, numberOfAnchors, capacity, new HashSet<Item>())
 	 */
 	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity) throws IllegalArgumentException {
@@ -60,25 +62,27 @@ public class Monster extends Character {
 	/**
 	 * Create a monster with a given name, amount of hitpoints, damage, protection,
 	 * number of anchors, capacity and given items, which are randomly distributed on the anchors.
+	 * 
 	 * @param 	name
-	 *			The name of this monster.
+	 *			The name of this monster
 	 * @param 	hitpoints
-	 * 			The maximum amount of hitpoints of this monster.
+	 * 			The maximum amount of hitpoints of this monster
 	 * @param 	damage
-	 * 			The damage of this monster.
+	 * 			The damage of this monster
 	 * @param 	protection
-	 * 			The protection of this monster.
+	 * 			The protection of this monster
 	 * @param 	numberOfAnchors
-	 * 			The number of anchors of this monster.
+	 * 			The number of anchors of this monster
 	 * @param 	capacity
-	 * 			The carry capacity of this monster.
+	 * 			The carry capacity of this monster
 	 * @param	items
-	 * @pre		The given damage is valid
+	 * 			The given set of items of this monster
+	 * @pre		The given damage must be valid.
 	 * 			| isValidDamage(damage)
-	 * @pre		The given protection is valid
+	 * @pre		The given protection must be valid.
 	 * 			| isValidProtection(protection)
 	 * 			The given set of items for this monster to carry.
-	 * @pre		The given number of anchors is equal to or higher than the amount of items to equip
+	 * @pre		The given number of anchors is equal to or higher than the amount of items to equip.
 	 * 			| numberOfAnchors >= items.size()
 	 * @effect	The new monster is set as a character with a given name, amount of hitpoints
 	 * 			and a number of anchors.
@@ -86,7 +90,8 @@ public class Monster extends Character {
 	 * @post	The capacity of this monster is set to the given capacity, if the capacity 
 	 * 			can handle the total weight of the given items. If not the capacity is set
 	 * 			to the total weight of the given items.
-	 * @post	Each item given in this constructor will be equipped, since all items are given in a set no order can be guaranteed
+	 * @post	Each item given in this constructor will be equipped, since all items are 
+	 * 			given in a set no order can be guaranteed.
 	 * @post	The damage of this monster is set to the given damage.
 	 * 			| new.getDamage() == damage
 	 * @post	The protection of this monster is set to the given protection.
@@ -132,10 +137,11 @@ public class Monster extends Character {
 	private final int damage;
 	
 	/**
-	 * Return true when the given damage is valid
+	 * Return true when the given damage is valid.
+	 * 
 	 * @param	damage
 	 * 			The damage to check
-	 * @return	Return true when the given damage is positive
+	 * @return	Return true when the given damage is positive.
 	 * 			| damage >= 0
 	 */
 	public static boolean isValidDamage(int damage) {
@@ -144,6 +150,7 @@ public class Monster extends Character {
 	
 	/**
 	 * Return the damage of this monster.
+	 * 
 	 * @return	Return the damage of this monster.
 	 */
 	@Basic@Override
@@ -163,10 +170,11 @@ public class Monster extends Character {
 	private static final int MAX_PROTECTION = 100;
 	
 	/**
-	 * Return true when the given protection is valid
+	 * Check whether the given protection is valid.
+	 * 
 	 * @param	protection
 	 * 			The protection to check
-	 * @return	Return true when the given protection is positive
+	 * @return	Return true when the given protection is positive.
 	 * 			| protection >= 0
 	 */
 	public static boolean isValidProtection(int protection) {
@@ -174,8 +182,9 @@ public class Monster extends Character {
 	}
 	
 	/**
-	 * Return the protection of the monster
-	 * @return	Return the protection of the monster
+	 * Return the protection of the monster.
+	 * 
+	 * @return	Return the protection of the monster.
 	 */
 	@Override@Basic
 	public int getProtection() {
@@ -189,8 +198,9 @@ public class Monster extends Character {
 	private final float capacity;
 	
 	/**
-	 * Return the monster's capacity
-	 * @return Return the monster's capacity
+	 * Return the monster's capacity.
+	 * 
+	 * @return Return the monster's capacity.
 	 */
 	@Basic@Override@Immutable
 	public float getCapacity() {
@@ -198,10 +208,11 @@ public class Monster extends Character {
 	}
 	
 	/**
-	 * Return true when the given capacity is valid
+	 * Check whether the given capacity is valid.
+	 * 
 	 * @param	capacity
 	 * 			The capacity to check
-	 * @return	Return true when the given capacity is positive
+	 * @return	Return true when the given capacity is positive.
 	 * 			| capacity >= 0
 	 */
 	public static boolean isValidCapacity(float capacity) {
@@ -213,9 +224,10 @@ public class Monster extends Character {
 	 ***********************/
 	
 	/**
-	 * Return a boolean whether the monster wants to take this item
-	 * @return	Returns true if the monster wants to take this item
-	 * 			Returns false when the monster doesn't want to take this item
+	 * Check whether the monster wants to take this item.
+	 * 
+	 * @return	Return true if the monster wants to take this item.
+	 * 			Return false when the monster doesn't want to take this item.
 	 * 
 	 * @note	The more shiny an item is, the more likely the monster wants to take it.
 	 */
@@ -259,8 +271,9 @@ public class Monster extends Character {
 	
 	/**
 	 * This monster collects the treasures it wants to take found on a dead body.
-	 * @post	Collects all anchored items of the other character 
-	 * 			when the current monster wants to take it
+	 * 
+	 * @post	Collect all anchored items of the other character 
+	 * 			when the current monster wants to take it.
 	 * 			| wantsToTake(item)
 	 * @throws	DeadException
 	 * 			throws this exception when the current monster is dead.
@@ -295,9 +308,10 @@ public class Monster extends Character {
 	
 	/**
 	 * This monster hits the given character.
+	 * 
 	 * @post	The character that was hit by this monster will take damage.
 	 * @throws	DeadException
-	 * 			throws this exception when the current monster is dead.
+	 * 			Throws this exception when the current monster is dead.
 	 */
 	@Override
 	public void hit(Character character) throws DeadException {
@@ -327,8 +341,9 @@ public class Monster extends Character {
 	}
 	
 	/**
-	 * Return a string containing all public data of this monster
-	 * @return Return a string containing all public data of this monster
+	 * Return a string containing all public data of this monster.
+	 * 
+	 * @return Return a string containing all public data of this monster.
 	 */
 	@Override
 	public String toString() {
