@@ -7,7 +7,8 @@ import be.kuleuven.cs.som.annotate.*;
 import qahramon.exceptions.*;
 
 /**
- * A class of weapons.
+ * A class of weapons as special kinds of items
+ * involving damage.
  * 
  * @invar	Each weapon must have a valid damage
  * 			| isValidDamage(getDamage())
