@@ -379,11 +379,9 @@ public abstract class Character {
 	public Item getItemAt (int anchorId) {
 		return this.anchors.get(anchorId);
 	}
-	
 	/**
-	 * Check whether the given item can be equipped in the given slot.
-	 * 
 	 * Return the number of anchored items.
+	 * 
 	 * @return 	Return the number of anchored items.
 	 * 			| result == getAnchorEntrySet().size()
 	 */
@@ -391,6 +389,9 @@ public abstract class Character {
 	public int getNbItems () {
 		return getAnchorEntrySet().size();
 	}
+	/**
+	 * Check whether the given item can be equipped in the given slot.
+	 * 
 	 * @param 	item
 	 * 			the item to be checked
 	 * @return	Return false when this item is terminated.
