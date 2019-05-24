@@ -35,8 +35,9 @@ class HeroTest {
 
 	@BeforeEach
 	public void setUp() {
-		hero = new Hero("LegalName", 97, 10);
-		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
+		HashMap<AnchorType, Item> emptyMap = new HashMap<AnchorType, Item>();
+		hero = new Hero("LegalName", 97, 10, emptyMap);
+		monster = new Monster("LegalName", 499, 20, 70, 10, 100);
 		smallMonster = new Monster("LegalName", 7, 1, 10, 2, 50);
 		weakMonster = new Monster("LegalName", 80, 0, 0, 5, 50);
 		weapon1 = new Weapon(10,5);
@@ -268,6 +269,7 @@ class HeroTest {
 		hero.equip(AnchorType.RIGHT_HAND, weapon1);
 		monster.takeDamage(monster.getHitpoints());
 		hero.collectTreasures(monster);
+		System.out.println(hero);
 		assertEquals(hero, weapon1.getHolder());
 		assertEquals(hero, armor2.getHolder());
 		assertEquals(hero, backpack2.getHolder());
