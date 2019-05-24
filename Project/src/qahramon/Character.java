@@ -44,9 +44,9 @@ public abstract class Character {
 	 * and a number of anchors.
 	 * 
 	 * @param	name
-	 * 			The name of the new character
+	 * 			the name of the new character
 	 * @param	hitpoints
-	 * 			The max amount of hitpoints
+	 * 			the max amount of hitpoints
 	 * @pre		The given amount of maximum hitpoints must be valid.
 	 * 			| canHaveAsMaxHitpoints(hitpoints)
 	 * @pre		The given number of anchors must be valid.
@@ -101,7 +101,7 @@ public abstract class Character {
 	 * 			| new.getName() == name	
 	 */
 	@Raw
-	private void setName(String name) {
+	protected void setName(String name) {
 		this.name = name;
 	}
 	
@@ -110,7 +110,7 @@ public abstract class Character {
 	 * 
 	 * @param 	name
 	 * 			the new name
-	 * @post	The name is set to the given name
+	 * @post	The name is set to the given name.
 	 * 			| new.getName() == name
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when the given name is not valid.
@@ -266,7 +266,7 @@ public abstract class Character {
 	 * 			| new.getMaxHitpoints() == maxHitpoints
 	 */
 	@Raw
-	private void setMaxHitpoints (int maxHitpoints) {
+	protected void setMaxHitpoints (int maxHitpoints) {
 		this.maxHitpoints = maxHitpoints;
 	}
 	
@@ -360,7 +360,7 @@ public abstract class Character {
 	 * @post	Set the item at the given anchor of this character.
 	 */
 	@Raw
-	private void setItemAt(int anchorId, Item item) {
+	protected void setItemAt(int anchorId, Item item) {
 		if (item == null) {
 			this.anchors.remove(anchorId);
 		} else {
@@ -687,7 +687,7 @@ public abstract class Character {
 	 * This character collects the treasures it wants to take found on a dead body.
 	 * 
 	 * @post	Collect all anchored items of the other character 
-	 * 			when the current character wants to take it.
+	 * 			when the current character wants to and can take it.
 	 * 			| wantsToTake(item)
 	 * @throws	DeadException
 	 * 			Throws this error when this character is dead.

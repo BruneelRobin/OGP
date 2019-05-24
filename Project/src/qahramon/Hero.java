@@ -1,18 +1,13 @@
 package qahramon;
 
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
 import qahramon.exceptions.DeadException;
 
 import java.util.Map.Entry;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * A class of heroes as special kinds of characters involving strength.
@@ -35,11 +30,11 @@ public class Hero extends Character {
 	 * Create a hero with a given name, amount of hitpoints and strength.
 	 * 
 	 * @param 	name
-	 * 			The name of this hero
+	 * 			the name of this hero
 	 * @param 	hitpoints
-	 * 			The amount of hitpoints of this hero
+	 * 			the amount of hitpoints of this hero
 	 * @param 	strength
-	 * 			The strength of this hero
+	 * 			the strength of this hero
 	 * @effect	The new hero is set as a character with a given name, amount of hitpoints,
 	 * 			a default number of anchors and starter gear.
 	 * 			| this(name, hitpoints, strength, getStarterGear())
@@ -52,13 +47,13 @@ public class Hero extends Character {
 	 * Create a hero with a given name, amount of hitpoints, strength and gear.
 	 * 
 	 * @param 	name
-	 * 			The name of this hero
+	 * 			the name of this hero
 	 * @param 	hitpoints
-	 * 			The amount of hitpoints of this hero
+	 * 			the amount of hitpoints of this hero
 	 * @param 	strength
-	 * 			The strength of this hero
+	 * 			the strength of this hero
 	 * @param	items
-	 * 			The initial gear of this hero
+	 * 			the initial gear of this hero
 	 * @effect	The new hero is set as a character with a given name, amount of hitpoints
 	 * 			and a default number of anchors.
 	 * 			| super(name, hitpoints, AnchorTypes.values().length)
