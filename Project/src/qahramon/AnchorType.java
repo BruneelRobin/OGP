@@ -39,7 +39,6 @@ public enum AnchorType {
 	 */
  	public String toString() {
  		return this.name;
-	
 	}
 	
 	/**
@@ -48,7 +47,7 @@ public enum AnchorType {
 	 */
 	 public int getAnchorId() {
 		 return this.anchorId;
-	 	}
+	 }
 
 		
 	/**
