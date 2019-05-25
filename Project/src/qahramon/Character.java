@@ -194,7 +194,7 @@ public abstract class Character {
 	 */
 	@Raw
 	public boolean canHaveAsHitpoints(int hitpoints) {
-		return hitpoints >= 0 && (isFighting() || MathHelper.isPrime(hitpoints));
+		return hitpoints >= 0 && (isFighting() || MathHelper.isPrime(hitpoints) || hitpoints == 0);
 	}
 	
 	/**
