@@ -704,8 +704,11 @@ public abstract class Character {
 	/**
 	 * Check whether this character has proper items equipped.
 	 * 
-	 * @return	Return true when this item has proper items equipped.
-	 * 			Return false when this item doesn't have proper items equipped.
+	 * @return	Return true when each item can be equipped at the slot its equipped on and each item
+	 * 			has the current character bound
+	 * 			Return false otherwise.
+	 * 			| 	for each (Entry<Integer, Item> entry : getAnchorEntrySet()) {
+	 *			|		canHaveAsItemAt(entry.getKey(), entry.getValue()) && entry.getValue().getCharacter() == this
 	 */
 	@Raw
 	public boolean hasProperItems () {
