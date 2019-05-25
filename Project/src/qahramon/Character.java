@@ -738,6 +738,7 @@ public abstract class Character {
 	
 	/**
 	 * This character hits the given character.
+	 * 
 	 * @param	character
 	 * 			the character to hit
 	 * @post	This character hits the given character. The new amount of hitpoints
@@ -750,6 +751,7 @@ public abstract class Character {
 	
 	/**
 	 * This character collects the treasures it wants to take found on a dead character.
+	 * 
 	 * @param	character
 	 * 			the backpack to look check
 	 * @effect	All items anchored onto the given dead character will be collected when possible
@@ -777,6 +779,7 @@ public abstract class Character {
 	
 	/**
 	 * This character collects the treasures it wants to take found in a backpack.
+	 * 
 	 * @param	backpack
 	 * 			the backpack to look into
 	 * @effect	All items in this backpack will be collected when possible
@@ -802,7 +805,8 @@ public abstract class Character {
 	}
 	
 	/**
-	 * Pick up the item when this character wants to take it
+	 * Pick up the item when this character wants to take it.
+	 * 
 	 * @param 	item
 	 * 			the item to check and pick up
 	 * @post	Pick up the item when this character wants to take it.
