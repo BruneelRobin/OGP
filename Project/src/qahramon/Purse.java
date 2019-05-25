@@ -375,6 +375,16 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
+	 * Return the default weight.
+	 * 
+	 * @return	Return the default weight.
+	 */
+	@Immutable@Basic@Override
+	public float getDefaultWeight () {
+		return 0.1f;
+	}
+	
+	/**
 	 * Return the total weight of this purse
 	 * @return	Return the total weight this purse: weight of the purse combined with weiht of its content.
 	 * 			| result == (this.getContent() * DUCATE_WEIGHT) + this.getWeight()
