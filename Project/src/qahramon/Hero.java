@@ -468,6 +468,7 @@ public class Hero extends Character {
 	
 	/**
 	 * Make the character hit the given character.
+	 * 
 	 * @param	character
 	 * 			the character to hit
 	 * @effect	A random number between 0 and 100 is generated, when this number is higher than the 

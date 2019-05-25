@@ -287,7 +287,8 @@ public class Monster extends Character {
 	}
 	
 	/**
-	 * Pick up the item when this character wants to take it
+	 * Pick up the item when this character wants to take it.
+	 * 
 	 * @param	item
 	 * 			the treasure to collect
 	 * @effect	When this monster wants to take an item it will be picked up
@@ -313,6 +314,7 @@ public class Monster extends Character {
 	
 	/**
 	 * This monster hits the given character.
+	 * 
 	 * @param	character
 	 * 			the character to hit
 	 * @effect	A random number between 0 and 100 is generated, when this number is below the current

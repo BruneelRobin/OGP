@@ -5,17 +5,17 @@ import qahramon.exceptions.TerminatedException;
 
 /**
  * An abstract class of items involving an identification, a class type, a termination state,
- * an identification, a weight, a value, a character and a parent backpack
+ * an identification, a weight, a value, a character and a parent backpack.
  * 
- * @invar 	Each item must have a unique and valid identification number
+ * @invar 	Each item must have a unique and valid identification number.
  * 			| canHaveAsIdentification(getIdentification())
- * @invar	Each item must have a valid weight
+ * @invar	Each item must have a valid weight.
  * 			| isValidWeight(getWeight())
- * @invar	Each item must have a valid value
+ * @invar	Each item must have a valid value.
  * 			| canHaveAsValue(getValue())
- * @invar	Each item must have a proper character when bound
+ * @invar	Each item must have a proper character when bound.
  * 			| getCharacter() == null || hasProperCharacter()
- * @invar	Each item must have a proper parent backpack when bound
+ * @invar	Each item must have a proper parent backpack when bound.
  * 			| getParentBackpack() == null || hasProperParentBackpack()
  * 
  * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
@@ -31,20 +31,19 @@ public abstract class Item {
 	
 	/**
 	 * Create an item with given weight and value.
-	 * @param 	weight
-	 * 			The weight of this item.
-	 * @param 	value
-	 * 			The value of this item.
 	 * 
+	 * @param 	weight
+	 * 			the weight of this item
+	 * @param 	value
+	 * 			the value of this item
 	 * @post	The identification is set to a generated identification.
 	 * 			| new.getIdentification() == generateIdentification()
 	 * @post	The weight is set to the given weight.
 	 * 			If the given weight is not valid, a default weight is set.
 	 * 			| new.getWeight() == weight
-	 * @post	The weight is valid after construction.
-	 * 			| new.isValidWeight
-	 * @post	The value of this item is set to the given value.
-	 * 			| setValue(value)
+	 * @post	The value of this item is set to the given value if the value lies
+	 * 			between the boundaries.
+	 * 			| new.getValue() == clamp(value, getMinValue(), getMaxValue())
 	 */
 	@Model
 	protected Item(float weight, int value) {
@@ -55,26 +54,25 @@ public abstract class Item {
 			this.weight = getDefaultWeight();
 		}
 		
-		setValue(MathHelper.clamp(value, getMinValue(), getMaxValue())); //total programming 
+		setValue(MathHelper.clamp(value, getMinValue(), getMaxValue()));
 	}
 	
 	/**
 	 * Create an item with given identification, weight and value.
+	 * 
 	 * @param 	identification
-	 * 			The identification of this item.
+	 * 			the identification of this item
 	 * @param 	weight
-	 * 			The weight of this item.
+	 * 			the weight of this item
 	 * @param 	value
-	 * 			The value of this item.
-	 * @post	The identification is set to the given identification
+	 * 			the value of this item
+	 * @post	The identification is set to the given identification.
 	 * 			| new.getIdentification() == identification
 	 * @post	The weight is set to the given weight.
 	 * 			If the given weight is not valid, a default weight is set.
 	 * 			| new.getWeight() == weight
-	 * @post	The weight is valid after construction.
-	 * 			| new.isValidWeight
 	 * @post	The value of this item is set to the given value.
-	 * 			| setValue(value)
+	 * 			| new.getValue() == clamp(value, getMinValue(), getMaxValue())
 	 * 
 	 * @note	For the class Armor, the identification needs to be given. For now this
 	 * 			is the only class that uses this constructor.
@@ -101,9 +99,10 @@ public abstract class Item {
 	 ***********************/
 	
 	/**
-	 * Return true when this item is a weapon
-	 * @return	Return true when this item is a weapon
-	 * 			Return false otherwise
+	 * Check whether this item is a weapon.
+	 * 
+	 * @return	Return true when this item is a weapon.
+	 * 			Return false otherwise.
 	 */
 	@Basic@Immutable@Raw
 	public boolean isWeapon () {
@@ -111,9 +110,10 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Return true when this item is an armor
-	 * @return	Return true when this item is an armor
-	 * 			Return false otherwise
+	 * Check whether this item is an armor.
+	 * 
+	 * @return	Return true when this item is an armor.
+	 * 			Return false otherwise.
 	 */
 	@Basic@Immutable@Raw
 	public boolean isArmor () {
@@ -121,9 +121,10 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Return true when this item is a backpack
-	 * @return	Return true when this item is a backpack
-	 * 			Return false otherwise
+	 * Check whether this item is a backpack.
+	 * 
+	 * @return	Return true when this item is a backpack.
+	 * 			Return false otherwise.
 	 */
 	@Basic@Immutable@Raw
 	public boolean isBackpack () {
@@ -131,9 +132,10 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Return true when this item is a purse
-	 * @return	Return true when this item is a purse
-	 * 			Return false otherwise
+	 * Check whether this item is a purse.
+	 * 
+	 * @return	Return true when this item is a purse.
+	 * 			Return false otherwise.
 	 */
 	@Basic@Immutable@Raw
 	public boolean isPurse () {
@@ -141,8 +143,10 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Return true when this item is a purse or backpack
-	 * @return 	Return true when this item is a purse or backpack
+	 * Check whether this item is a purse or backpack.
+	 * 
+	 * @return 	Return true when this item is a purse or backpack.
+	 * 			Return false otherwise.
 	 */
 	@Immutable@Raw
 	public boolean isContainer () {
@@ -153,12 +157,16 @@ public abstract class Item {
 	 * Destructor
 	 ***********************/
 	
+	/**
+	 * Variable referencing the terminated state of this item.
+	 */
 	private boolean isTerminated = false;
 	
 	/**
-	 * Return true when this item is terminated
-	 * @return	Return true when this item is terminated
-	 * 			Return false otherwise
+	 * Check whether this item is terminated.
+	 * 
+	 * @return	Return true when this item is terminated.
+	 * 			Return false otherwise.
 	 */
 	@Basic@Raw
 	public boolean isTerminated() {
@@ -166,10 +174,12 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Terminates this item
-	 * @post	Terminates this item by breaking all associations (dropping it on the ground)
-	 * 			and sets terminated state on true
+	 * Terminate this item.
+	 * 
+	 * @post	Set terminated state to true.
 	 * 			| isTerminated() == true
+	 * @effect	Drop this item to break all associations.
+	 * 			| drop()
 	 */
 	public void terminate () {
 		this.drop();
@@ -180,6 +190,9 @@ public abstract class Item {
 	 * Identification - total programming
 	 *************************************/
 	
+	/**
+	 * Variable referencing the identification of this item.
+	 */
 	private final long identification;
 	
 	/**
@@ -191,29 +204,30 @@ public abstract class Item {
 		return this.identification;
 	}
 	
-	//protected void setIdentification (long identification) {
-	//	this.identification = identification;
-	//}
-	
 	/**
-	 * Return true when this class can have this id as identification where id doesn't have to be unique
+	 * Check whether this class can have this id as identification where id doesn't have to be unique.
+	 * 
 	 * @return	Return true when this class can have this id as identification where id doesn't have to be 
-	 * 			unique
+	 * 			unique.
+	 * 			Return false otherwise.
 	 */
 	@Raw
 	public abstract boolean canHaveAsIdentification(long identification);
 	
 	/**
-	 * Return true when this class can have this id as identification where the given id has to be unique
+	 * Check whether this class can have this id as identification where the given id has to be unique.
+	 * 
 	 * @return	Return true when this class can have this id as identification where the given id has to 
-	 * 			be unique
+	 * 			be unique.
+	 * 			Return false otherwise.
 	 */
 	@Raw
 	public abstract boolean canHaveAsNewIdentification(long identification);
 	
 	/**
-	 * Return a valid id for this item
-	 * @return	Return a valid id for this item
+	 * Return a valid id for this item.
+	 * 
+	 * @return	Return a valid id for this item.
 	 */
 	@Raw
 	protected abstract long generateIdentification();
@@ -223,11 +237,16 @@ public abstract class Item {
 	/*****************************
 	 * Weight - total programming
 	 *****************************/
+	
+	/**
+	 * Variable referencing the weight of this item.
+	 */
 	private final float weight;
 	
 	/**
-	 * Returns the item's weight
-	 * @return Returns the item's weight
+	 * Return the item's weight.
+	 * 
+	 * @return Return the item's weight.
 	 */
 	@Basic@Immutable@Raw
 	public float getWeight() {
@@ -235,11 +254,12 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Return true when the given weight is valid
+	 * Check whether the given weight is valid.
+	 * 
 	 * @param 	weight
 	 * 			the weight to check
 	 * @return	Return true when the given weight is valid, thus positive.
-	 * 			Return false when the given weight is invalid
+	 * 			Return false otherwise.
 	 */
 	public static boolean isValidWeight(float weight) {
 		
@@ -247,39 +267,44 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Return the default weight
-	 * @return	Return the default weight
+	 * Return the default weight.
+	 * 
+	 * @return	Return the default weight.
 	 */
 	@Immutable@Basic
 	public float getDefaultWeight () {
-		return 100f;
+		return 10f;
 	}
-	
-	
-	
 	
 	/***********************
 	 * Value
 	 ***********************/
+	
+	/**
+	 * Variable referencing the value of this item.
+	 */
 	private int value;
 	
 	/**
-	 * Return the maximum value for this item
-	 * @return	Return the maximum value for this item
+	 * Return the maximum value for this item.
+	 * 
+	 * @return	Return the maximum value for this item.
 	 */
 	@Immutable@Basic
 	public abstract int getMaxValue ();
 	
 	/**
-	 * Return the minimum value for this item
-	 * @return	Return the minimum value for this item
+	 * Return the minimum value for this item.
+	 * 
+	 * @return	Return the minimum value for this item.
 	 */
 	@Immutable@Basic
 	public abstract int getMinValue ();
 	
 	/**
-	 * Returns the item's value 
-	 * @return Returns the item's value
+	 * Return the item's value.
+	 * 
+	 * @return Return the item's value.
 	 */
 	@Basic@Raw
 	public int getValue() {
@@ -287,10 +312,11 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Sets the item's value to the given value
+	 * Set the item's value to the given value.
+	 * 
 	 * @param value
-	 * 		  The new value
-	 * @post  The value is set to the given value
+	 * 		  the new value
+	 * @post  The value is set to the given value.
 	 * 		  | new.getValue() == value
 	 */
 	protected void setValue(int value) {
@@ -298,13 +324,13 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Returns whether or not the given value is valid
-	 * @param value
-	 * 		  the integer checked for its validity
-	 * @return returns true if the given value lies between the minimum and maximum value.
-	 * 		   | (value >= MIN_VALUE && value <= MAX_VALUE)
-	 * @return returns false if the given value does not lie between the minimum and maximum.
+	 * Check whether the given value is valid.
 	 * 
+	 * @param 	value
+	 * 		  	the integer checked for its validity
+	 * @return	Return true if the given value lies between the minimum and maximum value.
+	 * 			Return false otherwise.
+	 * 		   	| value >= getMinValue() && value <= getMaxValue()
 	 */
 	@Raw
 	public boolean canHaveAsValue(int value) {
@@ -315,11 +341,16 @@ public abstract class Item {
 	/***********************
 	 * Character
 	 ***********************/
+	
+	/**
+	 * Variable referencing the character of this item.
+	 */
 	private Character character;
 	
 	/**
-	 * Returns the item's character
-	 * @return Returns the item's character
+	 * Return the item's character.
+	 * 
+	 * @return Return the item's character.
 	 */
 	@Basic
 	public Character getCharacter() {
@@ -327,11 +358,12 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Sets the item's character to the given character
+	 * Set the item's character to the given character.
+	 * 
 	 * @param character
-	 * 		  The new character
-	 * @post  The character is set to the given character
-	 * 		  | new.getCharacter() == anchor
+	 * 		  the new character
+	 * @post  The character is set to the given character.
+	 * 		  | new.getCharacter() == character
 	 */
 	@Raw
 	private void setCharacter(Character character) {
@@ -339,14 +371,15 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Binds a character to this anchored item
-	 * @param 	anchor
-	 * 			The character to set as anchor
-	 * @pre		This item is not terminated
+	 * Bind a character to this anchored item.
+	 * 
+	 * @param 	character
+	 * 			the character to set
+	 * @pre		This item cannot be terminated.
 	 * 			| !this.isTerminated()
-	 * @post	Binds a character to this anchored item
-	 * 			| getParentBackpack() == null && getAnchor() == anchor
-	 * @post	When this item is in a backpack it will be removed from that backpack
+	 * @post	Bind a character to this anchored item.
+	 * 			| new.getParentBackpack() == null && new.getCharacter() == character
+	 * @post	When this item is in a backpack it will be removed from that backpack.
 	 * 			| getParentBackpack().removeItem(this);
 				| setParentBackpack(null);
 	 * @post	When this item is already anchored to the character, 
@@ -355,7 +388,6 @@ public abstract class Item {
 	 */
 	@Raw
 	protected void bindCharacter (Character character) {
-		//if (character == getCharacter() || getCharacter() == null) {
 			if (getParentBackpack() != null) {
 				getParentBackpack().removeItem(this);
 				setParentBackpack(null);
@@ -363,13 +395,14 @@ public abstract class Item {
 				getCharacter().removeItemFromHolder(this);
 			}
 			setCharacter(character);
-		//}
-		
 	}
 	
 	/**
-	 * Return true when this item has a proper character
-	 * @return	Return true when this item has a proper character
+	 * Check whether this item has a proper character.
+	 * 
+	 * @return	Return true when this item can have the current character and the character has
+	 * 			this item anchored.
+	 * 			Return false otherwise.
 	 * 			| result == canHaveAsCharacter(getCharacter()) && getCharacter().hasItem(this)
 	 */
 	@Raw
@@ -378,10 +411,12 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Return true when this item can have the given character
+	 * Check whether this item can have the given character.
+	 * 
 	 * @param 	character
-	 * 			The character to check
-	 * @return	Return true when the given character is not null
+	 * 			the character to check
+	 * @return	Return true when the given character is not null.
+	 * 			Return false otherwise.
 	 * 			| result == character != null
 	 */
 	@Raw
@@ -392,11 +427,16 @@ public abstract class Item {
 	/***********************
 	 * ParentBackpack
 	 ***********************/
+	
+	/**
+	 * Variable referencing the parent backpack of this item.
+	 */
 	private Backpack parentBackpack;
 	
 	/**
-	 * Returns the item's parentBackpack
-	 * @return Returns the item's parentBackpack
+	 * Return the item's parent backpack.
+	 * 
+	 * @return Return the item's parent backpack.
 	 */
 	@Basic
 	public Backpack getParentBackpack() {
@@ -404,10 +444,11 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Sets the item's parentBackpack to the given backpack
+	 * Set the item's parentBackpack to the given backpack.
+	 * 
 	 * @param backpack
-	 * 		  The new parentBackpack of the item
-	 * @post  The parentBackpack is set to the given parentBackpack
+	 * 		  the new parent backpack of the item
+	 * @post  The parent backpack is set to the given parentBackpack.
 	 * 		  | new.getParentBackpack() == backpack
 	 */
 	@Raw
@@ -416,8 +457,10 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Return true when this item has a proper backpack
-	 * @return	Return true when this item has a proper backpack
+	 * Check whether this item has a proper backpack.
+	 * 
+	 * @return	Return true when this item can have the given backpack and the backpack contains this item.
+	 * 			Return false otherwise.
 	 * 			| result == canHaveAsParentBackpack(getParentBackpack()) && getParentBackpack().contains(this)
 	 */
 	@Raw
@@ -426,11 +469,14 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Return true when this item can have the given backpack
+	 * Check whether this item can have the given backpack.
+	 * 
 	 * @param 	backpack
-	 * 			The backpack to check
-	 * @return	Return true when the given backpack is not null
-	 * 			| result == backpack != null
+	 * 			the backpack to check
+	 * @return	Return true when the given backpack is not null, not terminated and the given backpack
+	 * 			can have this item.
+	 * 			Return false otherwise.
+	 * 			| result == backpack != null && !backpack.isTerminated() && backpack.canHaveAsItem(this)
 	 */
 	@Raw
 	public boolean canHaveAsParentBackpack (Backpack backpack) {
