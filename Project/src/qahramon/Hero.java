@@ -312,13 +312,28 @@ public class Hero extends Character {
 	 ***********************/
 	
 	/**
-	 * Variable referencing ;...
+	 * Variable referencing the capacity of a default purse from the starter gear.
 	 */
 	private static final int DEFAULT_PURSE_CAPACITY = 100;
+	
+	/**
+	 * Variable referencing the weight of a default purse from the starter gear. 
+	 */
 	private static final float DEFAULT_PURSE_WEIGHT = 0.5f;
 	
+	/**
+	 * Variable referencing the protection of a default armor from the starter gear.
+	 */
 	private static final int DEFAULT_ARMOR_PROTECTION = 15;
+	
+	/**
+	 * Variable referencing the weight of a default armor from the starter gear.
+	 */
 	private static final float DEFAULT_ARMOR_WEIGHT = 4f;
+	
+	/**
+	 * Variable referencing the maximum value of a default armor from the starter gear.
+	 */
 	private static final int DEFAULT_FULLVALUE = 100;
 	
 	
