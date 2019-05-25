@@ -416,7 +416,8 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * Pick up the item when this character wants to take it
+	 * Pick up the item when this character wants to take it.
+	 * 
 	 * @param	item
 	 * 			the treasure to collect
 	 * @effect	When this item is a backpack, all treasures inside this backpack will be collected.
