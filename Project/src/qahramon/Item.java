@@ -207,6 +207,8 @@ public abstract class Item {
 	/**
 	 * Check whether this class can have this id as identification where id doesn't have to be unique.
 	 * 
+	 * @param	identification
+	 * 			the identification to be checked
 	 * @return	Return true when this class can have this id as identification where id doesn't have to be 
 	 * 			unique.
 	 * 			Return false otherwise.
@@ -217,6 +219,8 @@ public abstract class Item {
 	/**
 	 * Check whether this class can have this id as identification where the given id has to be unique.
 	 * 
+	 * @param	identification
+	 * 			the identification to be checked
 	 * @return	Return true when this class can have this id as identification where the given id has to 
 	 * 			be unique.
 	 * 			Return false otherwise.
@@ -389,7 +393,7 @@ public abstract class Item {
 	@Raw
 	protected void bindCharacter (Character character) {
 			if (getParentBackpack() != null) {
-				getParentBackpack().removeItem(this);
+				getParentBackpack().remove(this);
 				setParentBackpack(null);
 			} else if (getCharacter() != null) {
 				getCharacter().removeItemFromHolder(this);
@@ -488,7 +492,8 @@ public abstract class Item {
 	 ***********************/
 	
 	/**
-	 * Drops the item to the ground
+	 * Drop this item to the ground.
+	 * 
 	 * @effect 	When this item is anchored, the holder of the item is set to null(= on the ground).
 	 * 		   	Since this is a bidirectional relation, the item is also removed from the holder.
 	 * 			|this.getCharacter().removeItemFromHolder(this)
@@ -497,22 +502,25 @@ public abstract class Item {
 	 * 			and since this is a bidirectional, the item is also removed from the backpack.
 	 * 			|this.getParentBackpack().removeItem(this)
 	 * 		   	|this.setParentBackpack(null)
-	 * 	
 	 */
 	public void drop() {
 		if (this.getCharacter() != null) {
 			this.getCharacter().removeItemFromHolder(this);
 			this.setCharacter(null);
 		} else if (this.getParentBackpack() != null) {
-			this.getParentBackpack().removeItem(this);
+			this.getParentBackpack().remove(this);
 			this.setParentBackpack(null);
 		}
 	}
 	
 	/**
-	 * Return the holder of this item
-	 * @return	Return the character associated when equipped on an anchor, does this method recursively
-	 * 			when this item is in a backpack. If a backpack doesn't have a holder this method returns null.
+	 * Return the holder of this item.
+	 * 
+	 * @return	Return the character associated when equipped on an anchor 
+	 * 			or get the holder recursively when this item is in a backpack.
+	 * 			When a backpack does not have a holder this method returns null.
+	 * 
+	 * @note	If the holder is null, this item lies on the ground.
 	 */
 	public Character getHolder() {
 		if (getCharacter() != null) {
@@ -525,16 +533,19 @@ public abstract class Item {
 	}
 	
 	/**
-	 * Moves this item to the given backpack
+	 * Move this item to the given backpack.
+	 * 
 	 * @param	backpack
-	 * 			The backpack to move this item to
+	 * 			the backpack to move this item to
 	 * @post	Moves this item to the given backpack
 	 * 			| backpack.containsItem(this)
+	 * 			| new.getParentBackpack() == backpack
+	 * 			| new.getCharacter() == null
 	 * @throws	IllegalArgumentException
-	 * 			Throws this error when the given backpack can't have this item
+	 * 			Throws this error when the given backpack can not have this item.
 	 * 			| !backpack.canHaveAsItem(this)
 	 * @throws	TerminatedException
-	 * 			Throws this error when this item is terminated
+	 * 			Throws this error when this item is terminated.
 	 * 			| this.isTerminated()
 	 */
 	public void moveTo (Backpack backpack) throws IllegalArgumentException, TerminatedException {
@@ -542,18 +553,19 @@ public abstract class Item {
 			throw new TerminatedException(this);
 		}
 		else if (!canHaveAsParentBackpack(backpack)) {
-			throw new IllegalArgumentException ("The given backpack can't have this item");
+			throw new IllegalArgumentException ("The given backpack can not have this item");
 		}
 		
 		drop(); // break all previous associations
 		
-		backpack.addItem(this);
+		backpack.add(this);
 		setParentBackpack(backpack);
 	}
 	
 	/**
-	 * Return a string containing general data over this string
-	 * @return	Return a string containing data over its identification, value and weight
+	 * Return a string containing general data over this string.
+	 * 
+	 * @return	Return a string containing data over its identification, value and weight.
 	 */
 	protected String getString() {
 		return "Identification: " + getIdentification()

@@ -54,7 +54,7 @@ class ArmorTest {
 		assertFalse(armor2.getIdentification() == 7);
 		assertEquals(25, armor2.getProtection());
 		assertEquals(25, armor2.getFullProtection());
-		assertEquals(100f, armor2.getWeight(),0.01);
+		assertEquals(armor2.getDefaultWeight(), armor2.getWeight(),0.01);
 		assertEquals(1000, armor2.getValue());
 		assertEquals(1000, armor2.getFullValue());
 		

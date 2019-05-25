@@ -10,12 +10,13 @@ import java.util.Random;
  */
 public class MathHelper {
 	/**
-	 * Return a prime lower than the given value and higher than the min value
+	 * Return a prime lower than the given value and higher than the minimum value.
+	 * 
 	 * @param 	number
-	 * 			The number to find the closest prime for
+	 * 			the number to find the closest prime for
 	 * @param 	min
-	 * 			The minimum boundary
-	 * @return	Return a prime lower than the given value and higher than the min value
+	 * 			the minimum boundary
+	 * @return	Return a prime lower than the given value and higher than the minimum value.
 	 */
 	public static int getLowerPrime(int number, int min) {
 		if (number % 2 == 0) {
@@ -33,9 +34,10 @@ public class MathHelper {
 	}
 	
 	/**
-	 * Return a random prime number in the given range
+	 * Return a random prime number in the given range.
+	 * 
 	 * @return	Return a random prime number in the given range the current maximum number is 2^31
-	 * 			to speed up this process, but this can be changed
+	 * 			to speed up this process, but this can be changed.
 	 */
 	public static long getRandomPrime() {
 		long min = 3L;
@@ -50,11 +52,12 @@ public class MathHelper {
 	}
 	
 	/**
-	 * Return whether the given number is a prime number
+	 * Check whether the given number is a prime number.
+	 * 
 	 * @param 	number
-	 * 			The number to check
-	 * @return	Return true when the given number is a prime number
-	 * @return	Return false otherwise
+	 * 			the number to check
+	 * @return	Return true when the given number is a prime number.
+	 * 			Return false otherwise.
 	 */
 	public static boolean isPrime(long number) 
 	{
@@ -69,14 +72,15 @@ public class MathHelper {
 	}
 	
 	/**
-	 * Return a random long number in the given range
+	 * Return a random long number in the given range.
+	 * 
 	 * @param 	min
-	 * 			The minimum value
+	 * 			the minimum value
 	 * @param 	max
-	 * 			The maximum value
-	 * @pre		Range is smaller than the max long value
+	 * 			the maximum value
+	 * @pre		Range is smaller than the maximum long value.
 	 * 			| max-min <= Long.MAX_VALUE
-	 * @return	Return a random long number in the given range (between min and max)
+	 * @return	Return a random long number in the given range (between min and max).
 	 * 			| Math.abs((randomNumberGenerator.nextLong() % (max - min))) + min
 	 */
 	public static long getRandomLongBetweenRange(long min, long max){
@@ -95,12 +99,13 @@ public class MathHelper {
 	}
 	
 	/**
-	 * Return a random int number in the given range
+	 * Return a random integer in the given range.
+	 * 
 	 * @param 	min
-	 * 			The minimum value
+	 * 			the minimum value
 	 * @param 	max
-	 * 			The maximum value
-	 * @return	Return a random int number in the given range (between min and max)
+	 * 			the maximum value
+	 * @return	Return a random integer number in the given range (between min and max).
 	 * 			| result == (int)getRandomLongBetweenRange((long)min, (long)max);
 	 */
 	public static int getRandomIntBetweenRange(int min, int max){
@@ -108,13 +113,14 @@ public class MathHelper {
 	}
 	
 	/**
-	 * Return the value clamped between the min and max
+	 * Return the value clamped between the min and max.
+	 * 
 	 * @param	value
-	 * 			The value to clamp
+	 * 			the value to clamp
 	 * @param	min
-	 * 			The minimum value
+	 * 			the minimum value
 	 * @param	max
-	 * 			The maximum value
+	 * 			the maximum value
 	 * @return	Return the minimum value when value is smaller than min, the maximum value when value is
 	 * 			higher than max and value otherwise.
 	 */

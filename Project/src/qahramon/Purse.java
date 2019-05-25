@@ -11,9 +11,9 @@ import qahramon.exceptions.TornException;
  * involving capacity, content and isTorn.
  * This class implements the interface 'Container'.
  * 
- * @invar	Each purse must have a valid capacity
+ * @invar	Each purse must have a valid capacity.
  * 			| isValidCapacity(getCapacity())
- * @invar	Each purse must have a valid content
+ * @invar	Each purse must have a valid content.
  * 			| canHaveAsContent(getContent())
  * 
  * 
@@ -60,6 +60,7 @@ public class Purse extends Item implements Container {
 	
 	/**
 	 * Check whether this item is a purse.
+	 * 
 	 * @return	Always return true since this item is a purse.
 	 * 			| result == true
 	 */
@@ -73,11 +74,10 @@ public class Purse extends Item implements Container {
 	 **************************************/
 	
 	/**
-	 * Generates a valid identification for a purse.
+	 * Generate a valid identification for a purse.
 	 * 
-	 * @return return a unique long
-	 * 		   The uniqueness of the generated long is always considered true
-	 * 		   The chance of colliding is not zero, but neglectable (5.4*10^(-20))
+	 * @return 	Return a unique long.
+	 * 			| MathHelper.getRandomLong()
 	 */
 	@Override@Raw
 	protected long generateIdentification() {
@@ -94,9 +94,9 @@ public class Purse extends Item implements Container {
 	 * Check whether the given identification is valid.
 	 * 
 	 * @param 	identification
-	 * 			The identification to check
-	 * @return	Return true when this item can have the given identification number
-	 * 			Return false when this item can't have the given identification number
+	 * 			the identification to check
+	 * @return	Return true when the given identification is a long.
+	 * 			Return false otherwise.
 	 * 			| result == true
 	 */
 	@Override@Raw
@@ -110,9 +110,12 @@ public class Purse extends Item implements Container {
 	 * @param	identification
 	 * 			the identification to check
 	 * @return	Return true when this purse can have the given identification number that has to be unique
-	 * 			Return false when this purse can't
+	 * 			Return false otherwise.
 	 * 			| result == canHaveAsIdentification (identification) 
 	 * 							&& purseIds.contains(identification) == false
+	 * 
+	 * @note 	The uniqueness of the generated long is always considered true.
+	 * 			The chance of colliding is not zero, but neglectable (5.4*10^(-20)).			
 	 */
 	@Override@Raw
 	public boolean canHaveAsNewIdentification (long identification) {
@@ -122,9 +125,9 @@ public class Purse extends Item implements Container {
 	/**
 	 * Variable referencing a set with all purseIds of this class. 
 	 * 
-	 * @invar Each non null element in the hashset references an effective item. 
-	 *        | for (Item item : purseIds)
-	 *        | 	item != null
+	 * @invar Each non null element in the hashSet references an effective identification. 
+	 *        | for (Long id : purseIds)
+	 *        | 	id != null
 	 */
 	private static final HashSet<Long> purseIds = new HashSet<Long>();
 	
@@ -149,11 +152,12 @@ public class Purse extends Item implements Container {
 	
 	/**
 	 * Check whether the given capacity is valid.
+	 * 
 	 * @param 	capacity
 	 * 			the capacity to check
-	 * @return	Return true when the given capacity is valid
-	 * 			Return false when the given capacity is invalid
-	 * 			| result == ...
+	 * @return	Return true when the given capacity is valid.
+	 * 			Return false otherwise.
+	 * 			| result == (capacity >= 0)
 	 */
 	public static boolean isValidCapacity (int capacity) {
 		return (capacity >= 0);
@@ -242,9 +246,10 @@ public class Purse extends Item implements Container {
 	 * 
 	 * @param 	content
 	 * 			the content to check
-	 * @return	Return true when the content of this non torn purse is within the allowed range and the additional content doesn't exceed 
-	 * 			the maximum capacity of the holder of this purse
-	 * 			| result == content >= 0 && content <= getCapacity() && (this.getHolder() == null || 
+	 * @return	Return true when the content of this non torn purse is within the allowed range 
+	 * 			and the additional content doesn't exceed the maximum capacity of the holder of this purse.
+	 * 			Return false otherwise.
+	 * 			| result == !isTorn() && content >= 0 && content <= getCapacity() && (this.getHolder() == null || 
 	 * 						this.getHolder().getCapacity() - this.getHolder().getTotalWeight() >= (content - getContent())*getDucateWeight())
 	 */
 	@Raw
@@ -252,26 +257,26 @@ public class Purse extends Item implements Container {
 		float newWeight = (content - getContent())*getDucateWeight();
 		boolean validWeight =  (this.getHolder() == null || this.getHolder().getCapacity() - this.getHolder().getTotalWeight() >= newWeight);
 		
-		return !isTorn() && content >= 0 && content <= getCapacity() && validWeight;
+		return (!isTorn() && content >= 0 && content <= getCapacity() && validWeight);
 	}
 	
 	/**
-	 * Add  the given amount of ducates to this purse.
+	 * Add the given amount of ducates to this purse.
 	 * 
 	 * @param 	amount
 	 * 			the amount to add
-	 * @post	The new content is increased with the given amount
+	 * @post	The new content is increased with the given amount.
 	 * 			| new.getContent() == this.getContent() + amount
-	 * @effect	When the new content is higher than the allowed capacity this purse is torn
+	 * @effect	When the new content is higher than the allowed capacity this purse is torn.
 	 * 			| makeTorn()
 	 * @throws	TornException
-	 * 			Throws this error when you try to add ducates to a torn purse
+	 * 			Throws this error when you try to add ducates to a torn purse.
 	 * 			| this.isTorn()
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when an illegal amount (overflow or negative) is given or this purse can't have the new amount.
 	 * 			| getContent() + amount < getContent() || !canHaveAsContent(this.getContent() + amount)
 	 * @throws	TerminatedException
-	 *			Throws this error when this purse is terminated
+	 *			Throws this error when this purse is terminated.
 	 *			| this.isTerminated()
 	 */
 	public void add (int amount) throws TornException, IllegalArgumentException, TerminatedException {
@@ -297,16 +302,16 @@ public class Purse extends Item implements Container {
 	 * 
 	 * @param 	amount
 	 * 			the amount to remove
-	 * @post	The new content is decreased with the given amount
+	 * @post	The new content is decreased with the given amount.
 	 * 			| new.getContent() == this.getContent() - amount
 	 * @throws	TornException
-	 * 			throws this error when you try to remove ducates from a torn purse
+	 * 			Throws this error when you try to remove ducates from a torn purse.
 	 * 			| this.isTorn()
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when an illegal amount (overflow or negative) is given or this purse can't have the new amount.
 	 * 			| getContent() - amount < getContent() || !canHaveAsContent(this.getContent() - amount)
 	 * @throws	TerminatedException
-	 *			Throws this error when this purse is terminated
+	 *			Throws this error when this purse is terminated.
 	 *			| this.isTerminated()
 	 */
 	public void remove (int amount) throws TornException, IllegalArgumentException, TerminatedException {
@@ -326,23 +331,24 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
-	 * Adds the contents of the given purse to the current purse
+	 * Add the contents of the given purse to the current purse.
+	 * 
 	 * @param 	purse
-	 * 			The purse to empty
-	 * @post	The new content is increased with the content of the current purse
+	 * 			the purse to empty
+	 * @post	The new content is increased with the content of the current purse.
 	 * 			| this.getContent() == this.getContent() + purse.getContent()
-	 * @post	The emptied purse is dropped
+	 * @post	The emptied purse is dropped.
 	 * 			| purse.drop()
-	 * @effect	When the new content is higher than the allowed capacity this purse is torn
+	 * @effect	When the new content is higher than the allowed capacity this purse is torn.
 	 * 			| makeTorn()
 	 * @throws	TornException
-	 * 			throws this error when you try to take ducates from a torn purse
+	 * 			Throws this error when you try to take ducates from a torn purse.
 	 * 			| purse.isTorn()
 	 * @throws	TerminatedException
-	 *			Throws this error when the given purse is terminated
+	 *			Throws this error when the given purse is terminated.
 	 *			| purse.isTerminated()
 	 */
-	public void add (Purse purse) throws TornException, TerminatedException {
+	public void add(Purse purse) throws TornException, TerminatedException {
 		if (purse.isTerminated()) {
 			throw new TerminatedException(purse);
 		} else if (purse.isTorn()) {
@@ -360,14 +366,16 @@ public class Purse extends Item implements Container {
 	/***********************
 	 * Other Methods
 	 ***********************/
+	
 	/**
 	 * Variable referencing the weight of a ducate.
 	 */
 	private final static float DUCATE_WEIGHT = 0.05f;
 	
 	/**
-	 * Return the weight of one ducate
-	 * @return	Return the weight of one ducate
+	 * Return the weight of one ducate.
+	 * 
+	 * @return	Return the weight of one ducate.
 	 */
 	@Basic@Immutable@Raw
 	public static float getDucateWeight () {
@@ -385,7 +393,8 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
-	 * Return the total weight of this purse
+	 * Return the total weight of this purse.
+	 * 
 	 * @return	Return the total weight this purse: weight of the purse combined with weiht of its content.
 	 * 			| result == (this.getContent() * DUCATE_WEIGHT) + this.getWeight()
 	 */
@@ -395,8 +404,9 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
-	 * Return the maximum value for this item
-	 * @return	Return the maximum value for this item
+	 * Return the maximum value for this item.
+	 * 
+	 * @return	Return the maximum value for this item.
 	 */
 	@Immutable@Override@Basic@Raw
 	public int getMaxValue () {
@@ -404,8 +414,9 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
-	 * Return the minimum value for this item
-	 * @return	Return the minimum value for this item
+	 * Return the minimum value for this item.
+	 * 
+	 * @return	Return the minimum value for this item.
 	 */
 	@Immutable@Override@Basic@Raw
 	public int getMinValue () {
@@ -413,8 +424,9 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
-	 * Return the total value of this purse
-	 * @return	Return the total value of this purse in ducates
+	 * Return the total value of this purse.
+	 * 
+	 * @return	Return the total value of this purse in ducates.
 	 * 			| result == this.getContent()
 	 */
 	@Raw
@@ -423,8 +435,9 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
-	 * Return a string containing all public data of this purse
-	 * @return Return a string containing all public data of this purse
+	 * Return a string containing all public data of this purse.
+	 * 
+	 * @return Return a string containing all public data of this purse.
 	 */
 	@Override
 	public String toString() {

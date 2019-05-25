@@ -42,7 +42,7 @@ class WeaponTest {
 	public void testIntFloat_IllegalCase() {
 		Weapon weapon2 = new Weapon(20, -10, 100);
 		assertEquals(20, weapon2.getDamage());
-		assertEquals(100, weapon2.getWeight());
+		assertEquals(weapon2.getDefaultWeight(), weapon2.getWeight());
 		assertEquals(100, weapon2.getValue());
 		
 		Weapon weapon3 = new Weapon(20, 10, -100);
@@ -68,7 +68,7 @@ class WeaponTest {
 	public void testIntFloatInt_IllegalCase() {
 		Weapon weapon2 = new Weapon(20, -10);
 		assertEquals(20, weapon2.getDamage());
-		assertEquals(100, weapon2.getWeight());
+		assertEquals(weapon2.getDefaultWeight(), weapon2.getWeight());
 		assertEquals(40, weapon2.getValue());
 	}
 	

@@ -678,8 +678,6 @@ public abstract class Character {
 		return set;
 	}
 	
-	private final int numberOfAnchors;
-	
 	/**
 	 * Return the number of anchors of this character.
 	 * 

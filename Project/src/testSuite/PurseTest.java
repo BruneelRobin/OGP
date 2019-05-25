@@ -44,8 +44,8 @@ class PurseTest {
 	@Test
 	public void testPurseFloatIntInt_IllegalCase() {
 		Purse purse3 = new Purse(-0.5f, 600, 30);
-		assertEquals(100, purse3.getWeight());
-		assertEquals(100 + 30 * Purse.getDucateWeight(), purse3.getTotalWeight());
+		assertEquals(purse3.getDefaultWeight(), purse3.getWeight());
+		assertEquals(purse3.getDefaultWeight() + 30 * Purse.getDucateWeight(), purse3.getTotalWeight());
 		assertEquals(600, purse3.getCapacity());
 		assertEquals(30, purse3.getContent());
 	}

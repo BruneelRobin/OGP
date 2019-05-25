@@ -10,7 +10,7 @@ import qahramon.exceptions.*;
  * A class of weapons as special kinds of items
  * involving damage.
  * 
- * @invar	Each weapon must have a valid damage
+ * @invar	Each weapon must have a valid damage.
  * 			| isValidDamage(getDamage())
  * 
  * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
@@ -26,19 +26,17 @@ public class Weapon extends Item {
 	 * Create a weapon with given damage, weight and value.
 	 * 
 	 * @param	identification
-	 * 			The identification of this weapon.
+	 * 			the identification of this weapon
 	 * @param	weight
-	 * 			The weight of this weapon.
+	 * 			the weight of this weapon
 	 * @param	value
-	 * 			The value of this weapon.
+	 * 			the value of this weapon
 	 * @pre		The given damage must be valid.
 	 * 			| isValidDamage(damage)
-	 * @effect	The new weapon is set as an item with given weight and value.
+	 * @effect	The new weapon is set as an item with the given weight and value.
 	 * 			| super(weight, value)
 	 * @post	The damage is set to the given damage.
-	 * 			| setDamage(damage)
-	 * @post	The value has a given value.
-	 * 			| new.hasGivenValue
+	 * 			| new.getDamage() == damage
 	 */
 	public Weapon(int damage, float weight, int value) {
 		super(weight, value);
@@ -49,18 +47,17 @@ public class Weapon extends Item {
 	
 	/**
 	 * Create a weapon with given damage and value.
+	 * 
 	 * @param	identification
-	 * 			The identification of this weapon.
+	 * 			the identification of this weapon
 	 * @param	weight
-	 * 			The weight of this weapon.
+	 * 			the weight of this weapon
 	 * @pre		The given damage must be valid.
 	 * 			| isValidDamage(damage)
-	 * @effect	The new weapon is set as an item with given weight and 0 value.
+	 * @effect	The new weapon is set as an item with given weight and zero as value.
 	 * 			| super(weight, 0)
 	 * @post	The damage is set to the given damage.
-	 * 			| setDamage(damage)
-	 * @post	The value has no given value.
-	 * 			| !new.hasGivenValue
+	 * 			| new.getDamage() == damage
 	 */
 	public Weapon(int damage, float weight) {
 		super(weight, 0);
@@ -74,8 +71,9 @@ public class Weapon extends Item {
 	 ***********************/
 	
 	/**
-	 * Return true when this item is a weapon
-	 * @return	Always return true since this item is a weapon
+	 * Check whether this item is a weapon.
+	 * 
+	 * @return	Always return true since this item is a weapon.
 	 * 			| result == true
 	 */
 	@Basic@Immutable@Override@Raw
@@ -88,10 +86,9 @@ public class Weapon extends Item {
 	 **************************************/
 	
 	/**
-	 * Generates a valid identification.
+	 * Generate a valid identification.
 	 * 
-	 * @return Returns a unique, positive long, divisible by 6.
-	 * 		   
+	 * @return Return a unique, positive long, divisible by 6.		   
 	 */
 	@Override@Raw
 	protected long generateIdentification() {
@@ -106,15 +103,13 @@ public class Weapon extends Item {
 	}
 	
 	/**
-	 * Returns whether or not the given identification is a valid one.
+	 * Check whether the given identification is a valid one.
+	 * 
 	 * @param 	identification
-	 * 			The identification to check
-	 * @return	Return true when the given identification number is positive, divisible by 6 and unique.
-	 * 			| result == ((identification > -1) && (identification%6 == 0))
-	 * 			
-	 * @return	Return false when the given identification is not positive and/or not divisible by 6
-	 * @note Uniqueness is always considered true, the chance of colliding is not zero, but neglectable (6.5*10^(-19)).
-	 * 			
+	 * 			the identification to check
+	 * @return	Return true when the given identification number is positive, divisible by 6.
+	 * 			Return false otherwise.
+	 * 			| result == ((identification > -1) && (identification%6 == 0))			
 	 */
 	@Override@Raw
 	public boolean canHaveAsIdentification(long identification) {
@@ -123,12 +118,16 @@ public class Weapon extends Item {
 	}
 	
 	/**
+	 * Check whether the given identification is valid and unique.
+	 * 
 	 * @param	identification
-	 * 			The identification to check
-	 * @return	Return true when this weapon can have the given identification number that has to be unique
-	 * 			Return false when this weapon can't
+	 * 			the identification to check
+	 * @return	Return true when this weapon can have the given identification number that has to be unique.
+	 * 			Return false otherwise.
 	 * 			| result == canHaveAsIdentification (identification) 
 	 * 							&& !weaponIds.contains(identification)
+	 *
+	 * @note	Uniqueness is always considered true, the chance of colliding is not zero, but neglectable (6.5*10^(-19)).
 	 */
 	@Override@Raw
 	public boolean canHaveAsNewIdentification (long identification) {
@@ -138,15 +137,11 @@ public class Weapon extends Item {
 	/**
 	 * Variable referencing a set with all weaponIds of this class. 
 	 * 
-	 * @invar Each non null element in the hashset references an effective item. 
-	 *        | for (Item item : weaponIds)
-	 *        | 	item != null
+	 * @invar Each non null element in the hashSet references an effective identification. 
+	 *        | for (Long id : weaponIds)
+	 *        | 	id != null
 	 */
 	private static final HashSet<Long> weaponIds = new HashSet<Long>();
-	
-	
-	
-	
 	
 	/********************************
 	 * Damage - nominal programming
@@ -163,26 +158,28 @@ public class Weapon extends Item {
 	private static int MIN_DAMAGE = 1;
 	
 	/**
-	 * Checks whether the given damage is valid
+	 * Check whether the given damage is valid.
+	 * 
 	 * @param	damage
-	 * 			The damage to check
-	 * @return 	True if the given damage is divisible by seven, greater than 1 and smaller than 100
-	 * @return 	False if the given damage is not valid
+	 * 			the damage to check
+	 * @return 	Return true if the given damage is divisible by seven, greater than 1 and smaller than 100.
+	 * 		 	Return false otherwise.
+	 * 			| (damage >= MIN_DAMAGE && damage <= MAX_DAMAGE && damage % 7 == 0)
 	 */
 	public static boolean isValidDamage(int damage) {
-		return damage >= MIN_DAMAGE && damage <= MAX_DAMAGE && damage % 7 == 0;
+		return (damage >= MIN_DAMAGE && damage <= MAX_DAMAGE && damage % 7 == 0);
 	}
 	
 	/**
 	 * Variable referencing the damage of a weapon.
 	 */
-	private int damage = 0;
+	private int damage;
 	
 	/**
 	 * Set the damage of a weapon to a given amount of damage.
 	 * 
 	 * @param	damage
-	 * 			The new damage.
+	 * 			the new damage
 	 * @post	The damage is set to the given damage.
 	 * 			| new.getDamage() == damage
 	 */
@@ -193,6 +190,7 @@ public class Weapon extends Item {
 	
 	/**
 	 * Return the damage of this weapon.
+	 * 
 	 * @return	Return the damage of this weapon.
 	 */
 	@Basic
@@ -202,12 +200,16 @@ public class Weapon extends Item {
 	
 	
 	/**
-	 * Upgrade the weapon to a higher damage
-	 * @pre the given amount must be positive
-	 * @pre the result has to be valid
-	 * 		| isValidDamage(this.getDamage() + amount) == true
-	 * @post The damage of the weapon is incremented with the given amount
-	 * 		| new.getDamage() == this.getDamage() + amount
+	 * Upgrade the weapon to a higher damage.
+	 * 
+	 * @param	amount
+	 * 			the amount to upgrade the weapon damage with
+	 * @pre		The given amount must be positive.
+	 * 			| amount >= 0
+	 * @pre		The result has to be valid.
+	 * 			| isValidDamage(this.getDamage() + amount)
+	 * @post 	The damage of the weapon is incremented with the given amount
+	 * 			| new.getDamage() == this.getDamage() + amount
 	 * @throws	TerminatedException
 	 * 		  	Throws this exception when this weapon is terminated.
 	 * 		 	| isTerminated()
@@ -222,12 +224,16 @@ public class Weapon extends Item {
 	
 	
 	/**
-	 * Downgrade the weapon to a lower damage
-	 * @pre the given amount must be positive
-	 * @pre the result has to be valid
-	 * 		| isValidDamage(this.getDamage() - amount) == true
-	 * @post The damage of the weapon is decremented with the given amount
-	 * 		| new.getDamage() == this.getDamage() - amount
+	 * Downgrade the weapon to a lower damage.
+	 * 
+	 * @param	amount
+	 * 			the amount to decrease the damage with
+	 * @pre 	the given amount must be positive
+	 * 			| amount >= 0
+	 * @pre 	the result has to be valid
+	 * 			| isValidDamage(this.getDamage() - amount)
+	 * @post 	The damage of the weapon is decremented with the given amount
+	 * 			| new.getDamage() == this.getDamage() - amount
 	 * @throws	TerminatedException
 	 * 		  	Throws this exception when this weapon is terminated.
 	 * 			| isTerminated()
@@ -240,15 +246,14 @@ public class Weapon extends Item {
 		}
 	}
 	
-	
-	
 	/***********************
 	 * Value
 	 ***********************/
 	
 	/**
-	 * Return the maximum value for this item
-	 * @return	Return the maximum value for this item
+	 * Return the maximum value for this item.
+	 * 
+	 * @return	Return the maximum value for this item.
 	 */
 	@Immutable@Override@Basic@Raw
 	public int getMaxValue () {
@@ -256,24 +261,33 @@ public class Weapon extends Item {
 	}
 	
 	/**
-	 * Return the minimum value for this item
-	 * @return	Return the minimum value for this item
+	 * Return the minimum value for this item.
+	 * 
+	 * @return	Return the minimum value for this item.
 	 */
 	@Immutable@Override@Basic@Raw
 	public int getMinValue () {
 		return 0;
 	}
 	
+	/**
+	 * Variable referencing the factor to multiply the damage of this weapon with to get the value.
+	 */
 	private static final int VALUE_FACTOR = 2;
+	
+	/**
+	 * Variable referencing whether a value was given upon creation.
+	 */
 	private final boolean hasGivenValue;
 	
 	/**
-	 * Returns the value of the weapon.
-	 * @return if a value was given in the constructor, return that value
-	 * 		   | result == super.getValue()
-	 * @return if no value was given in the constructor, return the value as its function: damage of the weapon times
-	 * 		   the defined value factor. Clamp the result to make sure it lies between the MIN_VALUE and MAX_VALUE.
-	 * 		   | result == this.getDamage()*VALUE_FACTOR
+	 * Return the value of the weapon.
+	 * 
+	 * @return 	When a value was given in the constructor, return that value.
+	 * 		   	| result == super.getValue()
+	 * @return 	When no value was given in the constructor, return the value as its function: damage of the weapon times
+	 * 		   	the defined value factor. The result will be clamped between the value boundaries of this class.
+	 * 		  	| result == this.getDamage()*VALUE_FACTOR
 	 */
 	@Override@Raw
 	public int getValue() {
@@ -284,8 +298,9 @@ public class Weapon extends Item {
 	}
 	
 	/**
-	 * Return a string containing all public data of this purse
-	 * @return Return a string containing all public data of this purse
+	 * Return a string containing all public data of this purse.
+	 * 
+	 * @return	Return a string containing all public data of this purse.
 	 */
 	@Override
 	public String toString() {
