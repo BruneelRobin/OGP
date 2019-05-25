@@ -8,6 +8,7 @@ import java.util.Set;
 import be.kuleuven.cs.som.annotate.*;
 import qahramon.exceptions.DeadException;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -150,7 +151,7 @@ public abstract class Character {
 	 */
 	@Raw
 	public boolean canHaveAsHitpoints(int hitpoints) {
-		return hitpoints >= 0 && (isFighting() || MathHelper.isPrime(hitpoints));
+		return hitpoints >= 0 && (isFighting() || MathHelper.isPrime(hitpoints) || hitpoints == 0);
 	}
 	
 	/**
@@ -620,6 +621,20 @@ public abstract class Character {
 		return this.anchors.entrySet();
 	}
 	
+	/**
+	 * Return a set with all items anchors attached.
+	 * 
+	 * @return	Return a set with all items anchors attached.
+	 */
+	@Raw
+	public Set<Item> getAnchoredItems () {
+		Set<Item> set = new HashSet<Item>();
+		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
+			set.add(entry.getValue());
+		}
+		return set;
+	}
+	
 	private final int numberOfAnchors;
 	
 	/**
@@ -675,24 +690,76 @@ public abstract class Character {
 	
 	/**
 	 * This character hits the given character.
-	 * 
+	 * @param	character
+	 * 			the character to hit
 	 * @post	This character hits the given character. The new amount of hitpoints
 	 * 			of the character is lower or equal than before.
 	 * @throws	DeadException
 	 * 			throws this exception when the current character is dead.
+	 * 			| isDead()
 	 */
 	public abstract void hit(Character character);
 	
 	/**
-	 * This character collects the treasures it wants to take found on a dead body.
-	 * 
-	 * @post	Collect all anchored items of the other character 
-	 * 			when the current character wants to and can take it.
-	 * 			| wantsToTake(item)
+	 * This character collects the treasures it wants to take found on a dead character.
+	 * @param	character
+	 * 			the backpack to look check
+	 * @effect	All items anchored onto the given dead character will be collected when possible
+	 * 			| for (Item item : character.getAnchoredItems()) do
+	 *			|		collectTreasure(item);
+	 * @post	Does nothing when the given character is not dead
+	 * 			| !character.isDead()
 	 * @throws	DeadException
-	 * 			Throws this error when this character is dead.
+	 * 			throws this exception when the current character is dead.
+	 * 			| isDead()
 	 */
-	public abstract void collectTreasures(Character character) throws DeadException;
+	public void collectTreasures(Character character) throws DeadException {
+		if (isDead()) {
+			throw new DeadException(this);
+		}
+		
+		if (character.isDead()) {
+		
+			Set<Item> set = character.getAnchoredItems();
+			for (Item item : set) {
+				collectTreasure(item);
+			}
+		}
+	}
+	
+	/**
+	 * This character collects the treasures it wants to take found in a backpack.
+	 * @param	backpack
+	 * 			the backpack to look into
+	 * @effect	All items in this backpack will be collected when possible
+	 * 			| for (Item item : backpack.getItems()) do
+	 *			|		collectTreasure(item);
+	 * @post	Does nothing when the holder of this backpack is not dead
+	 * 			| !backpack.getHolder().isDead()
+	 * @throws	DeadException
+	 * 			throws this exception when the current character is dead.
+	 * 			| isDead()
+	 */
+	public void collectTreasures(Backpack backpack) throws DeadException {
+		if (isDead()) {
+			throw new DeadException(this);
+		}
+		
+		if (backpack.getHolder().isDead()) {
+			Set<Item> set = backpack.getItems();
+			for (Item item : set) {
+				collectTreasure(item);
+			}
+		}
+	}
+	
+	/**
+	 * Pick up the item when this character wants to take it
+	 * @param 	item
+	 * 			the item to check and pick up
+	 * @post	Pick up the item when this character wants to take it.
+	 */
+	public abstract void collectTreasure(Item item);
 	
 	/**
 	 * Check whether the character wants to take this item.

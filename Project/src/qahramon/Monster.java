@@ -266,48 +266,49 @@ public class Monster extends Character {
 	}
 	
 	/**
-	 * This monster collects the treasures it wants to take found on a dead body.
-	 * 
-	 * @post	Collect all anchored items of the other character 
-	 * 			when the current monster wants to take it.
-	 * 			| wantsToTake(item)
-	 * @throws	DeadException
-	 * 			throws this exception when the current monster is dead.
+	 * Pick up the item when this character wants to take it
+	 * @param	item
+	 * 			the treasure to collect
+	 * @effect	When this monster wants to take an item it will be picked up
+	 * 			| if (wantsToTake(item)) then 
+	 * 			|		pickUp(item)
+	 * @effect	When this monster doesn't want to take an armor or weapon it will be terminated
+	 * 			| if (!wantsToTake(item) && (item.isArmor() || item.isWeapon())) then 
+	 * 			|		item.terminate()
+	 * @effect	When this monster doesn't want to take a backpack then all its stored armors and weapons will be terminated
+	 * 			| if (!wantsToTake(item) && item.isBackpack()) then
+	 * 			|		((Backpack)item).terminateWeaponsAndArmor()
 	 */
 	@Override
-	public void collectTreasures(Character character) throws DeadException {
-		if (isDead()) {
-			throw new DeadException(this);
-		}
-		
-		if (character.isDead()) {
-			
-			Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
-			Set<Item> terminateSet = new HashSet<Item>();
-			
-			for (Entry<Integer, Item> entry : set) {
-				Item item = entry.getValue();
-				if (wantsToTake(item)) { //iterate over all items on dead body and pickup all items you want
-					pickUp(item);
-				} else if (item.isArmor() || item.isWeapon()) {
-					terminateSet.add(item);
-				} else if (item.isBackpack()) {
-					((Backpack)item).terminateWeaponsAndArmor();
-				}
-			}
-			
-			for (Item item : terminateSet) {
-				item.terminate();
-			}
+	public void collectTreasure (Item item) {
+		if (wantsToTake(item)) { //iterate over all items on dead body and pickup all items you want
+			pickUp(item);
+		} else if (item.isArmor() || item.isWeapon()) {
+			item.terminate();
+		} else if (item.isBackpack()) {
+			((Backpack)item).terminateWeaponsAndArmor();
 		}
 	}
 	
 	/**
 	 * This monster hits the given character.
-	 * 
-	 * @post	The character that was hit by this monster will take damage.
+	 * @param	character
+	 * 			the character to hit
+	 * @effect	A random number between 0 and 100 is generated, when this number is below the current
+	 * 			hitpoints of this monster, this number will be set to the current hitpoints of this monster.
+	 * 			When this last number is higher than or equal to the protection of the given character
+	 * 			then the given character will be hit.
+	 * 			| character.takeDamage(getDamage())
+	 * @post	When the given character dies, this monster's fighting state will be set to false
+	 * 			| new.isFighting() == false
+	 * @post	When the given character dies, this monster's amount of hitpoints will be set to the 
+	 * 			first found lower prime.
+	 * 			| new.getHitpoints() == MathHelper.getLowerPrime(getHitpoints(), 0)
+	 * @effect	When the given character dies, this monster will collect the treasures of that character
+	 * 			| collectTreasures(character)
 	 * @throws	DeadException
 	 * 			Throws this exception when the current monster is dead.
+	 * 			| isDead()
 	 */
 	@Override
 	public void hit(Character character) throws DeadException {

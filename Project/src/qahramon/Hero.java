@@ -333,113 +333,69 @@ public class Hero extends Character {
 	}
 	
 	/**
-	 * This hero collects the treasures it wants to take found on a dead body.
-	 * 
-	 * @post	Collect all anchored items of the other character
-	 * 			when the current hero wants to take it.
-	 * 			| wantsToTake(item)
-	 * @throws	DeadException
-	 * 			Throws this error when this hero is dead.
+	 * Pick up the item when this character wants to take it
+	 * @param	item
+	 * 			the treasure to collect
+	 * @effect	When this item is a backpack, all treasures inside this backpack will be collected.
+	 * 			| if (item.isBackpack()) then 
+	 * 			|		collectTreasures((Backpack) item)
+	 * @effect	When this item is a purse, it will be equipped when better than the current purse.
+	 * 			| if (item.isPurse()) then 
+	 * 			|		equip(AnchorType.BELT, (Purse)item)
+	 * @effect	When this item is a purse, the contents of the old purse will be added to the new purse 
+	 * 			when the new purse won't tear, otherwise no contents are added.
+	 * 			| newPurse.add(oldPurse)
+	 * @effect	Otherwise this hero will pick up the item when he wants
+	 * 			to take it
+	 * 			| if (!item.isBackpack() && !item.isPurse() && wantsToTake(item)) then 
+	 * 			|		pickUp(item)
 	 */
 	@Override
-	public void collectTreasures(Character character) throws DeadException {
-		if (isDead()) {
-			throw new DeadException(this);
+	public void collectTreasure (Item item) {
+		if (item.isBackpack()) {
+			Backpack backpack2 = (Backpack) item;
+			collectTreasures(backpack2);
 		}
-		
-		if (character.isDead()) {
-		
-			Set<Entry<Integer, Item>> set = character.getAnchorEntrySet();
-			Set<Purse> purses = new HashSet<Purse>();
-			Purse thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
-			if (thisPurse != null) {
-			purses.add(thisPurse);
-			}
-			
-			for (Entry<Integer, Item> entry : set) {
-				Item item = entry.getValue();
-				if (item.isBackpack()) {
-					Backpack backpack = (Backpack) item;
-					collectTreasures(backpack);
-				}
-				if (item.isPurse()) {
-					Purse purse = (Purse) item;
-					purses.add(purse);
-				} else {
-					if (wantsToTake(item)) { 
-					pickUp(item);
-					}
-				}
-			}
-			
-		    for (Purse purse : purses){
-		        if (wantsToTake(purse)) {
-		        	equip(AnchorType.BELT,purse);
-		        }
-		    }
-		    thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
-		    for(Purse purse : purses) {
-		    	if (thisPurse.canHaveAsContent(thisPurse.getContent() + purse.getContent()) && thisPurse != purse) {
-		    		thisPurse.add(purse);
-		    	}
-		    }
-		}
-	}
-	
-	/**
-	 * This hero collects the treasures it wants to take found in a backpack.
-	 * 
-	 * @post	Collect all items of a backpack
-	 * 			when the current hero wants to take it.
-	 * 			| wantsToTake(item)
-	 */
-	public void collectTreasures(Backpack backpack) throws DeadException {
-		if (isDead()) {
-			throw new DeadException(this);
-		}
-		
-		Set<Item> set = backpack.getItems();
-		Set<Purse> purses = new HashSet<Purse>();
-		Purse thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
-		if (thisPurse != null) {
-		purses.add(thisPurse);
-		}
-		
-		for (Item item : set) {
-			if (item.isBackpack()) {
-				Backpack backpack2 = (Backpack) item;
-				collectTreasures(backpack2);
-			}
-			if (item.isPurse()) {
-				Purse purse = (Purse) item;
-				purses.add(purse);
-			} else {
-				if (wantsToTake(item)) { 
-				pickUp(item);
-				}
-			}
-		}
-		
-		for (Purse purse : purses){
-	        if (wantsToTake(purse)) {
+		if (item.isPurse()) {
+			Purse purse = (Purse) item;
+			Purse oldPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+			if (wantsToTake(purse)) {
 	        	equip(AnchorType.BELT,purse);
 	        }
-	    }
-	    thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
-	    for(Purse purse : purses) {
-	    	if (thisPurse.canHaveAsContent(thisPurse.getContent() + purse.getContent()) && thisPurse != purse) {
-	    		thisPurse.add(purse);
-	    	}
-	    }
+			
+			Purse thisPurse = (Purse) this.getItemAt(AnchorType.BELT.getAnchorId());
+			
+			if (oldPurse != null && purse != null) { // We can fill a purse
+				if (thisPurse == oldPurse) { // nothing equipped, old purse will be the purse we tried to add
+					oldPurse = purse;
+				}
+				
+				if (thisPurse.canHaveAsContent(thisPurse.getContent() + oldPurse.getContent())) {
+		    		thisPurse.add(oldPurse);
+		    	}
+			}
+			
+		} else {
+			if (wantsToTake(item)) { 
+			pickUp(item);
+			}
+		}
 	}
 	
 	/**
 	 * Make the character hit the given character.
-	 * 
-	 * @post	A random number between 0 and 100 is generated, when this number is higher than the 
+	 * @param	character
+	 * 			the character to hit
+	 * @effect	A random number between 0 and 100 is generated, when this number is higher than the 
 	 * 			character's protection, the character takes the damage of this hero. When this number is
 	 * 			lower than the character's protection, nothing happens.
-	 * 			| character.takeDamage(this.getDamage())
+	 * 			| character.takeDamage(getDamage())
+	 * @post	When the given character dies, this hero's fighting state will be set to false
+	 * 			| new.isFighting() == false
+	 * @effect	When the given character dies, this hero will be healed
+	 * 			| heal()
+	 * @effect	When the given character dies, it's treasures will be collected
+	 * 			| collectTreasures(character)
 	 * @throws	DeadException
 	 * 			throws this exception when the current hero is dead.
 	 */
