@@ -47,9 +47,11 @@ public abstract class Character {
 	 * @param	name
 	 * 			the name of the new character
 	 * @param	hitpoints
-	 * 			the max amount of hitpoints
+	 * 			the max amount of hitpoints of the new character
+	 * @param	numberOfAnchors
+	 * 			the number of anchors of the new character
 	 * @pre		The given amount of maximum hitpoints must be valid.
-	 * 			| canHaveAsMaxHitpoints(hitpoints)
+	 * 			| isValidMaxHitpoints(hitpoints)
 	 * @pre		The given number of anchors must be valid.
 	 * 			| isValidNumberOfAnchors(numberOfAnchors)
 	 * @post	The name of this character is set to the given name.
@@ -59,6 +61,7 @@ public abstract class Character {
 	 * @post	The maximum amount of hitpoints of this character is set to the given hitpoints.
 	 * 			| new.getMaxHitpoints() == hitpoints
 	 * @post	The number of anchors of this character is set to the given number of anchors.
+	 * 			| new.getNumberOfAnchors() == numberOfAnchors
 	 * @throws	IllegalArgumentException
 	 * 			Throws this exception when the given name is not valid.
 	 * 			| !isValidName(name)
@@ -79,18 +82,19 @@ public abstract class Character {
 	 * Name - defensive programming
 	 ********************************/
 	
+	/**
+	 * Variable referencing the name of the character.
+	 */
 	private String name;
 	
 	/**
-	 * Check whether the name is valid.
+	 * Return the character's name.
 	 * 
-	 * @return	Return true when the name starts with a capital
-	 * 			and only contains letters, spaces and apostrophes.
-	 * 			| name != null && name.matches("[A-Z][a-z' ]+")
+	 * @return	Return the character's name.
 	 */
-	@Raw
-	public boolean canHaveAsName(String name) {
-		return (name != null && name.matches("[A-Z][A-Za-z' ]*"));
+	@Basic
+	public String getName() {
+		return this.name;
 	}
 	
 	/**
@@ -107,6 +111,18 @@ public abstract class Character {
 	}
 	
 	/**
+	 * Check whether the name is valid.
+	 * 
+	 * @return	Return true when the name starts with a capital
+	 * 			and only contains letters, spaces and apostrophes.
+	 * 			| name != null && name.matches("[A-Z][a-z' ]+")
+	 */
+	@Raw
+	public boolean canHaveAsName(String name) {
+		return (name != null && name.matches("[A-Z][A-Za-z' ]*"));
+	}
+	
+	/**
 	 * Change the name to the given name when valid.
 	 * 
 	 * @param 	name
@@ -117,41 +133,40 @@ public abstract class Character {
 	 * 			Throws this error when the given name is not valid.
 	 * 			| !isValidName(name)
 	 */
-	public void changeName(String name) {
+	public void changeName(String name) throws IllegalArgumentException {
 		if (!canHaveAsName(name)) {
 			throw new IllegalArgumentException("Invalid name!");
 		}
 		this.name = name;
 	}
 	
-	/**
-	 * Return the character's name.
-	 * 
-	 * @return	Return the character's name.
-	 */
-	@Basic
-	public String getName() {
-		return this.name;
-	}
-	
 	/*************************************
 	 * Hitpoints - nominal programming
 	 *************************************/
+	
+	/**
+	 * Variable referencing the amount of hitpoints of the character.
+	 */
 	private int hitpoints;
+	
+	/**
+	 * Variable referencing the fighting state of the character.
+	 */
 	private boolean isFighting = false;
+	
+	/**
+	 * Variable referencing the maximum amount of hitpoints of the character.
+	 */
 	private int maxHitpoints;
 	
 	/**
-	 * Return whether the player can have the given amount of hitpoints.
+	 * Return the current amount of hitpoints.
 	 * 
-	 * @param 	hitpoints
-	 * 			the amount of hitpoints to check
-	 * @return	Return true when the character can have the amount of hitpoints.
-	 * @return	Return false when the character can't have the amount of hitpoints.
+	 * @return	Return the current amount of hitpoints.
 	 */
-	@Raw
-	public boolean canHaveAsHitpoints(int hitpoints) {
-		return hitpoints >= 0 && (isFighting() || MathHelper.isPrime(hitpoints) || hitpoints == 0);
+	@Basic
+	public int getHitpoints() {
+		return this.hitpoints;
 	}
 	
 	/**
@@ -170,80 +185,36 @@ public abstract class Character {
 	}
 	
 	/**
-	 * Return the current amount of hitpoints.
+	 * Check whether the player can have the given amount of hitpoints.
 	 * 
-	 * @return	Return the current amount of hitpoints.
+	 * @param 	hitpoints
+	 * 			the amount of hitpoints to check
+	 * @return	Return true when the character can have the amount of hitpoints.
+	 * @return	Return false when the character can't have the amount of hitpoints.
 	 */
-	@Basic
-	public int getHitpoints() {
-		return this.hitpoints;
+	@Raw
+	public boolean canHaveAsHitpoints(int hitpoints) {
+		return hitpoints >= 0 && (isFighting() || MathHelper.isPrime(hitpoints));
 	}
 	
 	/**
 	 * Remove hitpoints from the character.
 	 * 
 	 * @param	hitpoints
-	 * 			The amount of hitpoints to be taken
+	 * 			the amount of hitpoints to be taken
 	 * @pre		The given amount of hitpoints must be a positive amount.
 	 * 			| hitpoints >= 0
 	 * @post	Remove the given amount of hitpoints or sets it to zero when
 	 * 			the new amount of hitpoints would be negative.
 	 * 			| new.getHitpoints() == Math.max(0, getHitpoints()-hitpoints)
 	 * @post	when the character takes damage, isFighting is set to true.
-	 * 			| new.isFighting() == true
+	 * 			| new.isFighting()
 	 */
 	public void takeDamage(int hitpoints) {
 		int newValue = Math.max(0, getHitpoints()-hitpoints);
 		
 		setFighting (true);
 		setHitpoints(newValue);
-	}
-	
-	/**
-	 * Set the current fighting state to the given state.
-	 * 
-	 * @param 	isFighting
-	 * 			The new state of isFighting
-	 * @post	Set the current fighting state to the given state.
-	 * 			| new.isFighting() == isFighting
-	 */
-	@Raw
-	protected void setFighting(boolean isFighting) {
-		this.isFighting = isFighting;
-	}
-	
-	/**
-	 * Return the current fighting state of this character.
-	 * 
-	 * @return	Return the current fighting state of this character.
-	 */
-	@Basic
-	public boolean isFighting() {
-		return this.isFighting;
-	}
-	
-	
-	/**
-	 * Return the current life state of this character.
-	 * 
-	 * @return	Return the current life state of this character.
-	 * 			| getHitpoints == 0
-	 */
-	@Raw
-	public boolean isDead() {
-		return getHitpoints() == 0;
-	}
-	
-	/**
-	 * Return whether the player can have the maximum amount of hitpoints.
-	 * 
-	 * @param 	hitpoints
-	 * 			the maximum amount of hitpoints to check
-	 * @return	Return true when the character can have the maximum amount of hitpoints.
-	 * @return	Return false when the character can't have the maximum amount of hitpoints.
-	 */
-	public static boolean isValidMaxHitpoints(int hitpoints) {
-		return hitpoints > 0 && MathHelper.isPrime(hitpoints);
 	}
 	
 	/**
@@ -272,6 +243,19 @@ public abstract class Character {
 	}
 	
 	/**
+	 * Check whether the player can have the maximum amount of hitpoints.
+	 * 
+	 * @param 	hitpoints
+	 * 			the maximum amount of hitpoints to check
+	 * @return	Return true when the character can have the maximum amount of hitpoints.
+	 * 			Return false otherwise.
+	 * 			| hitpoints > 0 && MathHelper.isPrime(hitpoints)
+	 */
+	public static boolean isValidMaxHitpoints(int hitpoints) {
+		return hitpoints > 0 && MathHelper.isPrime(hitpoints);
+	}
+	
+	/**
 	 * Increase the maximum amount of hitpoints.
 	 * 
 	 * @param 	hitpoints
@@ -284,7 +268,7 @@ public abstract class Character {
 	 * 			| new.getMaxHitpoints() == this.getMaxHitpoints() + hitpoints
 	 */
 	public void increaseMaxHitpoints (int hitpoints) {
-		this.maxHitpoints = this.maxHitpoints + hitpoints;
+		setMaxHitpoints(getMaxHitpoints() + hitpoints);
 	}
 	
 	/**
@@ -303,7 +287,46 @@ public abstract class Character {
 	 * 			of hitpoints.
 	 */
 	public void lowerMaxHitpoints (int hitpoints) {
-		this.maxHitpoints = this.maxHitpoints - hitpoints;
+		setMaxHitpoints(getMaxHitpoints() - hitpoints);
+		if (getHitpoints() > getMaxHitpoints()) {
+			setHitpoints(getMaxHitpoints());
+		}
+	}
+	
+	
+	/**
+	 * Return the current fighting state of this character.
+	 * 
+	 * @return	Return the current fighting state of this character.
+	 */
+	@Basic
+	public boolean isFighting() {
+		return this.isFighting;
+	}
+	
+	/**
+	 * Set the current fighting state to the given state.
+	 * 
+	 * @param 	isFighting
+	 * 			The new state of isFighting
+	 * @post	Set the current fighting state to the given state.
+	 * 			| new.isFighting() == isFighting
+	 */
+	@Raw
+	protected void setFighting(boolean isFighting) {
+		this.isFighting = isFighting;
+	}
+	
+	
+	/**
+	 * Check whether this character is dead.
+	 * 
+	 * @return	Return true when this character is dead.
+	 * 			| getHitpoints() == 0
+	 */
+	@Raw
+	public boolean isDead() {
+		return getHitpoints() == 0;
 	}
 	
 	/***********************
@@ -334,6 +357,11 @@ public abstract class Character {
 	 ***********************/
 	
 	/**
+	 * Variable referencing the maximum number of anchors of this character.
+	 */
+	private final int numberOfAnchors;
+	
+	/**
 	 * Variable referencing a dictionary of all anchored items of this character. 
 	 * This class has a bidirectional relation with the class Item. An item can be 
 	 * anchored using the function equip/unequip or the protected function
@@ -352,34 +380,18 @@ public abstract class Character {
 	private final HashMap<Integer, Item> anchors = new HashMap<Integer, Item>();
 	
 	/**
-	 * Set the item at the given anchorId.
-	 * 
-	 * @param 	anchorId
-	 * 			The anchorId to set the item at
-	 * @param 	item
-	 * 			The item to set at the given anchorId
-	 * @post	Set the item at the given anchor of this character.
-	 */
-	@Raw
-	protected void setItemAt(int anchorId, Item item) {
-		if (item == null) {
-			this.anchors.remove(anchorId);
-		} else {
-			this.anchors.put(anchorId, item);
-		}
-	}
-	
-	/**
 	 * Return the item at the given anchorId.
 	 * 
 	 * @param 	anchorId
-	 * 			The anchorId of the item
+	 * 			the anchorId of the item
 	 * @return	Return the item at the given anchorId.
+	 * 			| result == this.anchors.get(anchorId)
 	 */
 	@Basic
 	public Item getItemAt (int anchorId) {
 		return this.anchors.get(anchorId);
 	}
+	
 	/**
 	 * Return the number of anchored items.
 	 * 
@@ -390,6 +402,28 @@ public abstract class Character {
 	public int getNbItems () {
 		return getAnchorEntrySet().size();
 	}
+	
+	/**
+	 * Set the item at the given anchorId.
+	 * 
+	 * @param 	anchorId
+	 * 			the anchorId to set the item at
+	 * @param 	item
+	 * 			the item to set at the given anchorId
+	 * @post	Remove the entry when item is null.
+	 * 			| this.anchors.remove(anchorId)	
+	 * @post	Set the item at the given anchor of this character when the item is not null.
+	 * 			| this.anchors.put(anchorId, item)
+	 */
+	@Raw
+	protected void setItemAt(int anchorId, Item item) {
+		if (item == null) {
+			this.anchors.remove(anchorId);
+		} else {
+			this.anchors.put(anchorId, item);
+		}
+	}
+	
 	/**
 	 * Check whether the given item can be equipped in the given slot.
 	 * 
@@ -402,7 +436,8 @@ public abstract class Character {
 	 * 			Return true when the item is owned by this player or the 
 	 * 			item is on the ground and able to be picked up.
 	 * 			Return false otherwise.
-	 * 			| result == (anchorId >= 0 && anchorId < getNumberOfAnchors()) && (item.getHolder == this
+	 * 			| result == (anchorId >= 0 && anchorId < getNumberOfAnchors()) && (item.getHolder == this)
+	 * 			|			&& (item.canHaveAsCharacter(this))
 	 * 			|			|| (item.getHolder() == null && canPickUp(item)))
 	 */
 	@Raw
@@ -424,9 +459,10 @@ public abstract class Character {
 	}
 	
 	/**
-	 * Return true when this character has the given item anchored.
+	 * Check whether this character has the given item anchored.
 	 * 
 	 * @return	Return true when this character has the given item anchored.
+	 * 			Return false otherwise.
 	 */
 	public boolean hasItem (Item item) {
 		for (Item itemAt : this.anchors.values()) {
@@ -441,17 +477,16 @@ public abstract class Character {
 	 * Equip item from own inventory or from ground, on the given slot.
 	 * 
 	 * @param	anchorId
-	 * 			The id of the anchor to be set
+	 * 			the id of the anchor to be set
 	 * @param	item
 	 * 			the item to be equipped
-	 * @effect	Unequip the item in that slot if not null
+	 * @post	When this item cannot be equipped, nothing happens (total programming).
+	 * 			| !(canHaveAsItemAt())
+	 * @effect	Unequip the item in that slot if not null.
 	 * 			| unequip(anchorId)
-	 * @post	Equip the given item in the given slot when possible, unequip 
-	 * 			the item in that slot when not null.
-	 * 			| canHaveAsItemAt(item)
-	 * @post	When equipped the item at the given id will be set to the given item
+	 * @post	When equipped the item at the given id will be set to the given item.
 	 * 			| getItemAt(anchorId) == item
-	 * @effect	When equipped the anchor of the current item will bound to this character 
+	 * @effect	When equipped the anchor of the current item will bound to this character.
 	 * 			(so bidirectional relations are recreated).
 	 * 			| item.bindCharacter(this)
 	 * @throws	DeadException
@@ -466,17 +501,20 @@ public abstract class Character {
 			if (this.getItemAt(anchorId) != null) {
 				this.unequip(anchorId);
 			}
-			this.setItemAt(anchorId, item);
 			item.bindCharacter(this);
+			this.setItemAt(anchorId, item);
 		}
 	}
 	
 	/**
 	 * Unequip item on the given slot.
 	 * 
+	 * @param	anchorId
+	 * 			the anchorId of the item to be unequipped
 	 * @post	Unequip the item on the given slot and tries to put it in a backpack
 	 * 			when possible otherwise drops it on the ground.
-	 * @effect	When put in a backpack the item will be moved into that backpack.
+	 * 			| !(new.hasItem(this.getItemAt(anchorId)))
+	 * @effect	When possible the item will be moved into that backpack.
 	 * 			| item.moveTo(backpack)
 	 * @effect	When not put in a backpack the item will be dropped on the ground.
 	 * 			| item.drop();
@@ -516,6 +554,8 @@ public abstract class Character {
 	 * @param 	item
 	 * 			The item to be removed from its anchor
 	 * @post	Search and remove the given item from its anchor.
+	 * 
+	 * @note	Break the association with item unidirectionally.
 	 */
 	@Raw
 	protected void removeItemFromHolder(Item item) {
@@ -533,13 +573,16 @@ public abstract class Character {
 	 * Check whether an item can be picked up.
 	 * 
 	 * @param 	item
-	 * 			The item to be picked up
+	 * 			the item to be picked up
 	 * @return	Return false when the holder of the item is not null and not dead.
 	 * 			Return false when the new weight of this character will exceed 
 	 * 			the capacity of this character.
+	 * 			Return false when the item is terminated.
+	 * 			Return false when the item is already owned by this character.
 	 * 			Return true otherwise.
-	 * 			| result == !(item.getHolder() != null && !item.getHolder().isDead()) && 
-	 * 						!(this.getCapacity() < this.getTotalWeight() + totalWeightOfItem)
+	 * 			| result == !(item.isTerminated()) && !(item.getHolder() == this)
+	 * 						&& !(item.getHolder() != null && !item.getHolder().isDead())
+	 * 						&& !(this.getCapacity() < this.getTotalWeight() + totalWeightOfItem)
 	 */
 	@Raw
 	public boolean canPickUp(Item item) {
@@ -573,14 +616,14 @@ public abstract class Character {
 	 * Pick up an item from a dead body or from the ground.
 	 * 
 	 * @param	item
-	 * 			The item to be picked up
+	 * 			the item to be picked up
 	 * @post	If this item can not be picked up, nothings happens.
 	 * 			| !canPickUp(item)
 	 * @effect	Otherwise all anchors are checked, if an empty anchor
-	 * 			is found and the item can be equipped, the item equipped there.
+	 * 			is found and the item can be equipped, the item is equipped there.
 	 * 			| this.equip(anchorId, item)
-	 * @effect	If there are no available anchors and there is an anchored backpack that can take this item,
-	 * 			then the item will be put in that backpack.
+	 * @effect	If there are no available anchors and there is an anchored backpack
+	 * 			that can take this item, then the item will be put in that backpack.
 	 * 			| item.moveTo(backpack)
 	 * @throws	DeadException
 	 * 			throws this exception when the current character is dead.			
@@ -612,9 +655,9 @@ public abstract class Character {
 	}
 	
 	/**
-	 * Return an entry set with all anchors attached.
+	 * Return an entry set with all attached anchors.
 	 * 
-	 * @return	Return an entry set with all anchors attached.
+	 * @return	Return an entry set with all attached anchors.
 	 */
 	@Raw
 	public Set<Entry<Integer, Item>> getAnchorEntrySet () {
@@ -638,15 +681,6 @@ public abstract class Character {
 	private final int numberOfAnchors;
 	
 	/**
-	 * Check whether the given number of anchors is valid.
-	 * 
-	 * @return	Return true when the given number of anchors is valid
-	 */
-	public static boolean isValidNumberOfAnchors (int numberOfAnchors) {
-		return numberOfAnchors > 0;
-	}
-	
-	/**
 	 * Return the number of anchors of this character.
 	 * 
 	 * @return	Return the number of anchors of this character.
@@ -657,10 +691,21 @@ public abstract class Character {
 	}
 	
 	/**
-	 * Check whether this character has proper items.
+	 * Check whether the given number of anchors is valid.
 	 * 
-	 * @return	Return true when this item has proper items.
-	 * 			Return false when this item doesn't have proper items.
+	 * @return	Return true when the given number of anchors is positive.
+	 * 			Return false otherwise.
+	 * 			| numberOfAnchors >= 0
+	 */
+	public static boolean isValidNumberOfAnchors (int numberOfAnchors) {
+		return numberOfAnchors >= 0;
+	}
+	
+	/**
+	 * Check whether this character has proper items equipped.
+	 * 
+	 * @return	Return true when this item has proper items equipped.
+	 * 			Return false when this item doesn't have proper items equipped.
 	 */
 	@Raw
 	public boolean hasProperItems () {
@@ -793,7 +838,7 @@ public abstract class Character {
 	/**
 	 * Return the total weight of this character.
 	 * 
-	 * @return	Return the total weight of this character in kg calculated as the sum of the
+	 * @return	Return the total weight of this character in kilograms calculated as the sum of the
 	 * 			total weights of each anchored item.
 	 */
 	@Raw
@@ -917,7 +962,7 @@ public abstract class Character {
 			+ "\nHitpoints: " + getHitpoints() 
 			+ "\nMaxHitpoints: " + getMaxHitpoints() 
 			+ "\nNumber of anchors: " + getNumberOfAnchors()
-			+ "\nEquipped items: " + getAnchorEntrySet().size()
+			+ "\nEquipped items: " + getNbItems()
 			+ "\nCapacity: " + getCapacity() 
 			+ "\nDamage: " + getDamage() 
 			+ "\nProtection: " + getProtection()

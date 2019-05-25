@@ -33,46 +33,22 @@ public class Monster extends Character {
 	
 	/**
 	 * Create a monster with a given name, amount of hitpoints, damage, protection,
-	 * number of anchors and capacity.
-	 * 
-	 * @param 	name
-	 *			The name of this monster
-	 * @param 	hitpoints
-	 * 			The maximum amount of hitpoints of this monster
-	 * @param 	damage
-	 * 			The damage of this monster
-	 * @param 	protection
-	 * 			The protection of this monster
-	 * @param 	numberOfAnchors
-	 * 			The number of anchors of this monster
-	 * @param 	capacity
-	 * 			The carry capacity of this monster
-	 * @effect	The new monster is set as a character with a given name, amount of hitpoints,
-	 * 			a number of anchors and no items attached.
-	 * 			| this(name, hitpoints, damage, protection, numberOfAnchors, capacity, new HashSet<Item>())
-	 */
-	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity) throws IllegalArgumentException {
-		this(name, hitpoints, damage, protection, numberOfAnchors, capacity, new HashSet<Item>());
-	}
-	
-	/**
-	 * Create a monster with a given name, amount of hitpoints, damage, protection,
 	 * number of anchors, capacity and given items, which are randomly distributed on the anchors.
 	 * 
 	 * @param 	name
-	 *			The name of this monster
+	 *			the name of this monster
 	 * @param 	hitpoints
-	 * 			The maximum amount of hitpoints of this monster
+	 * 			the maximum amount of hitpoints of this monster
 	 * @param 	damage
-	 * 			The damage of this monster
+	 * 			the damage of this monster
 	 * @param 	protection
-	 * 			The protection of this monster
+	 * 			the protection of this monster
 	 * @param 	numberOfAnchors
-	 * 			The number of anchors of this monster
+	 * 			the number of anchors of this monster
 	 * @param 	capacity
-	 * 			The carry capacity of this monster
+	 * 			the carry capacity of this monster
 	 * @param	items
-	 * 			The given set of items of this monster
+	 * 			the given set of items of this monster
 	 * @pre		The given damage must be valid.
 	 * 			| isValidDamage(damage)
 	 * @pre		The given protection must be valid.
@@ -121,6 +97,32 @@ public class Monster extends Character {
 	        anchorId ++;
 	    }
 	}
+	
+	/**
+	 * Create a monster with a given name, amount of hitpoints, damage, protection,
+	 * number of anchors and capacity.
+	 * 
+	 * @param 	name
+	 *			the name of this monster
+	 * @param 	hitpoints
+	 * 			the maximum amount of hitpoints of this monster
+	 * @param 	damage
+	 * 			the damage of this monster
+	 * @param 	protection
+	 * 			the protection of this monster
+	 * @param 	numberOfAnchors
+	 * 			the number of anchors of this monster
+	 * @param 	capacity
+	 * 			the carry capacity of this monster
+	 * @effect	The new monster is set as a character with a given name, amount of hitpoints,
+	 * 			a number of anchors and no items attached.
+	 * 			| this(name, hitpoints, damage, protection, numberOfAnchors, capacity, new HashSet<Item>())
+	 */
+	public Monster(String name, int hitpoints, int damage, int protection, int numberOfAnchors, float capacity) throws IllegalArgumentException {
+		this(name, hitpoints, damage, protection, numberOfAnchors, capacity, new HashSet<Item>());
+	}
+	
+
 
 	
 	/********************************
@@ -133,18 +135,6 @@ public class Monster extends Character {
 	private final int damage;
 	
 	/**
-	 * Return true when the given damage is valid.
-	 * 
-	 * @param	damage
-	 * 			The damage to check
-	 * @return	Return true when the given damage is positive.
-	 * 			| damage >= 0
-	 */
-	public static boolean isValidDamage(int damage) {
-		return damage >= 0;
-	}
-	
-	/**
 	 * Return the damage of this monster.
 	 * 
 	 * @return	Return the damage of this monster.
@@ -153,7 +143,19 @@ public class Monster extends Character {
 	public int getDamage() {
 		return this.damage;
 	}
-
+	
+	/**
+	 * Return true when the given damage is valid.
+	 * 
+	 * @param	damage
+	 * 			the damage to check
+	 * @return	Return true when the given damage is positive.
+	 * 			Return false otherwise.
+	 * 			| damage >= 0
+	 */
+	public static boolean isValidDamage(int damage) {
+		return damage >= 0;
+	}
 	
 	/********************************
 	 * Protection
@@ -163,19 +165,11 @@ public class Monster extends Character {
 	 * Variable referencing the protection of a monster.
 	 */
 	private final int protection;
-	private static final int MAX_PROTECTION = 100;
 	
 	/**
-	 * Check whether the given protection is valid.
-	 * 
-	 * @param	protection
-	 * 			The protection to check
-	 * @return	Return true when the given protection is positive.
-	 * 			| protection >= 0
+	 * Variable referencing the maximum protection of all monsters.
 	 */
-	public static boolean isValidProtection(int protection) {
-		return protection >= 0 && protection <= MAX_PROTECTION;
-	}
+	private static final int MAX_PROTECTION = 100;
 	
 	/**
 	 * Return the protection of the monster.
@@ -187,10 +181,36 @@ public class Monster extends Character {
 		return this.protection;
 	}
 	
+	/**
+	 * Return the maximum protection of all monsters.
+	 * 
+	 * @return	Return the maximum protection of all monsters.
+	 */
+	@Basic@Immutable
+	public static int getMaxProtection() {
+		return MAX_PROTECTION;
+	}
+	
+	/**
+	 * Check whether the given protection is valid.
+	 * 
+	 * @param	protection
+	 * 			the protection to check
+	 * @return	Return true when the given protection is positive.
+	 * 			Return false otherwise.
+	 * 			| protection >= 0
+	 */
+	public static boolean isValidProtection(int protection) {
+		return protection >= 0 && protection <= getMaxProtection();
+	}
+	
 	/***********************
 	 * Capacity
 	 ***********************/
 	
+	/**
+	 * Variable referencing the capacity of a monster.
+	 */
 	private final float capacity;
 	
 	/**
@@ -207,8 +227,9 @@ public class Monster extends Character {
 	 * Check whether the given capacity is valid.
 	 * 
 	 * @param	capacity
-	 * 			The capacity to check
+	 * 			the capacity to check
 	 * @return	Return true when the given capacity is positive.
+	 * 			Return false otherwise.
 	 * 			| capacity >= 0
 	 */
 	public static boolean isValidCapacity(float capacity) {
