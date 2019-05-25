@@ -29,12 +29,13 @@ public class Purse extends Item implements Container {
 	
 	/**
 	 * Create a purse with given capacity and weight.
+	 * 
 	 * @param 	capacity
-	 * 			The capacity of this purse.
+	 * 			the capacity of this purse
 	 * @param 	weight
-	 * 			The weight of this purse.
+	 * 			the weight of this purse
 	 * @param	content
-	 * 			The default content
+	 * 			the default content
 	 * @pre		The given capacity is valid
 	 * 			| isValidCapacity (capacity)
 	 * @pre		The given content is valid
@@ -58,8 +59,8 @@ public class Purse extends Item implements Container {
 	 ***********************/
 	
 	/**
-	 * Return true when this item is a purse
-	 * @return	Always return true since this item is a purse
+	 * Check whether this item is a purse.
+	 * @return	Always return true since this item is a purse.
 	 * 			| result == true
 	 */
 	@Basic@Immutable@Override@Raw
@@ -71,11 +72,10 @@ public class Purse extends Item implements Container {
 	 * Identification - total programming
 	 **************************************/
 	
-	
-	
 	/**
 	 * Generates a valid identification for a purse.
-	 * @return returns a unique long
+	 * 
+	 * @return return a unique long
 	 * 		   The uniqueness of the generated long is always considered true
 	 * 		   The chance of colliding is not zero, but neglectable (5.4*10^(-20))
 	 */
@@ -91,6 +91,7 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
+	 * Check whether the given identification is valid.
 	 * 
 	 * @param 	identification
 	 * 			The identification to check
@@ -104,8 +105,10 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
+	 * Check whether the given identification is valid and unique.
+	 * 
 	 * @param	identification
-	 * 			The identification to check
+	 * 			the identification to check
 	 * @return	Return true when this purse can have the given identification number that has to be unique
 	 * 			Return false when this purse can't
 	 * 			| result == canHaveAsIdentification (identification) 
@@ -135,7 +138,8 @@ public class Purse extends Item implements Container {
 	private final int capacity;
 	
 	/**
-	 * Return the capacity of this container
+	 * Return the capacity of this container.
+	 * 
 	 * @return	Return the capacity of this container
 	 */
 	@Basic@Immutable@Raw
@@ -144,9 +148,9 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
-	 * Return true when the given capacity is valid
+	 * Check whether the given capacity is valid.
 	 * @param 	capacity
-	 * 			The capacity to check
+	 * 			the capacity to check
 	 * @return	Return true when the given capacity is valid
 	 * 			Return false when the given capacity is invalid
 	 * 			| result == ...
@@ -158,14 +162,16 @@ public class Purse extends Item implements Container {
 	/***********************
 	 * Torn
 	 ***********************/
+	
 	/**
 	 * Variable referencing whether or not the purse is torn.
 	 */
 	private boolean isTorn = false;
 	
 	/**
-	 * Return the torn state of this container
-	 * @return	Return the torn state of this container
+	 * Return the torn state of this container.
+	 * 
+	 * @return	Return the torn state of this container.
 	 */
 	@Basic@Raw
 	public boolean isTorn() {
@@ -173,7 +179,8 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
-	 * Set the torn state of this container to the given value
+	 * Set the torn state of this container to the given value.
+	 * 
 	 * @param	isTorn
 	 * 			the new torn state
 	 * @post	the new torn state is set to the given state
@@ -185,7 +192,8 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
-	 * Set the torn state of this container to true
+	 * Set the torn state of this container to true.
+	 * 
 	 * @post	the new torn state is set to true
 	 * 			| new.isTorn() == true
 	 * @post	the content is set to 0
@@ -207,7 +215,8 @@ public class Purse extends Item implements Container {
 	private int content;
 	
 	/**
-	 * Return the content of this container
+	 * Return the content of this container.
+	 * 
 	 * @return	Return the content of this container
 	 */
 	@Basic@Raw
@@ -216,7 +225,8 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
-	 * Set the content of this container
+	 * Set the content of this container.
+	 * 
 	 * @param 	content
 	 * 			the new content
 	 * @post	the new content is set to the given content
@@ -228,9 +238,10 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
-	 * Return true when this purse can have the given content
+	 * Check whether this purse can have the given content.
+	 * 
 	 * @param 	content
-	 * 			The content to check
+	 * 			the content to check
 	 * @return	Return true when the content of this non torn purse is within the allowed range and the additional content doesn't exceed 
 	 * 			the maximum capacity of the holder of this purse
 	 * 			| result == content >= 0 && content <= getCapacity() && (this.getHolder() == null || 
@@ -245,9 +256,10 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
-	 * Adds the given amount
+	 * Add  the given amount of ducates to this purse.
+	 * 
 	 * @param 	amount
-	 * 			The amount to add
+	 * 			the amount to add
 	 * @post	The new content is increased with the given amount
 	 * 			| new.getContent() == this.getContent() + amount
 	 * @effect	When the new content is higher than the allowed capacity this purse is torn
@@ -281,9 +293,10 @@ public class Purse extends Item implements Container {
 	}
 	
 	/**
-	 * Adds the given amount
+	 * Remove the given amount of ducates from this purse.
+	 * 
 	 * @param 	amount
-	 * 			The amount to remove
+	 * 			the amount to remove
 	 * @post	The new content is decreased with the given amount
 	 * 			| new.getContent() == this.getContent() - amount
 	 * @throws	TornException
