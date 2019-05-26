@@ -429,7 +429,8 @@ public abstract class Character {
 	 * 
 	 * @param 	item
 	 * 			the item to be checked
-	 * @return	Return false when this item is terminated.
+	 * @return	Return false when this character is dead.
+	 * 			Return false when this item is terminated.
 	 * 			Return false when the anchor id is lower than 0 and higher 
 	 * 			than the maximum anchors allowed.
 	 * 			Return false when the given item can't have this character
@@ -442,7 +443,10 @@ public abstract class Character {
 	 */
 	@Raw
 	public boolean canHaveAsItemAt(int anchorId, Item item) {
-		if (item.isTerminated()) {
+		if (isDead()) {
+			return false;
+		}
+		else if (item.isTerminated()) {
 			return false;
 		}
 		else if (anchorId < 0 || anchorId >= getNumberOfAnchors()) {
@@ -575,13 +579,14 @@ public abstract class Character {
 	 * 
 	 * @param 	item
 	 * 			the item to be picked up
-	 * @return	Return false when the holder of the item is not null and not dead.
+	 * @return	Return false when this character is dead
+	 * 			Return false when the holder of the item is not null and not dead.
 	 * 			Return false when the new weight of this character will exceed 
 	 * 			the capacity of this character.
 	 * 			Return false when the item is terminated.
 	 * 			Return false when the item is already owned by this character.
 	 * 			Return true otherwise.
-	 * 			| result == !(item.isTerminated()) && !(item.getHolder() == this)
+	 * 			| result == !(isDead()) && !(item.isTerminated()) && !(item.getHolder() == this)
 	 * 						&& !(item.getHolder() != null && !item.getHolder().isDead())
 	 * 						&& !(this.getCapacity() < this.getTotalWeight() + totalWeightOfItem)
 	 */
@@ -596,7 +601,11 @@ public abstract class Character {
 			totalWeightOfItem = item.getWeight();
 		}
 		
-		if (item.isTerminated()) {
+		if (isDead()) {
+			return false;
+		}
+		
+		else if (item.isTerminated()) {
 			return false;
 		}
 		else if(item.getHolder() != null && !item.getHolder().isDead()) {
