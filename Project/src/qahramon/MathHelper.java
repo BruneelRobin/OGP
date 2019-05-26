@@ -111,7 +111,12 @@ public class MathHelper {
 	 * 			| result == (new Random()).nextInt(max-min) + min;
 	 */
 	public static int getRandomIntBetweenRange(int min, int max){
-		return (new Random()).nextInt(max-min) + min;
+		if (max <= min) {
+			return min;
+		}
+		else{ 
+			return (new Random()).nextInt(max-min) + min;
+		}
 	}
 	
 	/**

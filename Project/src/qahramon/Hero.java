@@ -365,8 +365,21 @@ public class Hero extends Character {
 	/**
 	 * Check whether or not the hero wants to take an item.
 	 * 
-	 * @return 	Return true when the hero wants to take the item.
-	 * 			Return false otherwise.	
+	 * @param 	item
+	 * 			the item to be considered to take
+	 * @return 	Return true when the item is an armor that has higher fullProtection
+	 * 			than the fullProtection of the best armor this hero is currently holding.
+	 * 			Return true when the item is a weapon that has higher damage than the
+	 * 			damage of the best weapon this hero is currently holding.
+	 * 			Return true when the item is a backpack that has higher capacity than 
+	 * 			the capacity of the best backpack this hero is currently holding.
+	 * 			Return true when the item is a purse that has higher capacity than the
+	 * 			capacity of the best purse this hero is currently holding.
+	 * 			Return false otherwise.
+	 * 			| result == (item.isArmor() && bestArmor == null || armor.getFullProtection() > bestArmor.getFullProtection())
+	 * 			|		||	(item.isWeapon() && bestWeapon == null || weapon.getDamage() > bestWeapon.getDamage())
+	 * 			|		||	(item.isBackpack() && bestBackpack == null || backpack.getCapacity() > bestBackpack.getCapacity())
+	 * 			|		||	(item.isPurse() && purse.getCapacity() > thisPurse.getCapacity())
 	 */
 	@Override
 	public boolean wantsToTake(Item item) { 
@@ -376,11 +389,10 @@ public class Hero extends Character {
 			Armor bestArmor = getBestArmor();
 			if (bestArmor == null || armor.getFullProtection() > bestArmor.getFullProtection()) {
 				return true;
-			} 
-		else {
+			} else {
 			return false;
-				}
 			}
+		}
 		
 		else if (item.isWeapon()) {
 			Weapon weapon = (Weapon) item;
@@ -584,9 +596,10 @@ public class Hero extends Character {
 		if(!super.canPickUp(item)){
 			return false;
 		}
-		else if(item.isArmor() && this.getArmorCount() >= MAX_ARMOR_COUNT){
+		else if(item.isArmor() && this.getArmorCount()+1 > MAX_ARMOR_COUNT){
 			return false;
-			
+		} else if (item.isBackpack() && ((Backpack)item).getArmorCount() + this.getArmorCount() > MAX_ARMOR_COUNT) {
+			return false;
 		}
 		return true;
 	}
