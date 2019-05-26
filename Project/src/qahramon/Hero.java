@@ -484,7 +484,7 @@ public class Hero extends Character {
 	 * @param	character
 	 * 			the character to hit
 	 * @effect	A random number between 0 and 100 is generated, when this number is higher than the 
-	 * 			character's protection, the character takes the damage of this hero. When this number is
+	 * 			character's protection and the character is not dead, the character takes the damage of this hero. When this number is
 	 * 			lower than the character's protection, nothing happens.
 	 * 			| character.takeDamage(getDamage())
 	 * @post	When the given character dies, this hero's fighting state will be set to false
@@ -505,7 +505,7 @@ public class Hero extends Character {
 		
 		int randomNumber = MathHelper.getRandomIntBetweenRange(0, 100);
 		
-		if (randomNumber >= character.getProtection()) {
+		if (randomNumber >= character.getProtection() && !character.isDead()) {
 			int damage = getDamage();
 			
 			character.takeDamage(damage);
