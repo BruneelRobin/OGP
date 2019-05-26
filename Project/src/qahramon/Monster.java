@@ -3,6 +3,7 @@ package qahramon;
 
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import be.kuleuven.cs.som.annotate.*;
@@ -90,11 +91,13 @@ public class Monster extends Character {
 			this.capacity = totalWeight;
 	    }
 		
+		ArrayList<Integer> randomAnchorIds = MathHelper.generateRandomIntegerSequence(10, 12);
 		Iterator<Item> it = items.iterator();
-		int anchorId = 0;
+		int i = 0;
 	    while(it.hasNext()){
+	    	int anchorId = randomAnchorIds.get(i);
 	        this.equip(anchorId, it.next());
-	        anchorId ++;
+	        i ++;
 	    }
 	}
 	

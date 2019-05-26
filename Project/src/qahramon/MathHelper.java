@@ -1,5 +1,7 @@
 package qahramon;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -80,7 +82,7 @@ public class MathHelper {
 	 * 			the maximum value
 	 * @pre		Range is smaller than the maximum long value.
 	 * 			| max-min <= Long.MAX_VALUE
-	 * @return	Return a random long number in the given range (between min and max).
+	 * @return	Return a random long number in the given range (between min and max-1).
 	 * 			| Math.abs((randomNumberGenerator.nextLong() % (max - min))) + min
 	 */
 	public static long getRandomLongBetweenRange(long min, long max){
@@ -106,10 +108,10 @@ public class MathHelper {
 	 * @param 	max
 	 * 			the maximum value
 	 * @return	Return a random integer number in the given range (between min and max).
-	 * 			| result == (int)getRandomLongBetweenRange((long)min, (long)max);
+	 * 			| result == (new Random()).nextInt(max-min) + min;
 	 */
 	public static int getRandomIntBetweenRange(int min, int max){
-		return (int)getRandomLongBetweenRange((long)min, (long)max);
+		return (new Random()).nextInt(max-min) + min;
 	}
 	
 	/**
@@ -131,5 +133,46 @@ public class MathHelper {
 			return max;
 		}
 		return value;
+	}
+	
+	/**
+	 * Generate a random sequence of integers
+	 * @param 	seqLen
+	 * 			the length of the random sequence
+	 * @param 	maxNum
+	 * 			the maximum number that can be in this sequence
+	 * @return	Generate a random sequence of unique integers where each number lays between 0 and maxNum-1.
+	 */
+	public static ArrayList<Integer> generateRandomIntegerSequence (int seqLen, int maxNum) {
+		HashMap<Integer, Integer> swaps = new HashMap<Integer, Integer>();
+		ArrayList<Integer> sequence = new ArrayList<Integer>();
+		
+		// we create a sequence from 0..maxNum-1 and swap the seqLen first numbers
+		for (int i = 0; i < seqLen; i++) {
+			int rnd = getRandomIntBetweenRange(0, maxNum);
+			int rndVal;
+			int iVal;
+			// swap rnd and this num
+			if (swaps.get(rnd) != null) {
+				rndVal = swaps.get(rnd);
+			} else {
+				rndVal = rnd;
+			}
+			
+			if (swaps.get(i) != null) {
+				iVal = swaps.get(i);
+			} else {
+				iVal = i;
+			}
+			
+			swaps.put(i, rndVal);
+			swaps.put(rnd, iVal);
+		}
+		
+		for (int i = 0; i < seqLen; i++) {
+			sequence.add(swaps.get(i));
+		}
+		
+		return sequence;
 	}
 }
