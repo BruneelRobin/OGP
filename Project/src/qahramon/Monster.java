@@ -93,7 +93,7 @@ public class Monster extends Character {
 			this.capacity = totalWeight;
 	    }
 		
-		ArrayList<Integer> randomAnchorIds = MathHelper.generateRandomIntegerSequence(10, 12);
+		ArrayList<Integer> randomAnchorIds = MathHelper.generateRandomIntegerSequence(items.size(), numberOfAnchors);
 		Iterator<Item> it = items.iterator();
 		int i = 0;
 	    while(it.hasNext()){
@@ -248,8 +248,8 @@ public class Monster extends Character {
 	/**
 	 * Check whether the monster wants to take this item.
 	 * 
-	 * @return	Return true if the monster wants to take this item.
-	 * 			Return false when the monster doesn't want to take this item.
+	 * @return	Return true 
+	 * 			Return false otherwise.
 	 * 
 	 * @note	The more shiny an item is, the more likely the monster wants to take it.
 	 */

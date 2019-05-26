@@ -20,7 +20,7 @@ class HeroTest {
 	
 	static Hero hero, deadHero;
 	static Monster monster, smallMonster, weakMonster, deadMonster;
-	static Weapon weapon1, weapon2, smallWeapon;
+	static Weapon weapon1, weapon2, smallWeapon, heavyWeapon;
 	static Armor armor1, armor2, armor3;
 	static Purse purse1, purse2;
 	static Backpack backpack1, backpack2;
@@ -43,6 +43,7 @@ class HeroTest {
 		weapon1 = new Weapon(10,5);
 		weapon2 = new Weapon(25,10);
 		smallWeapon = new Weapon(2,1);
+		heavyWeapon = new Weapon(50, 400);
 		armor1 = new Armor(7, 20, 10, 15);
 		armor2 = new Armor(11, 50, 30, 50);
 		armor3 = new Armor(13, 10, 5, 10);
@@ -88,6 +89,11 @@ class HeroTest {
 	public void testHeroStringIntFloatHashMap_LegalCase() {
 		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
 		items.put(AnchorType.BODY, armor1);
+		items.put(AnchorType.BELT, purse1);
+		items.put(AnchorType.RIGHT_HAND, weapon1);
+		items.put(AnchorType.LEFT_HAND, weapon2);
+		armor2.moveTo(backpack1);
+		items.put(AnchorType.BACK, backpack1);
 		
 		Hero hero2 = new Hero ("Legalname", 50, 10.51f, items);
 		
@@ -96,21 +102,45 @@ class HeroTest {
 		assertEquals (10.51, hero2.getStrength(), 0.01);
 		assertEquals (50, hero2.getHitpoints());
 		assertEquals(true, hero2.hasItem(armor1));
+		
+		assertTrue(hero2.hasItem(armor1));
+		assertTrue(hero2.hasItem(purse1));
+		assertTrue(hero2.hasItem(weapon1));
+		assertTrue(hero2.hasItem(weapon2));
+		assertTrue(hero2.hasItem(backpack1));
+		assertTrue(backpack1.contains(armor2));
 	}
 	
 	@Test
-	public void testHeroStringIntFloatHashMap_IllegalSet() {
+	public void testHeroStringIntFloatHashMap_TooMuchArmorsInBackpack() {
 		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
-		items.put(AnchorType.BODY, armor2);
+		armor1.moveTo(backpack1);
+		armor2.moveTo(backpack1);
+		armor3.moveTo(backpack1);
+		items.put(AnchorType.BACK, backpack1);
 		
 		Hero hero2 = new Hero ("Legalname", 50, 0f, items);
 		
-		assertEquals ("Legalname", hero2.getName());
-		assertEquals (AnchorType.values().length, hero2.getNumberOfAnchors());
-		assertEquals (Hero.getDefaultStrength(), hero2.getStrength(), 0.01);
-		assertEquals (50, hero2.getHitpoints());
-		assertEquals(false, hero2.hasItem(armor2));
+		assertEquals("Legalname", hero2.getName());
+		assertEquals(AnchorType.values().length, hero2.getNumberOfAnchors());
+		assertEquals(Hero.getDefaultStrength(), hero2.getStrength(), 0.01);
+		assertEquals(50, hero2.getHitpoints());
+		assertFalse(hero2.hasItem(backpack1));
 	}
+	
+	@Test
+	public void testHeroStringIntFloatHashMap_TooHeavyWeapon() {
+		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
+		items.put(AnchorType.RIGHT_HAND, heavyWeapon);
+		
+		Hero hero2 = new Hero ("Legalname", 50, 0f, items);
+		
+		assertEquals("Legalname", hero2.getName());
+		assertEquals(AnchorType.values().length, hero2.getNumberOfAnchors());
+		assertEquals(Hero.getDefaultStrength(), hero2.getStrength(), 0.01);
+		assertEquals(50, hero2.getHitpoints());
+		assertFalse(hero2.hasItem(heavyWeapon));
+	}	
 	
 	/**************************************************************************************
 	 * End of test of most extensive constructor of Hero
