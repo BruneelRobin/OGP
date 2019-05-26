@@ -27,7 +27,7 @@ class HeroTest {
 	
 	@BeforeAll
 	public static void setUpBeforeAll() {
-	deadMonster = new Monster("LegalName", 499, 20, 70, 10, 50);
+	deadMonster = new Monster("LegalName", 499, 20, 0, 10, 50);
 	deadMonster.takeDamage(499);
 	deadHero = new Hero("LegalName", 97, 10);
 	deadHero.takeDamage(97);
@@ -95,13 +95,12 @@ class HeroTest {
 		armor2.moveTo(backpack1);
 		items.put(AnchorType.BACK, backpack1);
 		
-		Hero hero2 = new Hero ("Legalname", 50, 10.51f, items);
+		Hero hero2 = new Hero ("Legalname", 97, 30, items);
 		
-		assertEquals ("Legalname", hero2.getName());
-		assertEquals (AnchorType.values().length, hero2.getNumberOfAnchors());
-		assertEquals (10.51, hero2.getStrength(), 0.01);
-		assertEquals (50, hero2.getHitpoints());
-		assertEquals(true, hero2.hasItem(armor1));
+		assertEquals("Legalname", hero2.getName());
+		assertEquals(AnchorType.values().length, hero2.getNumberOfAnchors());
+		assertEquals(30, hero2.getStrength(), 0.01);
+		assertEquals(97, hero2.getHitpoints());
 		
 		assertTrue(hero2.hasItem(armor1));
 		assertTrue(hero2.hasItem(purse1));
@@ -112,6 +111,33 @@ class HeroTest {
 	}
 	
 	@Test
+	public void testHeroStringIntFloatHashMap_InvalidName() {
+		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
+		items.put(AnchorType.BODY, armor1);
+		items.put(AnchorType.BELT, purse1);
+		items.put(AnchorType.RIGHT_HAND, weapon1);
+		items.put(AnchorType.LEFT_HAND, weapon2);
+		armor2.moveTo(backpack1);
+		items.put(AnchorType.BACK, backpack1);
+		
+		assertThrows(IllegalArgumentException.class, () -> 
+						{Hero hero2 = new Hero ("IllegalN:me", 97, 30, items);});
+	}
+	
+	@Test
+	public void testHeroStringIntFloatHashMap_InvalidStrength() {
+		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
+		
+		Hero hero2 = new Hero ("LegalName", 97, 0f, items);
+		
+		assertEquals(Hero.getDefaultStrength(), hero2.getStrength(), 0.01);
+		
+		assertEquals("LegalName", hero2.getName());
+		assertEquals(AnchorType.values().length, hero2.getNumberOfAnchors());
+		assertEquals(97, hero2.getHitpoints());
+	}
+	
+	@Test
 	public void testHeroStringIntFloatHashMap_TooMuchArmorsInBackpack() {
 		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
 		armor1.moveTo(backpack1);
@@ -119,13 +145,30 @@ class HeroTest {
 		armor3.moveTo(backpack1);
 		items.put(AnchorType.BACK, backpack1);
 		
-		Hero hero2 = new Hero ("Legalname", 50, 0f, items);
+		Hero hero2 = new Hero ("Legalname", 97, 30, items);
 		
 		assertEquals("Legalname", hero2.getName());
 		assertEquals(AnchorType.values().length, hero2.getNumberOfAnchors());
-		assertEquals(Hero.getDefaultStrength(), hero2.getStrength(), 0.01);
-		assertEquals(50, hero2.getHitpoints());
+		assertEquals(30, hero2.getStrength(), 0.01);
+		assertEquals(97, hero2.getHitpoints());
 		assertFalse(hero2.hasItem(backpack1));
+	}
+	
+	@Test
+	public void testHeroStringIntFloatHashMap_TooMuchArmors() {
+		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
+		items.put(AnchorType.BODY, armor1);
+		items.put(AnchorType.RIGHT_HAND, armor2);
+		armor3.moveTo(backpack1);
+		items.put(AnchorType.BACK, backpack1);
+		
+		Hero hero2 = new Hero ("Legalname", 97, 30, items);
+		
+		assertEquals("Legalname", hero2.getName());
+		assertEquals(AnchorType.values().length, hero2.getNumberOfAnchors());
+		assertEquals(30, hero2.getStrength(), 0.01);
+		assertEquals(97, hero2.getHitpoints());
+		assertEquals(Hero.getMaxArmorCount(), hero2.getArmorCount());
 	}
 	
 	@Test
@@ -133,14 +176,42 @@ class HeroTest {
 		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
 		items.put(AnchorType.RIGHT_HAND, heavyWeapon);
 		
-		Hero hero2 = new Hero ("Legalname", 50, 0f, items);
+		Hero hero2 = new Hero ("Legalname", 97, 10, items);
 		
 		assertEquals("Legalname", hero2.getName());
 		assertEquals(AnchorType.values().length, hero2.getNumberOfAnchors());
-		assertEquals(Hero.getDefaultStrength(), hero2.getStrength(), 0.01);
-		assertEquals(50, hero2.getHitpoints());
+		assertEquals(10, hero2.getStrength(), 0.01);
+		assertEquals(97, hero2.getHitpoints());
 		assertFalse(hero2.hasItem(heavyWeapon));
-	}	
+	}
+	
+	@Test
+	public void testHeroStringIntFloatHashMap_ArmorOnBelt() {
+		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
+		items.put(AnchorType.BELT, armor1);
+		
+		Hero hero2 = new Hero ("Legalname", 97, 30, items);
+		
+		assertEquals("Legalname", hero2.getName());
+		assertEquals(AnchorType.values().length, hero2.getNumberOfAnchors());
+		assertEquals(30, hero2.getStrength(), 0.01);
+		assertEquals(97, hero2.getHitpoints());
+		assertFalse(hero2.hasItem(armor1));
+	}
+	
+	@Test
+	public void testHeroStringIntFloatHashMap_PurseOnBody() {
+		HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>();
+		items.put(AnchorType.BODY, purse1);
+		
+		Hero hero2 = new Hero ("Legalname", 97, 30, items);
+		
+		assertEquals("Legalname", hero2.getName());
+		assertEquals(AnchorType.values().length, hero2.getNumberOfAnchors());
+		assertEquals(30, hero2.getStrength(), 0.01);
+		assertEquals(97, hero2.getHitpoints());
+		assertFalse(hero2.hasItem(purse1));
+	}
 	
 	/**************************************************************************************
 	 * End of test of most extensive constructor of Hero
@@ -225,14 +296,13 @@ class HeroTest {
 	 ***************************************************************************************/
 	
 	@Test
-	public void testHit() {
+	public void testHit_LegalCase() {
 		hero.equip(AnchorType.RIGHT_HAND, weapon1);
 		while (monster.getHitpoints() == monster.getMaxHitpoints()) {
 			hero.hit(monster);
 		}
 		assertEquals(monster.getHitpoints(), monster.getMaxHitpoints() - hero.getDamage());
 		assertTrue(monster.isFighting());
-		assertThrows(DeadException.class, () -> { deadHero.hit(monster); });
 	}
 	
 	@Test
@@ -245,9 +315,26 @@ class HeroTest {
 		}
 		assertFalse(hero.isFighting());
 		assertTrue(weakMonster.isDead());
-		assertTrue(hero.getHitpoints() > 7);
-		
+		assertTrue(hero.getHitpoints() >= 7);
 		}
+	
+	/**
+	 * Test if the hero does not heal after hitting a dead monster.
+	 */
+	@Test
+	public void testHit_ReceiverDead() {
+		hero.equip(AnchorType.RIGHT_HAND, weapon1);
+		hero.takeDamage(90);
+		int hitpointsBefore = hero.getHitpoints();
+		hero.hit(deadMonster);
+		int hitpointsAfter = hero.getHitpoints();
+		assertTrue(hitpointsBefore == hitpointsAfter);	
+	}
+	
+	@Test
+	public void testHit_HitterDead() {
+		assertThrows(DeadException.class, () -> { deadHero.hit(monster); });
+	}
 	
 	/**************************************************************************************
 	 * End of test of hit
@@ -299,7 +386,6 @@ class HeroTest {
 		hero.equip(AnchorType.RIGHT_HAND, weapon1);
 		monster.takeDamage(monster.getHitpoints());
 		hero.collectTreasures(monster);
-		System.out.println(hero);
 		assertEquals(hero, weapon1.getHolder());
 		assertEquals(hero, armor2.getHolder());
 		assertEquals(hero, backpack2.getHolder());

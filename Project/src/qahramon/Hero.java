@@ -588,17 +588,20 @@ public class Hero extends Character {
 	 * @return	Return false when the item can not be picked up by a character.
 	 * 			Return false when the item is an armor
 	 * 			and the new armor count will exceed the maximum armor count.
+	 * 			Return false when the item is a backpack and the new armor count will exceed
+	 * 			the maximum armor count.
 	 * 			Return true otherwise.
-	 * 			| result == super.canPickUp(item) && !(item.isArmor() && this.getArmorCount() >= MAX_ARMOR_COUNT)					
+	 * 			| result == super.canPickUp(item) && !(item.isArmor() && this.getArmorCount() >= getMaxArmorCount())
+	 * 			| 		&&	!(item.isBackpack() && ((Backpack)item).getArmorCount() + this.getArmorCount() > getMaxArmorCount())					
 	 */
 	@Override
 	public boolean canPickUp(Item item) {
 		if(!super.canPickUp(item)){
 			return false;
 		}
-		else if(item.isArmor() && this.getArmorCount()+1 > MAX_ARMOR_COUNT){
+		else if(item.isArmor() && this.getArmorCount()+1 > getMaxArmorCount()){
 			return false;
-		} else if (item.isBackpack() && ((Backpack)item).getArmorCount() + this.getArmorCount() > MAX_ARMOR_COUNT) {
+		} else if (item.isBackpack() && ((Backpack)item).getArmorCount() + this.getArmorCount() > getMaxArmorCount()) {
 			return false;
 		}
 		return true;
