@@ -63,8 +63,10 @@ public class Monster extends Character {
 	 * @post	The capacity of this monster is set to the given capacity, if the capacity 
 	 * 			can handle the total weight of the given items. If not the capacity is set
 	 * 			to the total weight of the given items.
-	 * @post	Each item given in this constructor will be equipped, since all items are 
-	 * 			given in a set no order can be guaranteed.
+	 * @effect	Each item given in this constructor will be equipped in a random slot when possible, 
+	 * 			otherwise nothing happens.
+	 * 			| for (Item item : items)
+	 * 			|		equip(randomSlotId, item)
 	 * @post	The damage of this monster is set to the given damage.
 	 * 			| new.getDamage() == damage
 	 * @post	The protection of this monster is set to the given protection.
