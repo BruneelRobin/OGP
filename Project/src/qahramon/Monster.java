@@ -324,8 +324,8 @@ public class Monster extends Character {
 	 * 			the character to hit
 	 * @effect	A random number between 0 and 100 is generated, when this number is below the current
 	 * 			hitpoints of this monster, this number will be set to the current hitpoints of this monster.
-	 * 			When this last number is higher than or equal to the protection of the given character
-	 * 			then the given character will be hit.
+	 * 			When this last number is higher than or equal to the protection of the given character 
+	 * 			and the character is not dead then the given character will be hit.
 	 * 			| character.takeDamage(getDamage())
 	 * @post	When the given character dies, this monster's fighting state will be set to false
 	 * 			| new.isFighting() == false
@@ -350,7 +350,7 @@ public class Monster extends Character {
 			randomNumber = getHitpoints();
 		}
 		
-		if (randomNumber >= character.getProtection()) {
+		if (randomNumber >= character.getProtection() && !character.isDead()) {
 			int damage = getDamage();
 			
 			character.takeDamage(damage);
