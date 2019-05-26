@@ -584,9 +584,10 @@ public class Hero extends Character {
 		if(!super.canPickUp(item)){
 			return false;
 		}
-		else if(item.isArmor() && this.getArmorCount() >= MAX_ARMOR_COUNT){
+		else if(item.isArmor() && this.getArmorCount()+1 > MAX_ARMOR_COUNT){
 			return false;
-			
+		} else if (item.isBackpack() && ((Backpack)item).getArmorCount() + this.getArmorCount() > MAX_ARMOR_COUNT) {
+			return false;
 		}
 		return true;
 	}
