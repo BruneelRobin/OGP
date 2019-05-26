@@ -136,27 +136,28 @@ public class MathHelper {
 	}
 	
 	/**
-	 * Generate a random sequence of integers
-	 * @param 	seqLen
+	 * Generate a random sequence of integers.
+	 * 
+	 * @param 	sequenceLength
 	 * 			the length of the random sequence
-	 * @param 	maxNum
+	 * @param 	maxNumber
 	 * 			the maximum number that can be in this sequence
-	 * @return	Generate a random sequence of unique integers where each number lays between 0 and maxNum-1.
+	 * @return	Generate a random sequence of unique integers where each number lays between 0 and maxNumber-1.
 	 */
-	public static ArrayList<Integer> generateRandomIntegerSequence (int seqLen, int maxNum) {
+	public static ArrayList<Integer> generateRandomIntegerSequence (int sequenceLength, int maxNumber) {
 		HashMap<Integer, Integer> swaps = new HashMap<Integer, Integer>();
 		ArrayList<Integer> sequence = new ArrayList<Integer>();
 		
-		// we create a sequence from 0..maxNum-1 and swap the seqLen first numbers
-		for (int i = 0; i < seqLen; i++) {
-			int rnd = getRandomIntBetweenRange(0, maxNum);
-			int rndVal;
+		// we create a sequence from 0..maxNumber-1 and swap the sequenceLength first numbers
+		for (int i = 0; i < sequenceLength; i++) {
+			int random = getRandomIntBetweenRange(0, maxNumber);
+			int randomValue;
 			int iVal;
-			// swap rnd and this num
-			if (swaps.get(rnd) != null) {
-				rndVal = swaps.get(rnd);
+			// swap random and this number
+			if (swaps.get(random) != null) {
+				randomValue = swaps.get(random);
 			} else {
-				rndVal = rnd;
+				randomValue = random;
 			}
 			
 			if (swaps.get(i) != null) {
@@ -165,11 +166,11 @@ public class MathHelper {
 				iVal = i;
 			}
 			
-			swaps.put(i, rndVal);
-			swaps.put(rnd, iVal);
+			swaps.put(i, randomValue);
+			swaps.put(random, iVal);
 		}
 		
-		for (int i = 0; i < seqLen; i++) {
+		for (int i = 0; i < sequenceLength; i++) {
 			sequence.add(swaps.get(i));
 		}
 		
