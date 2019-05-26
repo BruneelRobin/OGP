@@ -1,10 +1,8 @@
 package qahramon;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import be.kuleuven.cs.som.annotate.*;
 import qahramon.exceptions.TerminatedException;

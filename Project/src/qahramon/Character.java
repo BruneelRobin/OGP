@@ -8,7 +8,6 @@ import java.util.Set;
 import be.kuleuven.cs.som.annotate.*;
 import qahramon.exceptions.DeadException;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -966,6 +965,33 @@ public abstract class Character {
 			}
 		}
 		return bestBackpack;
+	}
+	
+	/**
+	 * Try to give an item to the given character.
+	 * 
+	 * @param 	item
+	 * 			the item to give
+	 * @param 	character
+	 * 			the character to receive the item
+	 * @effect	Drop the item so the given character can pick it up.
+	 * 			| item.drop()
+	 * @effect	The given character tries to pick up the dropped item.
+	 * 			If the given character cannot pick up the dropped item, 
+	 * 			this character picks it up again.
+	 * 			| if (character.canPickUp(item)) then character.pickUp(item)
+	 * 			| else this.pickUp(item)
+	 */
+	public void giveTo(Item item, Character character) {
+		if (item.getHolder() == this) {
+			item.drop();
+			if (character.canPickUp(item)) {
+				character.pickUp(item);
+			} else {
+				this.pickUp(item);
+			}
+			
+		}
 	}
 	
 	/**

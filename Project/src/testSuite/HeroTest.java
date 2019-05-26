@@ -19,7 +19,7 @@ import org.junit.jupiter.api.*;
 class HeroTest {
 	
 	static Hero hero, deadHero;
-	static Monster monster, smallMonster, weakMonster, deadMonster;
+	static Monster monster, smallMonster, weakMonster, maxProtectionMonster, deadMonster;
 	static Weapon weapon1, weapon2, smallWeapon, heavyWeapon;
 	static Armor armor1, armor2, armor3;
 	static Purse purse1, purse2;
@@ -39,7 +39,8 @@ class HeroTest {
 		hero = new Hero("LegalName", 97, 10, emptyMap);
 		monster = new Monster("LegalName", 499, 20, 70, 10, 100);
 		smallMonster = new Monster("LegalName", 7, 1, 10, 2, 50);
-		weakMonster = new Monster("LegalName", 80, 0, 0, 5, 50);
+		weakMonster = new Monster("LegalName", 91, 0, 0, 5, 50);
+		maxProtectionMonster = new Monster("LegalName", 499, 20, 100, 10, 100);
 		weapon1 = new Weapon(10,5);
 		weapon2 = new Weapon(25,10);
 		smallWeapon = new Weapon(2,1);
@@ -316,7 +317,18 @@ class HeroTest {
 		assertFalse(hero.isFighting());
 		assertTrue(weakMonster.isDead());
 		assertTrue(hero.getHitpoints() >= 7);
+		assertTrue(hero.hasItem(armor2));
+	}
+	
+	@Test
+	public void testHit_MaxProtection() {
+		hero.equip(AnchorType.RIGHT_HAND, weapon1);
+		for (int i = 0; i < 100; i++) {
+			hero.hit(maxProtectionMonster);
 		}
+		assertFalse(hero.isFighting());
+		assertEquals(maxProtectionMonster.getMaxHitpoints(), maxProtectionMonster.getHitpoints());
+	}
 	
 	/**
 	 * Test if the hero does not heal after hitting a dead monster.
@@ -324,6 +336,8 @@ class HeroTest {
 	@Test
 	public void testHit_ReceiverDead() {
 		hero.equip(AnchorType.RIGHT_HAND, weapon1);
+		hero.hit(deadMonster);
+		assertFalse(hero.isFighting());
 		hero.takeDamage(90);
 		int hitpointsBefore = hero.getHitpoints();
 		hero.hit(deadMonster);

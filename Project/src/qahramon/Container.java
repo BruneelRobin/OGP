@@ -1,7 +1,5 @@
 package qahramon;
 
-import be.kuleuven.cs.som.annotate.*;
-
 /**
  * An interface for containers involving a total weight and total value.
  * 

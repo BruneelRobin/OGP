@@ -151,21 +151,13 @@ class MonsterTest {
 	 ***************************************************************************************/
 	
 	@Test
-	public void testHit() {
+	public void testHit_LegalCase() {
 		while (hero.getHitpoints() == hero.getMaxHitpoints()) {
 			monster.hit(hero);
 		}
 		assertEquals(hero.getHitpoints(), hero.getMaxHitpoints() - monster.getDamage());
 		assertTrue(hero.isFighting());
 		assertThrows(DeadException.class, () -> { deadMonster.hit(monster); });
-	}
-	
-	@Test
-	public void testHit_HeroHighProtection() {
-		hero.equip(AnchorType.BODY, armor);
-		monster.takeDamage(450);
-		monster.hit(hero);
-		assertEquals(hero.getHitpoints(), hero.getMaxHitpoints());
 	}
 	
 	@Test
@@ -177,6 +169,21 @@ class MonsterTest {
 		assertTrue(weakMonster.isDead());
 		assertFalse(monster.isFighting());
 		assertTrue(monster.hasItem(armor));
+	}
+	
+	@Test
+	public void testHit_HeroHighProtection() {
+		hero.equip(AnchorType.BODY, armor);
+		monster.takeDamage(450);
+		for (int i = 0; i < 100; i++) {
+			monster.hit(hero);
+		}
+		assertEquals(hero.getHitpoints(), hero.getMaxHitpoints());
+	}
+	
+	@Test
+	public void testHit_HitterDead() {
+		assertThrows(DeadException.class, () -> { deadMonster.hit(monster); });
 	}
 	
 	/**************************************************************************************

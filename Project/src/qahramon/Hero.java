@@ -1,8 +1,5 @@
 package qahramon;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import be.kuleuven.cs.som.annotate.*;
 import qahramon.exceptions.DeadException;
 

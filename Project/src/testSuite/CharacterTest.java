@@ -22,7 +22,7 @@ class CharacterTest {
 	static Monster monster, smallMonster, deadMonster;
 	static Hero hero;
 	static Weapon weapon1, weapon2, heavyWeapon, smallWeapon, terminatedWeapon;
-	static Backpack backpack;
+	static Backpack backpack, backpack2;
 	
 	@BeforeAll
 	public static void setUpBeforeAll() {
@@ -43,6 +43,7 @@ class CharacterTest {
 		heavyWeapon = new Weapon(30, 100);
 		smallWeapon = new Weapon(2,1);
 		backpack = new Backpack(100, 10, 2);
+		backpack2 = new Backpack(100, 10, 2);
 	}
 
 	@Test
@@ -157,34 +158,39 @@ class CharacterTest {
 	
 	@Test
 	public void testUnequip_ToBackpack() {
-		hero.equip(AnchorType.BACK, backpack);
-		hero.equip(AnchorType.RIGHT_HAND, weapon1);
-		hero.unequip(AnchorType.RIGHT_HAND);
-		hero.unequip(AnchorType.LEFT_HAND);
+		hero.equip(AnchorType.BACK.getAnchorId(), backpack);
+		hero.equip(AnchorType.RIGHT_HAND.getAnchorId(), weapon1);
+		hero.unequip(AnchorType.RIGHT_HAND.getAnchorId());
+		hero.unequip(AnchorType.LEFT_HAND.getAnchorId());
 		assertTrue(backpack.contains(weapon1));
 		assertEquals(null, hero.getItemAt(AnchorType.LEFT_HAND.getAnchorId()));
 	}
 	
 	@Test
 	public void testUnequip_ToGround() {
-		hero.equip(AnchorType.RIGHT_HAND, weapon1);
-		hero.unequip(AnchorType.RIGHT_HAND);
+		hero.equip(AnchorType.RIGHT_HAND.getAnchorId(), weapon1);
+		hero.unequip(AnchorType.RIGHT_HAND.getAnchorId());
 		assertEquals(weapon1.getHolder(), null);
 	}
 	
 	@Test
 	public void testUnequip_IllegalCase() {
-		hero.equip(AnchorType.LEFT_HAND,weapon1);
+		hero.equip(AnchorType.LEFT_HAND.getAnchorId(),weapon1);
 		hero.takeDamage(97);
-		assertThrows(DeadException.class, () -> {hero.unequip(AnchorType.LEFT_HAND);});
+		assertThrows(DeadException.class, () -> {hero.unequip(AnchorType.LEFT_HAND.getAnchorId());});
 	}
-	
-	
-	
+
 	
 	/**************************************************************************************
 	 * End of test of taking away an item from an anchor
 	 ***************************************************************************************/
+	
+	@Test
+	public void testGiveTo_ToOtherCharacter() {
+		hero.pickUp(weapon1);
+		hero.giveTo(weapon1, monster);
+		assertTrue(monster.hasItem(weapon1));
+	}
 	
 	@Test
 	public void testcanPickUp_LegalCase() {

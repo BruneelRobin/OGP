@@ -17,7 +17,7 @@ import org.junit.jupiter.api.*;
  */
 class ItemTest {
 
-	static Hero hero;
+	static Hero hero, hero2;
 	static Monster monster;
 	static Weapon weapon, terminatedWeapon;
 	static Armor armor;
@@ -33,6 +33,7 @@ class ItemTest {
 	@BeforeEach
 	public void setUp() {
 		hero = new Hero("LegalName", 97, 10);
+		hero2 = new Hero("LegalName", 97, 20);
 		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
 		weapon = new Weapon(10,5);
 		armor = new Armor(7, 20, 10, 15);
@@ -114,8 +115,15 @@ class ItemTest {
 	public void testMoveTo_LegalCase () {
 		assertEquals(weapon.getParentBackpack(), null);
 		weapon.moveTo(backpack);
+		backpack2.moveTo(backpack);
+		armor.moveTo(backpack);
+		
 		assertEquals(weapon.getParentBackpack(), backpack);
+		assertEquals(backpack2.getParentBackpack(), backpack);
+		assertEquals(armor.getParentBackpack(), backpack);
 		assertTrue(backpack.contains(weapon));
+		assertTrue(backpack.contains(backpack2));
+		assertTrue(backpack.contains(armor));
 	}
 	
 	@Test
@@ -157,8 +165,13 @@ class ItemTest {
 	}
 		
 	@Test
-	public void testMoveTo_TerminatedItem () {
+	public void testMoveTo_TerminatedItem() {
 		assertThrows(TerminatedException.class, () -> { terminatedWeapon.moveTo(backpack); });
+	}
+	
+	@Test
+	public void testMoveTo_BackpackNull() {
+		assertThrows(IllegalArgumentException.class, () -> {weapon.moveTo(null);});
 	}
 	
 	/**************************************************************************************
@@ -202,6 +215,12 @@ class ItemTest {
 		assertEquals(weapon.getHolder(),null);
 		assertFalse(backpack.contains(weapon));
 		assertFalse(backpack2.contains(weapon));
+	}
+	
+	@Test
+	public void testDrop_AlreadyOnGround() {
+		weapon.drop();
+		assertEquals(weapon.getHolder(), null);
 	}
 	
 	/**************************************************************************************
