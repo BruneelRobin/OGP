@@ -491,6 +491,7 @@ public abstract class Character {
 	 * 			| item.bindCharacter(this)
 	 * @throws	DeadException
 	 * 			throws this exception when the current character is dead.
+	 * 			| isDead()
 	 */
 	public void equip(int anchorId, Item item) throws DeadException {
 		if (isDead()) {
@@ -626,7 +627,8 @@ public abstract class Character {
 	 * 			that can take this item, then the item will be put in that backpack.
 	 * 			| item.moveTo(backpack)
 	 * @throws	DeadException
-	 * 			throws this exception when the current character is dead.			
+	 * 			throws this exception when the current character is dead.
+	 * 			| isDead()			
 	 */
 	public void pickUp(Item item) throws DeadException {
 		if (isDead()) {
