@@ -74,23 +74,6 @@ public class Purse extends Item implements Container {
 	 **************************************/
 	
 	/**
-	 * Generate a valid identification for a purse.
-	 * 
-	 * @return 	Return a unique long.
-	 * 			| MathHelper.getRandomLong()
-	 */
-	@Override@Raw
-	protected long generateIdentification() {
-		long candidate = MathHelper.getRandomLong();
-		
-		if (!canHaveAsNewIdentification (candidate)) {
-			return generateIdentification();
-		}
-		
-		return candidate;
-	}
-	
-	/**
 	 * Check whether the given identification is valid.
 	 * 
 	 * @param 	identification
@@ -120,6 +103,23 @@ public class Purse extends Item implements Container {
 	@Override@Raw
 	public boolean canHaveAsNewIdentification (long identification) {
 		return canHaveAsIdentification (identification) && purseIds.contains(identification) == false;
+	}
+	
+	/**
+	 * Generate a valid identification for a purse.
+	 * 
+	 * @return 	Return a unique long.
+	 * 			| MathHelper.getRandomLong()
+	 */
+	@Override@Raw
+	protected long generateIdentification() {
+		long candidate = MathHelper.getRandomLong();
+		
+		if (!canHaveAsNewIdentification (candidate)) {
+			return generateIdentification();
+		}
+		
+		return candidate;
 	}
 	
 	/**
@@ -295,7 +295,7 @@ public class Purse extends Item implements Container {
 		} else if (newAmount > getCapacity()) {
 			makeTorn();
 		} else {
-			// overflow of negative amount
+			// overflow or negative amount
 			throw new IllegalArgumentException ("Illegal amount given");
 		}
 	}

@@ -83,7 +83,7 @@ public class Backpack extends Item implements Container {
 	 */
 	@Override@Raw
 	protected long generateIdentification() {
-		long n = backpackCount+1;
+		long n = backpackCount + 1;
 		/*long prev = 1L;
 		long result = prev;
 		for (int i = 1; i<n; i++) {
@@ -245,34 +245,6 @@ public class Backpack extends Item implements Container {
 	}
 	
 	/**
-	 * Remove an item from this backpack.
-	 * 
-	 * @param 	item
-	 * 			the item to be removed
-	 * @post	Remove the item from this backpack.
-	 * 			| new.contains(item) == false
-	 * @throws	IllegalArgumentException
-	 * 			Throws this error when the given item is not found in this backpack.
-	 * 			| !contains(item)
-	 * @throws	TerminatedException
-	 * 			Throws this error when this item is terminated.
-	 * 			| isTerminated()
-	 */
-	@Raw
-	protected void remove(Item item) throws IllegalArgumentException, TerminatedException {
-		if (isTerminated()) {
-			throw new TerminatedException(this);
-		}
-		
-		if (!contains(item)) {
-			throw new IllegalArgumentException ("The given item does not exist in this backpack");
-		} else {
-			HashSet<Item> set = getContentAt(item.getIdentification());
-			set.remove(item);
-		}
-	}
-	
-	/**
 	 * Check whether this backpack can have an item.
 	 * 
 	 * @param 	item
@@ -313,29 +285,6 @@ public class Backpack extends Item implements Container {
 	}
 	
 	/**
-	 * Check whether the given backpack is a direct or indirect parent backpack of this backpack.
-	 * 
-	 * @param 	backpack
-	 * 			the parent backpack to check
-	 * @return	Return true when the given backpack is a direct or indirect parent backpack of this backpack.
-	 * 			Return false otherwise.
-	 * 			| result == (backpack == this.getParentBackpack() || 
-	 * 			|		this.getParentBackpack().getParentBackpack().isDirectOrIndirectSubBackpackOf(backpack))
-	 */
-	@Raw
-	public boolean isDirectOrIndirectSubBackpackOf (Backpack backpack) {
-		Backpack parent = this.getParentBackpack();
-		while (parent != null) {
-			if (backpack == parent) {
-				return true;
-			}
-			parent = parent.getParentBackpack();
-		}
-		
-		return false;
-	}
-	
-	/**
 	 * Add an item to this backpack.
 	 * 
 	 * @param 	item
@@ -367,6 +316,57 @@ public class Backpack extends Item implements Container {
 			HashSet<Item> list = getContentAt(item.getIdentification());
 			list.add(item);
 		}
+	}
+	
+	/**
+	 * Remove an item from this backpack.
+	 * 
+	 * @param 	item
+	 * 			the item to be removed
+	 * @post	Remove the item from this backpack.
+	 * 			| new.contains(item) == false
+	 * @throws	IllegalArgumentException
+	 * 			Throws this error when the given item is not found in this backpack.
+	 * 			| !contains(item)
+	 * @throws	TerminatedException
+	 * 			Throws this error when this item is terminated.
+	 * 			| isTerminated()
+	 */
+	@Raw
+	protected void remove(Item item) throws IllegalArgumentException, TerminatedException {
+		if (isTerminated()) {
+			throw new TerminatedException(this);
+		}
+		
+		if (!contains(item)) {
+			throw new IllegalArgumentException ("The given item does not exist in this backpack");
+		} else {
+			HashSet<Item> set = getContentAt(item.getIdentification());
+			set.remove(item);
+		}
+	}
+	
+	/**
+	 * Check whether the given backpack is a direct or indirect parent backpack of this backpack.
+	 * 
+	 * @param 	backpack
+	 * 			the parent backpack to check
+	 * @return	Return true when the given backpack is a direct or indirect parent backpack of this backpack.
+	 * 			Return false otherwise.
+	 * 			| result == (backpack == this.getParentBackpack() || 
+	 * 			|		this.getParentBackpack().getParentBackpack().isDirectOrIndirectSubBackpackOf(backpack))
+	 */
+	@Raw
+	public boolean isDirectOrIndirectSubBackpackOf (Backpack backpack) {
+		Backpack parent = this.getParentBackpack();
+		while (parent != null) {
+			if (backpack == parent) {
+				return true;
+			}
+			parent = parent.getParentBackpack();
+		}
+		
+		return false;
 	}
 	
 	/**

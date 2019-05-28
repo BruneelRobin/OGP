@@ -114,5 +114,10 @@ class PurseTest {
 	public void testAddPurse_IllegalCase() {
 		assertThrows(TornException.class, () -> { purse1.add(tornPurse);});
 	}
+	
+	@Test
+	public void testGetTotalWeight_TornPurse() {
+		assertEquals(0, tornPurse.getTotalWeight());
+	}
 
 }
