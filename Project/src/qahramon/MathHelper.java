@@ -150,33 +150,38 @@ public class MathHelper {
 	 * @return	Generate a random sequence of unique integers where each number lays between 0 and maxNumber-1.
 	 */
 	public static ArrayList<Integer> generateRandomIntegerSequence (int sequenceLength, int maxNumber) {
-		HashMap<Integer, Integer> swaps = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> permutations = new HashMap<Integer, Integer>();
 		ArrayList<Integer> sequence = new ArrayList<Integer>();
 		
 		// we create a sequence from 0..maxNumber-1 and swap the sequenceLength first numbers
+		
+		// 1 2 | 3 4 5
+		// 5 n | n n 1
+		// 5 3 | 2 n 1
+		
 		for (int i = 0; i < sequenceLength; i++) {
+			int iValue;
+			// swap random and this number
+			if (permutations.get(i) != null) {
+				iValue = permutations.get(i);
+			} else {
+				iValue = i;
+			}
+			
 			int random = getRandomIntBetweenRange(0, maxNumber);
 			int randomValue;
-			int iVal;
-			// swap random and this number
-			if (swaps.get(random) != null) {
-				randomValue = swaps.get(random);
+			if (permutations.get(random) != null) {
+				randomValue = permutations.get(random);
 			} else {
 				randomValue = random;
 			}
 			
-			if (swaps.get(i) != null) {
-				iVal = swaps.get(i);
-			} else {
-				iVal = i;
-			}
-			
-			swaps.put(i, randomValue);
-			swaps.put(random, iVal);
+			permutations.put(i, randomValue);
+			permutations.put(random, iValue);
 		}
 		
 		for (int i = 0; i < sequenceLength; i++) {
-			sequence.add(swaps.get(i));
+			sequence.add(permutations.get(i));
 		}
 		
 		return sequence;

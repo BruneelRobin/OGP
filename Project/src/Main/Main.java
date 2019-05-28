@@ -24,15 +24,22 @@ public class Main {
 		
 		System.out.println("Total monster value: " + String.valueOf(odon.getTotalValue()));
 		
+		boolean monsterFirst = MathHelper.getRandomIntBetweenRange(0, 2) == 0;
+		
+		if (monsterFirst) {
+			odon.hit(tim);
+		}
+		
 		while (!odon.isDead() && !tim.isDead()) {
+			
 			
 			tim.hit(odon);
 			
-			System.out.println("Tim: " + tim.getHitpoints());
 			
 			if (!odon.isDead()) {
 				odon.hit(tim);
 				System.out.println("Odontotyrannos: " + odon.getHitpoints());
+				System.out.println("Tim: " + tim.getHitpoints());
 			}
 		}
 		
