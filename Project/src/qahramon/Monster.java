@@ -146,6 +146,28 @@ public class Monster extends Character {
 		return this.damage;
 	}
 	
+	private final static int MAX_DAMAGE = 100;
+	
+	/**
+	 * Return the maximum damage allowed for a monster
+	 * 
+	 * @return 	Return the maximum damage allowed for a monster
+	 */
+	public static int getMaximumDamage() {
+		return MAX_DAMAGE;
+	}
+	
+	private final static int MIN_DAMAGE = 1;
+	
+	/**
+	 * Return the minimum damage allowed for a monster
+	 * 
+	 * @return 	Return the minimum damage allowed for a monster
+	 */
+	public static int getMinimumDamage() {
+		return MIN_DAMAGE;
+	}
+	
 	/**
 	 * Return true when the given damage is valid.
 	 * 
@@ -153,10 +175,10 @@ public class Monster extends Character {
 	 * 			the damage to check
 	 * @return	Return true when the given damage is positive.
 	 * 			Return false otherwise.
-	 * 			| damage >= 0
+	 * 			| damage >= getMinimumDamage() && damage <= getMaximumDamage()
 	 */
 	public static boolean isValidDamage(int damage) {
-		return damage >= 0;
+		return damage >= getMinimumDamage() && damage <= getMaximumDamage();
 	}
 	
 	/********************************

@@ -335,7 +335,7 @@ public abstract class Item {
 	 * 		  	the integer checked for its validity
 	 * @return	Return true if the given value lies between the minimum and maximum value.
 	 * 			Return false otherwise.
-	 * 		   	| value >= getMinValue() && value <= getMaxValue()
+	 * 		   	| result == value >= getMinValue() && value <= getMaxValue()
 	 */
 	@Raw
 	public boolean canHaveAsValue(int value) {

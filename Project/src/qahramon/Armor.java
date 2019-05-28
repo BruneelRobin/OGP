@@ -13,6 +13,8 @@ import qahramon.exceptions.TerminatedException;
  * 			| isValidFullProtection(getFullProtection())
  * @invar	Each armor must have a valid protection.
  * 			| canHaveAsProtection(getProtection())
+ * @invar	Each item must have a valid full value.
+ * 			| canHaveAsFullValue(getFullValue())
  * 
  * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
@@ -44,7 +46,7 @@ public class Armor extends Item {
 	 * 			| new.getFullProtection() = protection
 	 */
 	public Armor(long identification, int protection, float weight, int fullValue) {
-		super(identification, weight, fullValue);
+		super(identification, weight, (fullValue/2)*2); // always an even number
 		setProtection(protection);
 		this.fullProtection = protection;
 		armorIds.add(getIdentification());
@@ -73,7 +75,7 @@ public class Armor extends Item {
 	 * Return a valid identification number for this class.
 	 * 
 	 * @return	Return a random valid identification number for this class.
-	 * 			| result == MathHelper.getRandomPrime() && canHaveAsNewIdentification(result)
+	 * 			| (result == MathHelper.getRandomPrime()) && canHaveAsNewIdentification(result)
 	 */
 	@Override@Raw
 	protected long generateIdentification() {
@@ -117,7 +119,7 @@ public class Armor extends Item {
 	}
 
 	/**
-	 * Variable referencing a set with all armoridentifications of this class. 
+	 * Variable referencing a set with all armor identifications of this class. 
 	 * 
 	 * @invar Each non null element in the hashSet references an effective identification. 
 	 *        | for (Long id : armorIds)
@@ -127,7 +129,7 @@ public class Armor extends Item {
 	 *        | 	canHaveAsIdentification(id)
 	 */
 	private static final HashSet<Long> armorIds = new HashSet<Long>();
-
+	
 
 	/***********************
 	 * Protection (nominal)
@@ -331,6 +333,34 @@ public class Armor extends Item {
 	@Override@Raw
 	public int getValue() { 
 		return (int)((float)getFullValue()*((float)getProtection()/(float)getFullProtection()));
+	}
+	
+	/**
+	 * Check whether the given full value is valid.
+	 * 
+	 * @param 	value
+	 * 		  	the integer checked for its validity
+	 * @return	Return true if the given value lies between the minimum and maximum value and is an even integer.
+	 * 			Return false otherwise.
+	 * 		   	| result == super.canHaveAsValue(value) && value % 2 == 0
+	 */
+	@Raw
+	public boolean canHaveAsFullValue(int value) {
+		return super.canHaveAsValue(value) && value % 2 == 0;
+	}
+	
+	/**
+	 * Check whether the given value is valid.
+	 * 
+	 * @param 	value
+	 * 		  	the integer checked for its validity
+	 * @return	Return true if the given value lies between the minimum and maximum value.
+	 * 			Return false otherwise.
+	 * 		   	| result == super.canHaveAsValue(value) && value <= getFullValue()
+	 */
+	@Raw@Override
+	public boolean canHaveAsValue(int value) {
+		return super.canHaveAsValue(value) && value <= getFullValue();
 	}
 	
 	/**

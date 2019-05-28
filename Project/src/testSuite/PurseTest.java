@@ -117,7 +117,8 @@ class PurseTest {
 	
 	@Test
 	public void testGetTotalWeight_TornPurse() {
-		assertEquals(0, tornPurse.getTotalWeight());
+		assertEquals(tornPurse.getWeight(), tornPurse.getTotalWeight());
+		assertEquals(tornPurse.getValue(), tornPurse.getTotalValue());
 	}
 
 }

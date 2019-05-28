@@ -256,6 +256,7 @@ public class Backpack extends Item implements Container {
 	 * 			Return false when the given item is a direct or indirect parent backpack of this backpack.
 	 * 			Return false when the weight of the backpack with this item is higher than the capacity 
 	 * 			of this backpack.
+	 * 			Return false when this item is in a backpack and the parent backpack can't have this item.
 	 * 			Return true otherwise.
 	 * 			| result == !(item == this || this.isTerminated() || item.isTerminated())
 	 * 			| 			&& !(item.isPurse())
@@ -263,6 +264,7 @@ public class Backpack extends Item implements Container {
 	 * 			|       	&& !(item.getHolder() == null && this.getHolder() != null && !this.getHolder().canPickUp(item))
 	 * 			|			&& !(item.isBackpack() && this.isDirectOrIndirectSubBackpackOf((Backpack)item))
 	 * 			|     		&& !(this.getTotalWeight() + item.getWeight() - this.getWeight() > this.getCapacity())
+	 * 			|			&& !(getParentBackpack() != null && !getParentBackpack().canHaveAsItem(item))
 	 */
 	@Raw
 	public boolean canHaveAsItem (Item item) {
@@ -279,6 +281,8 @@ public class Backpack extends Item implements Container {
 		} else if (item.isBackpack() && this.isDirectOrIndirectSubBackpackOf((Backpack)item)) {
 			return false;
 		} else if (this.getTotalWeight() + item.getWeight() - this.getWeight() > this.getCapacity()) {
+			return false;
+		} else if (getParentBackpack() != null && !getParentBackpack().canHaveAsItem(item)) {
 			return false;
 		}
 		return true;
@@ -539,7 +543,7 @@ public class Backpack extends Item implements Container {
 	 * Return the best armor in a backpack.
 	 * 
 	 * @return	Return the best armor of a backpack.
-	 * 			| result == max ({item in getItems() : 
+	 * 			| result.getFullProtection() == max ({item in getItems() : 
 	 * 			|		if (item.isArmor()) then ((Armor)item).getFullProtection()
 	 * 			|		else ((Backpack)item).getBestArmor().getFullProtection()
 	 * 			|	})
@@ -571,7 +575,7 @@ public class Backpack extends Item implements Container {
 	 * Return the best weapon in a backpack.
 	 * 
 	 * @return	Return the best weapon of a backpack.
-	 * 			| result == max ({item in getItems() : 
+	 * 			| result.getDamage() == max ({item in getItems() : 
 	 * 			|		if (item.isWeapon()) then ((Weapon)item).getDamage()
 	 * 			|		else ((Backpack)item).getBestWeapon().getDamage()
 	 * 			|	})
@@ -605,7 +609,7 @@ public class Backpack extends Item implements Container {
 	 * Return the best backpack in a backpack.
 	 * 
 	 * @return	Return the best backpack of a backpack.
-	 * 			| result == max ({item in getItems() : 
+	 * 			| result.getCapacity() == max ({item in getItems() : 
 	 * 			|		if (item.isBackpack()) then 
 	 * 			|			max ({((Backpack)item).getCapacity(), ((Backpack)item).getBestBackpack().getCapacity()})
 	 * 			|	})		   

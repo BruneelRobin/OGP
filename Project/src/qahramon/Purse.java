@@ -368,6 +368,30 @@ public class Purse extends Item implements Container {
 	}
 	
 	/***********************
+	 * Value
+	 ***********************/
+	
+	/**
+	 * Return the maximum value for this item.
+	 * 
+	 * @return	Return the maximum value for this item.
+	 */
+	@Immutable@Override@Basic@Raw
+	public int getMaxValue () {
+		return 0;
+	}
+	
+	/**
+	 * Return the minimum value for this item.
+	 * 
+	 * @return	Return the minimum value for this item.
+	 */
+	@Immutable@Override@Basic@Raw
+	public int getMinValue () {
+		return 0;
+	}
+	
+	/***********************
 	 * Other Methods
 	 ***********************/
 	
@@ -405,26 +429,6 @@ public class Purse extends Item implements Container {
 	@Raw
 	public float getTotalWeight() {
 		return ((float)(this.getContent())*getDucateWeight() + this.getWeight());
-	}
-	
-	/**
-	 * Return the maximum value for this item.
-	 * 
-	 * @return	Return the maximum value for this item.
-	 */
-	@Immutable@Override@Basic@Raw
-	public int getMaxValue () {
-		return 0;
-	}
-	
-	/**
-	 * Return the minimum value for this item.
-	 * 
-	 * @return	Return the minimum value for this item.
-	 */
-	@Immutable@Override@Basic@Raw
-	public int getMinValue () {
-		return 0;
 	}
 	
 	/**

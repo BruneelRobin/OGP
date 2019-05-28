@@ -207,13 +207,19 @@ public abstract class Character {
 	 * @post	Remove the given amount of hitpoints or sets it to zero when
 	 * 			the new amount of hitpoints would be negative.
 	 * 			| new.getHitpoints() == Math.max(0, getHitpoints()-hitpoints)
-	 * @post	when the character takes damage, isFighting is set to true.
-	 * 			| new.isFighting()
+	 * @post	When the character takes damage, isFighting is set to true.
+	 * 			When the character dies isFighting is set to false.
+	 * 			| new.isFighting() || new.isDead()
 	 */
 	public void takeDamage(int hitpoints) {
 		int newValue = Math.max(0, getHitpoints()-hitpoints);
 		
-		setFighting (true);
+		if (newValue == 0) {
+			setFighting(false);
+		} else {
+			setFighting (true);
+		}
+		
 		setHitpoints(newValue);
 	}
 	
@@ -894,7 +900,7 @@ public abstract class Character {
 	 * Return the best armor of any owned armor.
 	 * 
 	 * @return	Return the best armor of any owned armor.
-	 * 			| result == max ({item in getAnchoredItems() : 
+	 * 			| result.getFullProtection() == max ({item in getAnchoredItems() : 
 	 * 			|		if (item.isArmor()) then ((Armor)item).getFullProtection()
 	 * 			|		else ((Backpack)item).getBestArmor().getFullProtection()
 	 * 			|	})
@@ -928,7 +934,7 @@ public abstract class Character {
 	 * Return the best armor of any owned weapon.
 	 * 
 	 * @return	Return the best armor of any owned armor.
-	 * 			| result == max ({item in getAnchoredItems() : 
+	 * 			| result.getDamage() == max ({item in getAnchoredItems() : 
 	 * 			|		if (item.isWeapon()) then ((Weapon)item).getDamage()
 	 * 			|		else ((Backpack)item).getBestWeapon().getDamage()
 	 * 			|	})
@@ -962,7 +968,7 @@ public abstract class Character {
 	 * Return the best backpack of any owned armor.
 	 * 
 	 * @return	Return the best backpack of any owned armor.
-	 * 			| result == max ({item in getAnchoredItems() : 
+	 * 			| result.getCapacity() == max ({item in getAnchoredItems() : 
 	 * 			|		if (item.isBackpack()) then 
 	 * 			|			max ({((Backpack)item).getCapacity(), ((Backpack)item).getBestBackpack().getCapacity()})
 	 * 			|	})	
