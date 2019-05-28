@@ -544,7 +544,7 @@ public class Hero extends Character {
 	 * 
 	 * @return	Return the damage of the hero as the sum of his weapons in his hands and strength minus ten and divided by two.
 	 * 			When this result is negative, zero is returned.
-	 * 			| result = (int)((float)(AnchorType.RIGHT_HAND.getAnchorId() + AnchorType.LEFT_HAND.getAnchorId() + this.getStrength() -10)/2)
+	 * 			| result == (int)((float)(AnchorType.RIGHT_HAND.getAnchorId() + AnchorType.LEFT_HAND.getAnchorId() + this.getStrength() -10)/2)
 	 * 			
 	 */
 	@Override
@@ -573,8 +573,9 @@ public class Hero extends Character {
 		
 		if(result < 0) {
 			return 0;
+		} else {
+			return result;
 		}
-		return result;
 	}
 	
 	/**
