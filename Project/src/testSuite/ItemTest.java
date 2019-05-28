@@ -160,7 +160,7 @@ class ItemTest {
 	@Test
 	public void testMoveTo_AnchoredItem() {
 		monster.pickUp(armor);
-		assertTrue(monster.hasItem(armor));
+		assertTrue(monster.hasAnchored(armor));
 		assertThrows(IllegalArgumentException.class, () -> {armor.moveTo(backpack);});
 	}
 		
@@ -198,11 +198,11 @@ class ItemTest {
 	public void testDrop_FromCharacter() {
 		monster.equip(2,weapon);
 		assertEquals(weapon.getCharacter(), monster);
-		assertTrue(monster.hasItem(weapon));
+		assertTrue(monster.hasAnchored(weapon));
 		weapon.drop();
 		assertEquals(weapon.getCharacter(), null);
 		assertEquals(weapon.getHolder(),null);
-		assertFalse(monster.hasItem(weapon));
+		assertFalse(monster.hasAnchored(weapon));
 	}
 	
 	@Test

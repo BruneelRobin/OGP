@@ -128,6 +128,9 @@ public class Purse extends Item implements Container {
 	 * @invar Each non null element in the hashSet references an effective identification. 
 	 *        | for (Long id : purseIds)
 	 *        | 	id != null
+	 * @invar Each non null element in the hashSet references a valid identification. 
+	 *        | for (Long id : purseIds)
+	 *        | 	canHaveAsIdentification(id)
 	 */
 	private static final HashSet<Long> purseIds = new HashSet<Long>();
 	

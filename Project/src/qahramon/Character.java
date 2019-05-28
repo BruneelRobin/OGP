@@ -114,7 +114,7 @@ public abstract class Character {
 	 * 
 	 * @return	Return true when the name starts with a capital
 	 * 			and only contains letters, spaces and apostrophes.
-	 * 			| name != null && name.matches("[A-Z][a-z' ]+")
+	 * 			| name != null && name.matches("[A-Z][A-Za-z' ]*")
 	 */
 	@Raw
 	public boolean canHaveAsName(String name) {
@@ -130,7 +130,7 @@ public abstract class Character {
 	 * 			| new.getName() == name
 	 * @throws	IllegalArgumentException
 	 * 			Throws this error when the given name is not valid.
-	 * 			| !isValidName(name)
+	 * 			| !canHaveAsName(name)
 	 */
 	public void changeName(String name) throws IllegalArgumentException {
 		if (!canHaveAsName(name)) {
@@ -369,12 +369,12 @@ public abstract class Character {
 	 * @invar	The dictionary must be effective.
 	 * 			| anchors != null
 	 * @invar 	Each non null element in the hashmap references an effective item. 
-	 *        	| for (HashMap.Entry<Integer,Item> entry : anchors.entrySet())
-	 *        	| 	entry.getValue() != null
+	 *        	| for (Item item : getAnchoredItems())
+	 *        	| 	item != null
 	 * @invar 	Each element in the hashmap references an item that references
 	 *        	back to this character.
-	 *        	| for (HashMap.Entry<Integer,Item> entry : anchors.entrySet())
-	 *        	| 	entry.getValue().getCharacter() == this
+	 *        	| for (Item item : getAnchoredItems())
+	 *        	| 	item.getCharacter() == this
 	 */	
 	private final HashMap<Integer, Item> anchors = new HashMap<Integer, Item>();
 	
@@ -395,11 +395,10 @@ public abstract class Character {
 	 * Return the number of anchored items.
 	 * 
 	 * @return 	Return the number of anchored items.
-	 * 			| result == getAnchorEntrySet().size()
 	 */
 	@Basic
 	public int getNbItems () {
-		return getAnchorEntrySet().size();
+		return this.anchors.size();
 	}
 	
 	/**
@@ -466,9 +465,11 @@ public abstract class Character {
 	 * 
 	 * @return	Return true when this character has the given item anchored.
 	 * 			Return false otherwise.
+	 * 			| for some (Item itemAt : getAnchoredItems())
+	 * 			|		itemAt == item
 	 */
-	public boolean hasItem (Item item) {
-		for (Item itemAt : this.anchors.values()) {
+	public boolean hasAnchored (Item item) {
+		for (Item itemAt : getAnchoredItems()) {
 			if (itemAt == item) {
 				return true;
 			}
@@ -665,13 +666,17 @@ public abstract class Character {
 	}
 	
 	/**
-	 * Return an entry set with all attached anchors.
+	 * Return a set with the ids of all attached anchors.
 	 * 
-	 * @return	Return an entry set with all attached anchors.
+	 * @return	Return a set with the ids of all attached anchors.
 	 */
 	@Raw
-	public Set<Entry<Integer, Item>> getAnchorEntrySet () {
-		return this.anchors.entrySet();
+	public Set<Integer> getAnchorIds () {
+		Set<Integer> set = new HashSet<Integer>();
+		for (Entry<Integer, Item> entry : this.anchors.entrySet()) {
+			set.add(entry.getKey());
+		}
+		return set;
 	}
 	
 	/**
@@ -682,7 +687,7 @@ public abstract class Character {
 	@Raw
 	public Set<Item> getAnchoredItems () {
 		Set<Item> set = new HashSet<Item>();
-		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
+		for (Entry<Integer, Item> entry : this.anchors.entrySet()) {
 			set.add(entry.getValue());
 		}
 		return set;
@@ -715,13 +720,14 @@ public abstract class Character {
 	 * @return	Return true when each item can be equipped at the slot its equipped on and each item
 	 * 			has the current character bound
 	 * 			Return false otherwise.
-	 * 			| 	for each (Entry<Integer, Item> entry : getAnchorEntrySet()) {
-	 *			|		canHaveAsItemAt(entry.getKey(), entry.getValue()) && entry.getValue().getCharacter() == this
+	 * 			| 	for each (Integer anchorId : getAnchorIds())
+	 *			|		canHaveAsItemAt(anchorId, getItemAt(anchorId)) && getItemAt(anchorId).getCharacter() == this
 	 */
 	@Raw
 	public boolean hasProperItems () {
-		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
-			if (!canHaveAsItemAt(entry.getKey(), entry.getValue()) || entry.getValue().getCharacter() != this) { // false when not possible to reequip in same slot
+		for (Integer anchorId : getAnchorIds()) {
+			Item item = getItemAt(anchorId);
+			if (!canHaveAsItemAt(anchorId, item) || item.getCharacter() != this) { // false when not possible to reequip in same slot
 				return false;
 			}
 		}
@@ -838,8 +844,7 @@ public abstract class Character {
 	@Raw
 	public int getTotalValue () {
 		int value = 0;
-		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
-			Item item = entry.getValue();
+		for (Item item : getAnchoredItems()) {
 			
 			if (item.isContainer()) {
 				value += ((Container) item).getTotalValue();
@@ -859,8 +864,7 @@ public abstract class Character {
 	@Raw
 	public float getTotalWeight () {
 		float weight = 0;
-		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
-			Item item = entry.getValue();
+		for (Item item : getAnchoredItems()) {
 			
 			if (item.isContainer()) {
 				weight += ((Container) item).getTotalWeight();
@@ -879,11 +883,9 @@ public abstract class Character {
 	 * @note	The evaluation of the armor is based on its full protection.
 	 */
 	public Armor getBestArmor() {
-		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
 		int bestFullProtection = 0;
 		Armor bestArmor = null;
-		for (Entry<Integer, Item> entry : set) {
-			Item item = entry.getValue();
+		for (Item item : getAnchoredItems()) {
 			if (item.isArmor()) {
 				Armor armor = (Armor) item;
 				int armorProtection = armor.getFullProtection();
@@ -911,11 +913,9 @@ public abstract class Character {
 	 * @note	The evaluation of the weapon is based on its damage.
 	 */
 	public Weapon getBestWeapon() {
-		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
 		int bestDamage = 0;
 		Weapon bestWeapon = null;
-		for (Entry<Integer, Item> entry : set) {
-			Item item = entry.getValue();
+		for (Item item : getAnchoredItems()) {
 			if (item.isWeapon()) {
 				Weapon weapon = (Weapon) item;
 				int weaponDamage = weapon.getDamage();
@@ -943,11 +943,9 @@ public abstract class Character {
 	 * @note	The evaluation of the backpack is based on its capacity.
 	 */
 	public Backpack getBestBackpack() {
-		Set<Entry<Integer, Item>> set = this.getAnchorEntrySet();
 		float bestCapacity = 0;
 		Backpack bestBackpack = null;
-		for (Entry<Integer, Item> entry : set) {
-			Item item = entry.getValue();
+		for (Item item : getAnchoredItems()) {
 			if (item.isBackpack()) {
 				Backpack backpack = (Backpack) item;
 				float backpackCapacity = backpack.getCapacity();

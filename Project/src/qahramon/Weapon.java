@@ -140,6 +140,9 @@ public class Weapon extends Item {
 	 * @invar Each non null element in the hashSet references an effective identification. 
 	 *        | for (Long id : weaponIds)
 	 *        | 	id != null
+	 * @invar Each non null element in the hashSet references a valid identification. 
+	 *        | for (Long id : weaponIds)
+	 *        | 	canHaveAsIdentification(id)
 	 */
 	private static final HashSet<Long> weaponIds = new HashSet<Long>();
 	

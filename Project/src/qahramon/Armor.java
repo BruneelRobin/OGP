@@ -73,6 +73,7 @@ public class Armor extends Item {
 	 * Return a valid identification number for this class.
 	 * 
 	 * @return	Return a random valid identification number for this class.
+	 * 			| result == MathHelper.getRandomPrime() && canHaveAsNewIdentification(result)
 	 */
 	@Override@Raw
 	protected long generateIdentification() {
@@ -121,6 +122,9 @@ public class Armor extends Item {
 	 * @invar Each non null element in the hashSet references an effective identification. 
 	 *        | for (Long id : armorIds)
 	 *        | 	id != null
+	 * @invar Each non null element in the hashSet references a valid identification. 
+	 *        | for (Long id : armorIds)
+	 *        | 	canHaveAsIdentification(id)
 	 */
 	private static final HashSet<Long> armorIds = new HashSet<Long>();
 
@@ -189,7 +193,6 @@ public class Armor extends Item {
 	 * Return the fullProtection of an armor.
 	 * 
 	 * @return Return the fullProtection of an armor.
-	 * 		   | result == this.fullProtection
 	 */
 	@Basic@Immutable
 	public int getFullProtection() {
@@ -213,7 +216,7 @@ public class Armor extends Item {
 	 * @param protection
 	 * 		  the new value of the armor's protection
 	 * @post  The protection is set to the given protection.
-	 * 		  | new.getProtection == protection
+	 * 		  | new.getProtection() == protection
 	 */
 	@Raw
 	private void setProtection(int protection) {
@@ -229,7 +232,6 @@ public class Armor extends Item {
 	 * @return	Return true when the given protection lies between MIN_PROTECTION and its fullProtection.
 	 * 			Return false otherwise.
 	 * 			| (protection >= MIN_PROTECTION && protection <= this.getFullProtection())
-	 * 			
 	 */
 	@Raw
 	public boolean canHaveAsProtection (int protection) {
@@ -243,7 +245,7 @@ public class Armor extends Item {
 	 * 			the fullProtection to check
 	 * @return	Return true when the given fullProtection lies between MIN_FULLPROTECTION and MAX_FULLPROTECTION.
 	 * 			Return false otherwise.
-	 * 			| (fullProtection >= MIN_FULLPROTECTION && fullProtection <= MAX_FULLPROTECTION)			
+	 * 			| result == (fullProtection >= MIN_FULLPROTECTION && fullProtection <= MAX_FULLPROTECTION)			
 	 */
 	public static boolean isValidFullProtection(int fullProtection) {
 		return (fullProtection >= MIN_FULLPROTECTION && fullProtection <= MAX_FULLPROTECTION);
@@ -324,11 +326,11 @@ public class Armor extends Item {
 	 * 
 	 * @return Return the value as its function: highest possible value of the armor times
 	 * 		   the current protection percentage of the armor. 
-	 * 		   | result == this.getValue()*(this.getProtection()/this.getFullProtection())
+	 * 		   | result == (int)((float)getFullValue()*((float)getProtection()/(float)getFullProtection()))
 	 */
 	@Override@Raw
 	public int getValue() { 
-		return (int)((float)this.getFullValue()*((float)this.getProtection()/(float)this.getFullProtection()));
+		return (int)((float)getFullValue()*((float)getProtection()/(float)getFullProtection()));
 	}
 	
 	/**

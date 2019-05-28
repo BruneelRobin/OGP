@@ -92,7 +92,13 @@ public enum AnchorType {
 	 * @param 	anchorId
 	 * 		The id of the type
 	 * @return	Return the AnchorType associated with the given id.
+	 * 			| for some (AnchorType value : AnchorType.values())
+	 * 			| 		value.getAnchorId() == anchorId
+	 * 			|		result == value
 	 * @return	Return null when the given anchorId exists.
+	 * 			| for each (AnchorType value : AnchorType.values())
+	 * 			|		value.getAnchorId() != anchorId
+	 * 			| result == null
 	 */
 	 public static AnchorType getTypeFromId (int anchorId) {
 		 for (AnchorType value : AnchorType.values()) {

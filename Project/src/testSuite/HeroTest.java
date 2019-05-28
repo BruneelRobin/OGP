@@ -103,11 +103,11 @@ class HeroTest {
 		assertEquals(30, hero2.getStrength(), 0.01);
 		assertEquals(97, hero2.getHitpoints());
 		
-		assertTrue(hero2.hasItem(armor1));
-		assertTrue(hero2.hasItem(purse1));
-		assertTrue(hero2.hasItem(weapon1));
-		assertTrue(hero2.hasItem(weapon2));
-		assertTrue(hero2.hasItem(backpack1));
+		assertTrue(hero2.hasAnchored(armor1));
+		assertTrue(hero2.hasAnchored(purse1));
+		assertTrue(hero2.hasAnchored(weapon1));
+		assertTrue(hero2.hasAnchored(weapon2));
+		assertTrue(hero2.hasAnchored(backpack1));
 		assertTrue(backpack1.contains(armor2));
 	}
 	
@@ -152,7 +152,7 @@ class HeroTest {
 		assertEquals(AnchorType.values().length, hero2.getNumberOfAnchors());
 		assertEquals(30, hero2.getStrength(), 0.01);
 		assertEquals(97, hero2.getHitpoints());
-		assertFalse(hero2.hasItem(backpack1));
+		assertFalse(hero2.hasAnchored(backpack1));
 	}
 	
 	@Test
@@ -183,7 +183,7 @@ class HeroTest {
 		assertEquals(AnchorType.values().length, hero2.getNumberOfAnchors());
 		assertEquals(10, hero2.getStrength(), 0.01);
 		assertEquals(97, hero2.getHitpoints());
-		assertFalse(hero2.hasItem(heavyWeapon));
+		assertFalse(hero2.hasAnchored(heavyWeapon));
 	}
 	
 	@Test
@@ -197,7 +197,7 @@ class HeroTest {
 		assertEquals(AnchorType.values().length, hero2.getNumberOfAnchors());
 		assertEquals(30, hero2.getStrength(), 0.01);
 		assertEquals(97, hero2.getHitpoints());
-		assertFalse(hero2.hasItem(armor1));
+		assertFalse(hero2.hasAnchored(armor1));
 	}
 	
 	@Test
@@ -211,7 +211,7 @@ class HeroTest {
 		assertEquals(AnchorType.values().length, hero2.getNumberOfAnchors());
 		assertEquals(30, hero2.getStrength(), 0.01);
 		assertEquals(97, hero2.getHitpoints());
-		assertFalse(hero2.hasItem(purse1));
+		assertFalse(hero2.hasAnchored(purse1));
 	}
 	
 	/**************************************************************************************
@@ -317,7 +317,7 @@ class HeroTest {
 		assertFalse(hero.isFighting());
 		assertTrue(weakMonster.isDead());
 		assertTrue(hero.getHitpoints() >= 7);
-		assertTrue(hero.hasItem(armor2));
+		assertTrue(hero.hasAnchored(armor2));
 	}
 	
 	@Test

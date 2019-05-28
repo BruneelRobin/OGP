@@ -43,7 +43,7 @@ public class Backpack extends Item implements Container {
 	 * @effect	The backpack is set as an item with given weight and value.
 	 * 			| super(weight, value)
 	 * @post	The capacity is set to the given capacity.
-	 * 			| new.capacity == capacity
+	 * 			| new.getCapacity() == capacity
 	 */
 	public Backpack (float capacity, float weight, int value) {
 		super(weight, value);
@@ -256,11 +256,11 @@ public class Backpack extends Item implements Container {
 	 * 			| !contains(item)
 	 * @throws	TerminatedException
 	 * 			Throws this error when this item is terminated.
-	 * 			| this.isTerminated()
+	 * 			| isTerminated()
 	 */
 	@Raw
 	protected void remove(Item item) throws IllegalArgumentException, TerminatedException {
-		if (this.isTerminated()) {
+		if (isTerminated()) {
 			throw new TerminatedException(this);
 		}
 		
@@ -319,6 +319,8 @@ public class Backpack extends Item implements Container {
 	 * 			the parent backpack to check
 	 * @return	Return true when the given backpack is a direct or indirect parent backpack of this backpack.
 	 * 			Return false otherwise.
+	 * 			| result == (backpack == this.getParentBackpack() || 
+	 * 			|		this.getParentBackpack().getParentBackpack().isDirectOrIndirectSubBackpackOf(backpack))
 	 */
 	@Raw
 	public boolean isDirectOrIndirectSubBackpackOf (Backpack backpack) {
@@ -368,9 +370,9 @@ public class Backpack extends Item implements Container {
 	}
 	
 	/**
-	 * Return a set with all the item of this backpack.
+	 * Return a set with all the items of this backpack.
 	 * 
-	 * @return Return a set with all the item of this backpack.
+	 * @return Return a set with all the items of this backpack.
 	 */
 	@Raw
 	public Set<Item> getItems () {
@@ -391,7 +393,7 @@ public class Backpack extends Item implements Container {
 	 * @Return	Return true when this backpack can have each item in this backpack
 	 * 			and the parentBackpack of this item is this backpack.
 	 * 			Return false otherwise.
-	 * 			| for(Item item : getItems())
+	 * 			| for each (Item item : getItems())
 	 * 			| 	(canHaveAsItem(item) && item.getParentBackpack() == this)
 	 */
 	@Raw
@@ -450,6 +452,10 @@ public class Backpack extends Item implements Container {
 	 * 
 	 * @return	Return the total weight of this backpack, this is calculated using the own weight
 	 * 			of this backpack and the weight of all descendants in this backpack.
+	 * 			| result == sum ({item in getItems() : 
+	 * 			|		if (item.isContainer()) then ((Container)(item)).getTotalWeight()
+	 * 			|		else item.getWeight()
+	 * 			|	})
 	 */
 	@Raw
 	public float getTotalWeight() {
@@ -470,6 +476,10 @@ public class Backpack extends Item implements Container {
 	 * Return the total value of this purse.
 	 * 
 	 * @return	Return the total value of this purse in ducates.
+	 * 			| result == sum ({item in getItems() : 
+	 * 			|		if (item.isContainer()) then ((Container)(item)).getTotalValue()
+	 * 			|		else item.getValue()
+	 * 			|	})
 	 */
 	@Raw
 	public int getTotalValue() {
@@ -489,6 +499,10 @@ public class Backpack extends Item implements Container {
 	 * Return the amount of armors in this backpack.
 	 * 
 	 * @return	Return the amount of armors in this backpack also looks inside anchored backpacks.
+	 * 			| result == sum ({item in getItems() : 
+	 * 			|		if (item.isArmor()) then 1
+	 * 			|		else ((Backpack)item).getArmorCount()
+	 * 			|	})
 	 */
 	public int getArmorCount () {
 		int armorCount = 0;
@@ -507,9 +521,9 @@ public class Backpack extends Item implements Container {
 	 * Terminate all weapons and armor in this backpack recursively.
 	 * 
 	 * @post	Terminate all weapons and armor in this backpack recursively.
-	 * 			| for(Item item : getItems())
-	 * 			|	if(item.isBackpack()) then ((Backpack)item).terminateWeaponsAndArmor()
-	 * 			|   else if(item.isArmor() || item.isWeapon()) then item.terminate()
+	 * 			| for each (Item item : getItems())
+	 * 			|	if (item.isBackpack()) then ((Backpack)item).terminateWeaponsAndArmor()
+	 * 			|   else if (item.isArmor() || item.isWeapon()) then item.terminate()
 	 */
 	protected void terminateWeaponsAndArmor () {
 		for (Item item : getItems()) {
@@ -525,6 +539,10 @@ public class Backpack extends Item implements Container {
 	 * Return the best armor in a backpack.
 	 * 
 	 * @return	Return the best armor of a backpack.
+	 * 			| result == max ({item in getItems() : 
+	 * 			|		if (item.isArmor()) then ((Armor)item).getFullProtection()
+	 * 			|		else ((Backpack)item).getBestArmor()
+	 * 			|	})
 	 */
 	public Armor getBestArmor() {
 		int bestFullProtection = 0;
@@ -553,6 +571,10 @@ public class Backpack extends Item implements Container {
 	 * Return the best weapon in a backpack.
 	 * 
 	 * @return	Return the best weapon of a backpack.
+	 * 			| result == max ({item in getItems() : 
+	 * 			|		if (item.isWeapon()) then ((Weapon)item).getDamage()
+	 * 			|		else ((Backpack)item).getBestWeapon()
+	 * 			|	})
 	 * 		   
 	 * 
 	 */
@@ -582,7 +604,11 @@ public class Backpack extends Item implements Container {
 	/**
 	 * Return the best backpack in a backpack.
 	 * 
-	 * @return	Return the best backpack of a backpack.		   
+	 * @return	Return the best backpack of a backpack.
+	 * 			| result == max ({item in getItems() : 
+	 * 			|		if (item.isBackpack()) then 
+	 * 			|			max ({((Backpack)item).getCapacity(), ((Backpack)item).getBestBackpack()})
+	 * 			|	})		   
 	 * 
 	 */
 	public Backpack getBestBackpack() {
