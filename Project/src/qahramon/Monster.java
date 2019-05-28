@@ -243,9 +243,13 @@ public class Monster extends Character {
 	 ***********************/
 	
 	/**
-	 * Check whether the monster wants to take this item.
+	 * Check whether the monster wants to take the given item.
 	 * 
-	 * @return	Return true 
+	 * @return	Return true when the given item is an armor and the random percentage is lower than 
+	 * 			the ratio between the protection and the fullProtection of the armor.
+	 * 			Return true when the given item is a weapon and the random percentage is lower than 80.
+	 * 			Return true when the given item is a backpack and the random percentage is lower than 10.
+	 * 			Return true when the given item is a purse and the random percentage is lower than 20.
 	 * 			Return false otherwise.
 	 * 
 	 * @note	The more shiny an item is, the more likely the monster wants to take it.
@@ -271,7 +275,7 @@ public class Monster extends Character {
 		}
 		
 		else if (item.isBackpack()) {
-			if (randomInt <= 5) {
+			if (randomInt <= 10) {
 				return true;
 			} else {
 				return false;
@@ -279,7 +283,7 @@ public class Monster extends Character {
 		}
 		
 		else if (item.isPurse()) {
-			if (randomInt <= 25) {
+			if (randomInt <= 20) {
 				return true;
 			} else {
 				return false;
