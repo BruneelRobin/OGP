@@ -127,8 +127,7 @@ public class Armor extends Item {
 	 *        | 	canHaveAsIdentification(id)
 	 */
 	private static final HashSet<Long> armorIds = new HashSet<Long>();
-
-
+	
 	/***********************
 	 * Protection (nominal)
 	 ***********************/	
@@ -157,7 +156,6 @@ public class Armor extends Item {
 	 * Variable registering the current protection of an armor.
 	 */
 	private int protection;
-	
 	
 	/**
 	 * Return the maximum fullProtection allowed for all armors.
@@ -207,7 +205,6 @@ public class Armor extends Item {
 	@Basic
 	public int getProtection() {
 		return this.protection;
-
 	}
 	
 	/**
@@ -221,7 +218,6 @@ public class Armor extends Item {
 	@Raw
 	private void setProtection(int protection) {
 		this.protection = protection;
-	
 	}
 	
 	/**
@@ -271,7 +267,6 @@ public class Armor extends Item {
 			throw new TerminatedException(this);
 		}
 		this.setProtection(this.getProtection() - amount );
-		
 	}
 	
 	/**
@@ -294,7 +289,6 @@ public class Armor extends Item {
 			throw new TerminatedException(this);
 		}
 		this.setProtection(this.getProtection() + amount);
-		
 	}
 	
 	/***********************

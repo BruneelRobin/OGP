@@ -105,7 +105,7 @@ public abstract class Item {
 	 * 			Return false otherwise.
 	 */
 	@Basic@Immutable@Raw
-	public boolean isWeapon () {
+	public boolean isWeapon() {
 		return false;
 	}
 	
@@ -116,7 +116,7 @@ public abstract class Item {
 	 * 			Return false otherwise.
 	 */
 	@Basic@Immutable@Raw
-	public boolean isArmor () {
+	public boolean isArmor() {
 		return false;
 	}
 	
@@ -127,7 +127,7 @@ public abstract class Item {
 	 * 			Return false otherwise.
 	 */
 	@Basic@Immutable@Raw
-	public boolean isBackpack () {
+	public boolean isBackpack() {
 		return false;
 	}
 	
@@ -138,7 +138,7 @@ public abstract class Item {
 	 * 			Return false otherwise.
 	 */
 	@Basic@Immutable@Raw
-	public boolean isPurse () {
+	public boolean isPurse() {
 		return false;
 	}
 	
@@ -149,7 +149,7 @@ public abstract class Item {
 	 * 			Return false otherwise.
 	 */
 	@Immutable@Raw
-	public boolean isContainer () {
+	public boolean isContainer() {
 		return isBackpack() || isPurse();
 	}
 	
@@ -181,7 +181,7 @@ public abstract class Item {
 	 * @effect	Drop this item to break all associations.
 	 * 			| drop()
 	 */
-	public void terminate () {
+	public void terminate() {
 		this.drop();
 		this.isTerminated = true;
 	}
@@ -277,7 +277,7 @@ public abstract class Item {
 	 * @return	Return the default weight.
 	 */
 	@Immutable@Basic
-	public float getDefaultWeight () {
+	public float getDefaultWeight() {
 		return 10f;
 	}
 	
@@ -296,7 +296,7 @@ public abstract class Item {
 	 * @return	Return the maximum value for this item.
 	 */
 	@Immutable@Basic
-	public abstract int getMaxValue ();
+	public abstract int getMaxValue();
 	
 	/**
 	 * Return the minimum value for this item.
@@ -304,7 +304,7 @@ public abstract class Item {
 	 * @return	Return the minimum value for this item.
 	 */
 	@Immutable@Basic
-	public abstract int getMinValue ();
+	public abstract int getMinValue();
 	
 	/**
 	 * Return the item's value.
@@ -341,7 +341,6 @@ public abstract class Item {
 	public boolean canHaveAsValue(int value) {
 		return (value >= getMinValue() && value <= getMaxValue());
 	}
-	
 	
 	/***********************
 	 * Character
@@ -411,7 +410,7 @@ public abstract class Item {
 	 * 			| result == canHaveAsCharacter(getCharacter()) && getCharacter().hasAnchored(this)
 	 */
 	@Raw
-	public boolean hasProperCharacter () {
+	public boolean hasProperCharacter() {
 		return canHaveAsCharacter(getCharacter()) && getCharacter().hasAnchored(this);
 	}
 	
@@ -425,7 +424,7 @@ public abstract class Item {
 	 * 			| result == character != null
 	 */
 	@Raw
-	public boolean canHaveAsCharacter (Character character) {
+	public boolean canHaveAsCharacter(Character character) {
 		return character != null;
 	}
 	
@@ -484,7 +483,7 @@ public abstract class Item {
 	 * 			| result == backpack != null && !backpack.isTerminated() && backpack.canHaveAsItem(this)
 	 */
 	@Raw
-	public boolean canHaveAsParentBackpack (Backpack backpack) {
+	public boolean canHaveAsParentBackpack(Backpack backpack) {
 		return backpack != null && !backpack.isTerminated() && backpack.canHaveAsItem(this);
 	}
 	
@@ -552,7 +551,7 @@ public abstract class Item {
 	 * 			Throws this error when this item is terminated.
 	 * 			| this.isTerminated()
 	 */
-	public void moveTo (Backpack backpack) throws IllegalArgumentException, TerminatedException {
+	public void moveTo(Backpack backpack) throws IllegalArgumentException, TerminatedException {
 		if (this.isTerminated()) {
 			throw new TerminatedException(this);
 		}
