@@ -43,7 +43,7 @@ public class Hero extends Character {
 	 * 			| new.getStrength() == strength
 	 * @post	Equip the given items on the given slots of this hero.
 	 * 			Only what this hero can wear is equipped, all other items are dropped.
-	 * 			| for (Entry<AnchorType, Item> entry : items.entrySet()) {
+	 * 			| for each (Entry<AnchorType, Item> entry : items.entrySet()) {
 	 *			|	this.equip(entry.getKey(), entry.getValue());
 	 *			| }
 	 * @throws	IllegalArgumentException
@@ -339,6 +339,11 @@ public class Hero extends Character {
 	 * 
 	 * @return	Return a starter armor and starter purse for this hero, as a hashMap.
 	 * 			The purse will contain a random amount of ducates.
+	 * 			| result == () -> { HashMap<AnchorType, Item> items = new HashMap<AnchorType, Item>()
+	 * 			|	items.put(AnchorType.BODY, new Armor(MathHelper.getRandomPrime(), DEFAULT_ARMOR_PROTECTION, DEFAULT_ARMOR_WEIGHT, DEFAULT_FULLVALUE))
+	 * 			|	items.put(AnchorType.BELT, new Purse(DEFAULT_PURSE_WEIGHT, DEFAULT_PURSE_CAPACITY , randomContent)
+	 * 			|	return items;
+	 *  		| }
 	 */
 	private static HashMap<AnchorType, Item> getStarterGear() {
 		
@@ -611,7 +616,9 @@ public class Hero extends Character {
 	 * @param 	item
 	 * 			the item to be checked
 	 * @return	Return true when the given item can be equipped.
-	 * 			| ...
+	 * 			| result == super.canHaveAsItemAt(anchorId, item) && 
+	 * 			|			((AnchorType.getTypeFromId(anchorId).holdsPurse() == true) && item.isPurse()) || 
+	 * 			|			!item.isPurse()
 	 */
 	@Override@Raw
 	public boolean canHaveAsItemAt(int anchorId, Item item) {
@@ -634,7 +641,7 @@ public class Hero extends Character {
 	 * @param 	item
 	 * 			the item to equip
 	 * @effect	Equip an item in the given anchor.
-	 * 			| equip(AnchorType.getAnchorId())
+	 * 			| equip(AnchorType.getAnchorId(), item)
 	 * 
 	 * @note	This method has been overloaded in order to use the enumerator 'AnchorType'.
 	 */
@@ -663,6 +670,10 @@ public class Hero extends Character {
 	 * 
 	 * @return	Return the amount of armor's equipped by this character also
 	 * 			looks inside anchored backpacks.
+	 * 			| result == sum ({item in getAnchoredItems() : 
+	 * 			|		if (item.isArmor()) then 1
+	 * 			|		else ((Backpack)item).getArmorCount()
+	 * 			|	})
 	 */
 	@Raw
 	public int getArmorCount () {

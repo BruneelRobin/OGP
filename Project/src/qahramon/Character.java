@@ -189,7 +189,8 @@ public abstract class Character {
 	 * @param 	hitpoints
 	 * 			the amount of hitpoints to check
 	 * @return	Return true when the character can have the amount of hitpoints.
-	 * @return	Return false when the character can't have the amount of hitpoints.
+	 * 			Return false otherwise.
+	 * 			| hitpoints >= 0 && (isFighting() || MathHelper.isPrime(hitpoints) || hitpoints == 0)
 	 */
 	@Raw
 	public boolean canHaveAsHitpoints(int hitpoints) {
@@ -232,7 +233,7 @@ public abstract class Character {
 	 * @param 	maxHitpoints
 	 * 			the maximum amount of hitpoints
 	 * @pre		The given maximum amount of hitpoints must be a valid amount.
-	 * 			| canHaveAsMaxHitpoints(hitpoints)
+	 * 			| isValidMaxHitpoints(hitpoints)
 	 * @post	Sets the maximum amount of hitpoints to the given value.
 	 * 			| new.getMaxHitpoints() == maxHitpoints
 	 */
@@ -262,7 +263,7 @@ public abstract class Character {
 	 * @pre		The given amount of hitpoints must be a positive amount.
 	 * 			| hitpoints >= 0
 	 * @pre		The new amount of maximum hitpoints must be valid.
-	 * 			| canHaveAsMaxHitpoints(this.getMaxHitpoints() + hitpoints)
+	 * 			| isValidMaxHitpoints(this.getMaxHitpoints() + hitpoints)
 	 * @post	Increase the amount of maximum hitpoints with the given amount.
 	 * 			| new.getMaxHitpoints() == this.getMaxHitpoints() + hitpoints
 	 */
@@ -278,12 +279,13 @@ public abstract class Character {
 	 * @pre		The given amount of hitpoints must be a positive amount.
 	 * 			| hitpoints >= 0
 	 * @pre		the new amount of maximum hitpoints must be valid
-	 * 			| canHaveAsMaxHitpoints(this.getMaxHitpoints() - hitpoints)
+	 * 			| isValidMaxHitpoints(this.getMaxHitpoints() - hitpoints)
 	 * @post	Lower the amount of maximum hitpoints with the given amount.
 	 * 			| new.getMaxHitpoints() == this.getMaxHitpoints() - hitpoints
 	 * @post	When the new amount of maximum hitpoints is lower than the current value
 	 * 			of hitpoints, the current value of hitpoints is set to the maximum amount 
 	 * 			of hitpoints.
+	 * 			| if (getHitpoints() > getMaxHitpoints()) then new.getHitpoints() == getMaxHitpoints()
 	 */
 	public void lowerMaxHitpoints (int hitpoints) {
 		setMaxHitpoints(getMaxHitpoints() - hitpoints);
@@ -321,7 +323,7 @@ public abstract class Character {
 	 * Check whether this character is dead.
 	 * 
 	 * @return	Return true when this character is dead.
-	 * 			| getHitpoints() == 0
+	 * 			| result == getHitpoints() == 0
 	 */
 	@Raw
 	public boolean isDead() {
@@ -384,7 +386,6 @@ public abstract class Character {
 	 * @param 	anchorId
 	 * 			the anchorId of the item
 	 * @return	Return the item at the given anchorId.
-	 * 			| result == this.anchors.get(anchorId)
 	 */
 	@Basic
 	public Item getItemAt (int anchorId) {
@@ -409,9 +410,7 @@ public abstract class Character {
 	 * @param 	item
 	 * 			the item to set at the given anchorId
 	 * @post	Remove the entry when item is null.
-	 * 			| this.anchors.remove(anchorId)	
-	 * @post	Set the item at the given anchor of this character when the item is not null.
-	 * 			| this.anchors.put(anchorId, item)
+	 * @post	Set the item at the given anchor of this character otherwise.
 	 */
 	@Raw
 	protected void setItemAt(int anchorId, Item item) {
@@ -468,6 +467,7 @@ public abstract class Character {
 	 * 			| for some (Item itemAt : getAnchoredItems())
 	 * 			|		itemAt == item
 	 */
+	@Raw
 	public boolean hasAnchored (Item item) {
 		for (Item itemAt : getAnchoredItems()) {
 			if (itemAt == item) {
@@ -520,9 +520,12 @@ public abstract class Character {
 	 * 			when possible otherwise drops it on the ground.
 	 * 			| !(new.hasItem(this.getItemAt(anchorId)))
 	 * @effect	When possible the item will be moved into that backpack.
-	 * 			| item.moveTo(backpack)
+	 * 			| for each (Integer key : getAnchorIds())
+	 * 			|		if (getItemAt(key).isBackpack() && key != anchorId 
+	 * 			|				&& ((Backpack)getItemAt(key)).canHaveAsItem(item)) then
+	 * 			| 			item.moveTo((Backpack)getItemAt(key)))
 	 * @effect	When not put in a backpack the item will be dropped on the ground.
-	 * 			| item.drop();
+	 * 			| item.drop()
 	 * @throws	DeadException
 	 * 			throws this exception when the current character is dead.
 	 * 			| isDead()
@@ -537,9 +540,8 @@ public abstract class Character {
 			return;
 		}
 		
-		for (Map.Entry<Integer, Item> entry : this.anchors.entrySet()) {
-		    int key = entry.getKey();
-		    Item value = entry.getValue();
+		for (Integer key : getAnchorIds()) {
+		    Item value = getItemAt(key);
 		    		
 		    if (value.isBackpack() && key != anchorId) {
 		    	Backpack backpack = (Backpack) value;
@@ -559,16 +561,16 @@ public abstract class Character {
 	 * @param 	item
 	 * 			The item to be removed from its anchor
 	 * @post	Search and remove the given item from its anchor.
+	 * 			| !new.hasAnchored(item)
 	 * 
 	 * @note	Break the association with item unidirectionally.
 	 */
 	@Raw
 	protected void removeItemFromHolder(Item item) {
-		for (Entry<Integer, Item> entry : this.anchors.entrySet()) {
-		    int key = entry.getKey();
-		    Item value = entry.getValue();
+		for (Integer anchorId : getAnchorIds()) {
+		    Item value = getItemAt(anchorId);
 		    if (value == item) {
-		    	this.setItemAt(key,null);
+		    	this.setItemAt(anchorId,null);
 		    	return;
 		    }
 		}
@@ -631,10 +633,14 @@ public abstract class Character {
 	 * 			| !canPickUp(item)
 	 * @effect	Otherwise all anchors are checked, if an empty anchor
 	 * 			is found and the item can be equipped, the item is equipped there.
-	 * 			| this.equip(anchorId, item)
+	 * 			| for (int anchorId = 0; anchorId < getNumberOfAnchors(); anchorId ++)
+	 * 			|		if (getItemAt(anchorId) == null) then
+	 * 			| 			this.equip(anchorId, item)
 	 * @effect	If there are no available anchors and there is an anchored backpack
 	 * 			that can take this item, then the item will be put in that backpack.
-	 * 			| item.moveTo(backpack)
+	 * 			| for (Item itemAt : getAnchoredItems())
+	 * 			|		if (itemAt.isBackpack() && ((Backpack)itemAt).canHaveAsItem(item)) then
+	 * 			| 				item.moveTo((Backpack)itemAt))
 	 * @throws	DeadException
 	 * 			throws this exception when the current character is dead.
 	 * 			| isDead()			
@@ -769,7 +775,7 @@ public abstract class Character {
 	 * @param	character
 	 * 			the backpack to look check
 	 * @effect	All items anchored onto the given dead character will be collected when possible
-	 * 			| for (Item item : character.getAnchoredItems()) do
+	 * 			| for each (Item item : character.getAnchoredItems()) do
 	 *			|		collectTreasure(item);
 	 * @post	Does nothing when the given character is not dead
 	 * 			| !character.isDead()
@@ -823,7 +829,8 @@ public abstract class Character {
 	 * 
 	 * @param 	item
 	 * 			the item to check and pick up
-	 * @post	Pick up the item when this character wants to take it.
+	 * @effect	Pick up the item when this character wants to take it.
+	 * 			| pickUp(item)
 	 */
 	public abstract void collectTreasure(Item item);
 	
@@ -831,7 +838,7 @@ public abstract class Character {
 	 * Check whether the character wants to take this item.
 	 * 
 	 * @return	Return true if the character wants to take this item.
-	 * 			Return false when the character doesn't want to take this item.
+	 * 			Return false otherwise.
 	 */
 	public abstract boolean wantsToTake(Item item);
 	
@@ -840,6 +847,10 @@ public abstract class Character {
 	 * 
 	 * @return	Return the total value of this character in ducates calculated as the sum of the 
 	 * 			total values of each anchored item.
+	 * 			| result == sum ({item in getAnchoredItems() : 
+	 * 			|		if (item.isContainer()) then ((Container)(item)).getTotalValue()
+	 * 			|		else item.getValue()
+	 * 			|	})
 	 */
 	@Raw
 	public int getTotalValue () {
@@ -860,6 +871,10 @@ public abstract class Character {
 	 * 
 	 * @return	Return the total weight of this character in kilograms calculated as the sum of the
 	 * 			total weights of each anchored item.
+	 * 			| result == sum ({item in getAnchoredItems() : 
+	 * 			|		if (item.isContainer()) then ((Container)(item)).getTotalWeight()
+	 * 			|		else item.getWeight()
+	 * 			|	})
 	 */
 	@Raw
 	public float getTotalWeight () {
@@ -879,6 +894,10 @@ public abstract class Character {
 	 * Return the best armor of any owned armor.
 	 * 
 	 * @return	Return the best armor of any owned armor.
+	 * 			| result == max ({item in getAnchoredItems() : 
+	 * 			|		if (item.isArmor()) then ((Armor)item).getFullProtection()
+	 * 			|		else ((Backpack)item).getBestArmor().getFullProtection()
+	 * 			|	})
 	 * 		   
 	 * @note	The evaluation of the armor is based on its full protection.
 	 */
@@ -909,6 +928,10 @@ public abstract class Character {
 	 * Return the best armor of any owned weapon.
 	 * 
 	 * @return	Return the best armor of any owned armor.
+	 * 			| result == max ({item in getAnchoredItems() : 
+	 * 			|		if (item.isWeapon()) then ((Weapon)item).getDamage()
+	 * 			|		else ((Backpack)item).getBestWeapon().getDamage()
+	 * 			|	})
 	 * 		   
 	 * @note	The evaluation of the weapon is based on its damage.
 	 */
@@ -939,6 +962,10 @@ public abstract class Character {
 	 * Return the best backpack of any owned armor.
 	 * 
 	 * @return	Return the best backpack of any owned armor.
+	 * 			| result == max ({item in getAnchoredItems() : 
+	 * 			|		if (item.isBackpack()) then 
+	 * 			|			max ({((Backpack)item).getCapacity(), ((Backpack)item).getBestBackpack().getCapacity()})
+	 * 			|	})	
 	 * 		   
 	 * @note	The evaluation of the backpack is based on its capacity.
 	 */
@@ -972,6 +999,8 @@ public abstract class Character {
 	 * 			the item to give
 	 * @param 	character
 	 * 			the character to receive the item
+	 * @post	Does nothing when this character is not the holder of this item
+	 * 			| item.getHolder() != this
 	 * @effect	Drop the item so the given character can pick it up.
 	 * 			| item.drop()
 	 * @effect	The given character tries to pick up the dropped item.

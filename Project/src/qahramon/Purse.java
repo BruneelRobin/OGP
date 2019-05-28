@@ -338,8 +338,9 @@ public class Purse extends Item implements Container {
 	 * 
 	 * @param 	purse
 	 * 			the purse to empty
-	 * @post	The new content is increased with the content of the current purse.
+	 * @post	The new content is increased with the content of the given purse.
 	 * 			| this.getContent() == this.getContent() + purse.getContent()
+	 * 			| purse.getContent() == 0
 	 * @post	The emptied purse is dropped.
 	 * 			| purse.drop()
 	 * @effect	When the new content is higher than the allowed capacity this purse is torn.
@@ -398,12 +399,12 @@ public class Purse extends Item implements Container {
 	/**
 	 * Return the total weight of this purse.
 	 * 
-	 * @return	Return the total weight this purse: weight of the purse combined with weiht of its content.
-	 * 			| result == (this.getContent() * DUCATE_WEIGHT) + this.getWeight()
+	 * @return	Return the total weight this purse: weight of the purse combined with weight of its content.
+	 * 			| result == ((float)(this.getContent())*getDucateWeight() + this.getWeight())
 	 */
 	@Raw
 	public float getTotalWeight() {
-		return ((float)(this.getContent())*DUCATE_WEIGHT + this.getWeight());
+		return ((float)(this.getContent())*getDucateWeight() + this.getWeight());
 	}
 	
 	/**

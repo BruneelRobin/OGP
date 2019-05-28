@@ -5,7 +5,7 @@ import be.kuleuven.cs.som.annotate.*;
 import qahramon.*;
 
 /**
- * A class signaling illegal attempts to perform actions on terminated objects.
+ * A class signaling illegal attempts to perform actions on terminated items.
  * 
  * @author Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0

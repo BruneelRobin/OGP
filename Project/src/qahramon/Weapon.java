@@ -88,7 +88,9 @@ public class Weapon extends Item {
 	/**
 	 * Generate a valid identification.
 	 * 
-	 * @return Return a unique, positive long, divisible by 6.		   
+	 * @return 	Return a unique, positive long, divisible by 6.
+	 * 			| result == MathHelper.getRandomLongBetweenRange(0, Long.MAX_VALUE/6)*6 
+	 * 			|			&& canHaveAsNewIdentification(result)
 	 */
 	@Override@Raw
 	protected long generateIdentification() {
@@ -109,11 +111,11 @@ public class Weapon extends Item {
 	 * 			the identification to check
 	 * @return	Return true when the given identification number is positive, divisible by 6.
 	 * 			Return false otherwise.
-	 * 			| result == ((identification > -1) && (identification%6 == 0))			
+	 * 			| result == ((identification >= 0) && (identification%6 == 0))			
 	 */
 	@Override@Raw
 	public boolean canHaveAsIdentification(long identification) {
-		return ((identification > -1) && (identification%6 == 0));
+		return ((identification >= 0) && (identification%6 == 0));
 
 	}
 	

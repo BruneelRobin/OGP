@@ -264,6 +264,7 @@ public abstract class Item {
 	 * 			the weight to check
 	 * @return	Return true when the given weight is valid, thus positive.
 	 * 			Return false otherwise.
+	 * 			| weight >= 0
 	 */
 	public static boolean isValidWeight(float weight) {
 		
@@ -385,7 +386,7 @@ public abstract class Item {
 	 * 			| new.getParentBackpack() == null && new.getCharacter() == character
 	 * @post	When this item is in a backpack it will be removed from that backpack.
 	 * 			| getParentBackpack().removeItem(this);
-				| setParentBackpack(null);
+	 *			| setParentBackpack(null);
 	 * @post	When this item is already anchored to the character, 
 	 * 			it will be removed from the character
 	 * 			| getCharacter().removeItemFromHolder(this);
@@ -407,11 +408,11 @@ public abstract class Item {
 	 * @return	Return true when this item can have the current character and the character has
 	 * 			this item anchored.
 	 * 			Return false otherwise.
-	 * 			| result == canHaveAsCharacter(getCharacter()) && getCharacter().hasItem(this)
+	 * 			| result == canHaveAsCharacter(getCharacter()) && getCharacter().hasAnchored(this)
 	 */
 	@Raw
 	public boolean hasProperCharacter () {
-		return canHaveAsCharacter(getCharacter()) && getCharacter().hasItem(this);
+		return canHaveAsCharacter(getCharacter()) && getCharacter().hasAnchored(this);
 	}
 	
 	/**
@@ -496,12 +497,12 @@ public abstract class Item {
 	 * 
 	 * @effect 	When this item is anchored, the holder of the item is set to null(= on the ground).
 	 * 		   	Since this is a bidirectional relation, the item is also removed from the holder.
-	 * 			|this.getCharacter().removeItemFromHolder(this)
-	 * 		   	|this.setCharacter(null)
+	 * 			| this.getCharacter().removeItemFromHolder(this)
+	 * 		   	| this.setCharacter(null)
 	 * @effect 	When this item is in a backpack, the parent backpack of this item is set to null
 	 * 			and since this is a bidirectional, the item is also removed from the backpack.
-	 * 			|this.getParentBackpack().removeItem(this)
-	 * 		   	|this.setParentBackpack(null)
+	 * 			| this.getParentBackpack().removeItem(this)
+	 * 		   	| this.setParentBackpack(null)
 	 */
 	public void drop() {
 		if (this.getCharacter() != null) {
@@ -519,6 +520,9 @@ public abstract class Item {
 	 * @return	Return the character associated when equipped on an anchor 
 	 * 			or get the holder recursively when this item is in a backpack.
 	 * 			When a backpack does not have a holder this method returns null.
+	 * 			| result == if (getCharacter() != null) then getCharacter()
+	 * 			|			else if (getParentBackpack() != null) then getParentBackpack().getHolder()
+	 * 			|			else null
 	 * 
 	 * @note	If the holder is null, this item lies on the ground.
 	 */

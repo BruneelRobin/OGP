@@ -62,7 +62,7 @@ public class Monster extends Character {
 	 * 			to the total weight of the given items.
 	 * @effect	Each item given in this constructor will be equipped in a random slot when possible, 
 	 * 			otherwise nothing happens.
-	 * 			| for (Item item : items)
+	 * 			| for each (Item item : items)
 	 * 			|		equip(randomSlotId, item)
 	 * @post	The damage of this monster is set to the given damage.
 	 * 			| new.getDamage() == damage
@@ -200,7 +200,7 @@ public class Monster extends Character {
 	 * 			the protection to check
 	 * @return	Return true when the given protection is positive.
 	 * 			Return false otherwise.
-	 * 			| protection >= 0
+	 * 			| protection >= 0 && protection <= getMaxProtection()
 	 */
 	public static boolean isValidProtection(int protection) {
 		return protection >= 0 && protection <= getMaxProtection();
