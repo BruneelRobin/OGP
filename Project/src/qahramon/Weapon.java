@@ -251,9 +251,9 @@ public class Weapon extends Item {
 	 ***********************/
 	
 	/**
-	 * Return the maximum value for this item.
+	 * Return the maximum value for this weapon.
 	 * 
-	 * @return	Return the maximum value for this item.
+	 * @return	Return the maximum value for this weapon.
 	 */
 	@Immutable@Override@Basic@Raw
 	public int getMaxValue () {
@@ -261,9 +261,9 @@ public class Weapon extends Item {
 	}
 	
 	/**
-	 * Return the minimum value for this item.
+	 * Return the minimum value for this weapon.
 	 * 
-	 * @return	Return the minimum value for this item.
+	 * @return	Return the minimum value for this weapon.
 	 */
 	@Immutable@Override@Basic@Raw
 	public int getMinValue () {
@@ -292,7 +292,7 @@ public class Weapon extends Item {
 	@Override@Raw
 	public int getValue() {
 		if(hasGivenValue == false) {
-		return MathHelper.clamp(this.getDamage()*VALUE_FACTOR, getMinValue(), getMaxValue()); 
+			return MathHelper.clamp(this.getDamage()*VALUE_FACTOR, getMinValue(), getMaxValue()); 
 		}
 		return super.getValue();
 	}

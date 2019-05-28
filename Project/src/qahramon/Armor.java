@@ -97,7 +97,7 @@ public class Armor extends Item {
 	 */
 	@Override@Raw
 	public boolean canHaveAsIdentification(long identification) {
-		return (MathHelper.isPrime(identification) && identification>0);
+		return (MathHelper.isPrime(identification) && identification > 0);
 	}
 	
 	/**
