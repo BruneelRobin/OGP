@@ -184,6 +184,8 @@ public class Weapon extends Item {
 	 * 
 	 * @param	damage
 	 * 			the new damage
+	 * @pre		the given damage is valid
+	 * 			| isValidDamage(damage)
 	 * @post	The damage is set to the given damage.
 	 * 			| new.getDamage() == damage
 	 */
