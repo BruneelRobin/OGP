@@ -668,8 +668,7 @@ public class Hero extends Character {
 	public int getArmorCount () {
 		int armorCount = 0;
 		
-		for (Entry<Integer, Item> entry : getAnchorEntrySet()) {
-			Item item = entry.getValue();
+		for (Item item : getAnchoredItems()) {
 			if (item.isArmor()) { //iterate over all items on dead body and pickup all items you want
 				armorCount += 1;
 			} else if (item.isBackpack()) {

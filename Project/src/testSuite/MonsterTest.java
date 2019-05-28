@@ -84,7 +84,7 @@ class MonsterTest {
 		assertEquals(10, monster2.getNumberOfAnchors());
 		assertEquals(50, monster2.getCapacity());
 		
-		assertEquals(true, monster2.hasItem(armor));
+		assertEquals(true, monster2.hasAnchored(armor));
 	}
 	
 	@Test
@@ -105,7 +105,7 @@ class MonsterTest {
 		assertEquals(10, monster2.getNumberOfAnchors());
 		assertEquals(50, monster2.getCapacity());
 		
-		assertEquals(true, monster2.hasItem(armor));
+		assertEquals(true, monster2.hasAnchored(armor));
 	}
 	
 	@Test
@@ -168,7 +168,7 @@ class MonsterTest {
 			}
 		assertTrue(weakMonster.isDead());
 		assertFalse(monster.isFighting());
-		assertTrue(monster.hasItem(armor));
+		assertTrue(monster.hasAnchored(armor));
 	}
 	
 	@Test

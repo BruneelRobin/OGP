@@ -189,7 +189,7 @@ class CharacterTest {
 	public void testGiveTo_ToOtherCharacter() {
 		hero.pickUp(weapon1);
 		hero.giveTo(weapon1, monster);
-		assertTrue(monster.hasItem(weapon1));
+		assertTrue(monster.hasAnchored(weapon1));
 	}
 	
 	@Test
@@ -211,8 +211,8 @@ class CharacterTest {
 	@Test
 	public void testhasItem() {
 		monster.equip(2, weapon1);
-		assertTrue(monster.hasItem(weapon1));
-		assertFalse(monster.hasItem(weapon2));
+		assertTrue(monster.hasAnchored(weapon1));
+		assertFalse(monster.hasAnchored(weapon2));
 	}
 	
 	@Test
