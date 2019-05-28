@@ -296,7 +296,7 @@ public class Purse extends Item implements Container {
 			makeTorn();
 		} else {
 			// overflow or negative amount
-			throw new IllegalArgumentException ("Illegal amount given");
+			throw new IllegalArgumentException ("Illegal amount given.");
 		}
 	}
 	

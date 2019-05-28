@@ -116,7 +116,6 @@ public class Weapon extends Item {
 	@Override@Raw
 	public boolean canHaveAsIdentification(long identification) {
 		return ((identification >= 0) && (identification%6 == 0));
-
 	}
 	
 	/**
