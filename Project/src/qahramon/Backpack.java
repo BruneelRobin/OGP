@@ -257,17 +257,18 @@ public class Backpack extends Item implements Container {
 	}
 	
 	/**
-	 * Check whether this backpack can have the given weight.
+	 * Check whether this backpack can have the given total weight.
 	 * 
-	 * @return	Return true when this backpack can have the new weight.
+	 * @return	Return true when this backpack can have the new total weight.
 	 * 			Return false otherwise.
 	 * 			| result == weight - this.getWeight() <= getCapacity() 
 	 *			| 		&& (getParentBackpack() == null || getParentBackpack().canHaveAsNewWeight(getParentBackpack().getTotalWeight() - this.getTotalWeight() + weight))
 	 *			|		&& (getCharacter() == null || getCharacter().getTotalWeight() - this.getTotalWeight() + weight <= getCharacter().getCapacity())
 	 */
-	public boolean canHaveAsBackpackWeight(float weight) {
+	@Raw
+	public boolean canHaveAsTotalWeight(float weight) {
 		return weight - this.getWeight() <= getCapacity()
-				&& (getParentBackpack() == null || getParentBackpack().canHaveAsBackpackWeight(getParentBackpack().getTotalWeight() - this.getTotalWeight() + weight))
+				&& (getParentBackpack() == null || getParentBackpack().canHaveAsTotalWeight(getParentBackpack().getTotalWeight() - this.getTotalWeight() + weight))
 				&& (getCharacter() == null || getCharacter().getTotalWeight() - this.getTotalWeight() + weight <= getCharacter().getCapacity());
 	}
 	
@@ -281,7 +282,7 @@ public class Backpack extends Item implements Container {
 	 * 			Return false when the item is held by another non dead character than the holder of this backpack.
 	 * 			Return false when the item can't be picked up by the holder of this backpack.
 	 * 			Return false when the given item is a direct or indirect parent backpack of this backpack.
-	 * 			Return false when the this backpack can't have the given weight.
+	 * 			Return false when the this backpack can't have the new total weight.
 	 * 			of this backpack.
 	 * 			Return true otherwise.
 	 * 			| result == !(item == this || this.isTerminated() || item.isTerminated())
@@ -289,7 +290,7 @@ public class Backpack extends Item implements Container {
 	 * 			|			&& !(item.getHolder() != null && item.getHolder() != this.getHolder() && item.getHolder().isDead() == false)
 	 * 			|       	&& !(item.getHolder() == null && this.getHolder() != null && !this.getHolder().canPickUp(item))
 	 * 			|			&& !(item.isBackpack() && this.isDirectOrIndirectSubBackpackOf((Backpack)item))
-	 * 			|     		&& (canHaveAsBackpackWeight(this.getTotalWeight() + item.getWeight() - this.getWeight()))
+	 * 			|     		&& (!contains(item) && !canHaveAsTotalWeight(this.getTotalWeight() + item.getWeight()))
 	 */
 	@Raw
 	public boolean canHaveAsItem (Item item) {
@@ -305,7 +306,7 @@ public class Backpack extends Item implements Container {
 			return false;
 		} else if (item.isBackpack() && this.isDirectOrIndirectSubBackpackOf((Backpack)item)) {
 			return false;
-		} else if (!canHaveAsBackpackWeight(this.getTotalWeight() + item.getWeight() - this.getWeight())) {
+		} else if (!contains(item) && !canHaveAsTotalWeight(this.getTotalWeight() + item.getWeight())) {
 			return false;
 		}
 		return true;

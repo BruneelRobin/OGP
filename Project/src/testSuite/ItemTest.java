@@ -19,7 +19,7 @@ class ItemTest {
 
 	static Hero hero, hero2;
 	static Monster monster;
-	static Weapon weapon, terminatedWeapon;
+	static Weapon weapon, weapon2, terminatedWeapon;
 	static Armor armor;
 	static Purse purse;
 	static Backpack backpack, backpack2, smallBackpack;
@@ -36,6 +36,7 @@ class ItemTest {
 		hero2 = new Hero("LegalName", 97, 20);
 		monster = new Monster("LegalName", 499, 20, 70, 10, 50);
 		weapon = new Weapon(10,5);
+		weapon2 = new Weapon(15,5);
 		armor = new Armor(7, 20, 10, 15);
 		purse = new Purse(2, 500, 20);
 		backpack = new Backpack(100, 10, 2);
@@ -172,6 +173,13 @@ class ItemTest {
 	@Test
 	public void testMoveTo_BackpackNull() {
 		assertThrows(IllegalArgumentException.class, () -> {weapon.moveTo(null);});
+	}
+	
+	@Test
+	public void testMoveTo_ParentTooSmall() {
+		backpack.moveTo(smallBackpack);
+		
+		assertThrows(IllegalArgumentException.class, () -> {weapon2.moveTo(backpack);});
 	}
 	
 	/**************************************************************************************
