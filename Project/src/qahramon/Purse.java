@@ -351,6 +351,9 @@ public class Purse extends Item implements Container {
 	 * @throws	TerminatedException
 	 *			Throws this error when the given purse is terminated.
 	 *			| purse.isTerminated()
+	 * @throws	TerminatedException
+	 *			Throws this error when this purse is terminated.
+	 *			| this.isTerminated()
 	 */
 	public void add(Purse purse) throws TornException, TerminatedException {
 		if (purse.isTerminated()) {

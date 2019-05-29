@@ -273,7 +273,7 @@ public class Weapon extends Item {
 	 */
 	@Immutable@Override@Basic@Raw
 	public int getMinValue () {
-		return 0;
+		return 1;
 	}
 	
 	/**
