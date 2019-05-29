@@ -418,7 +418,7 @@ public class Backpack extends Item implements Container {
 	/**
 	 * Check whether this backpack has proper items.
 	 * 
-	 * @Return	Return true when this backpack can have each item in this backpack
+	 * @return	Return true when this backpack can have each item in this backpack
 	 * 			and the parentBackpack of this item is this backpack.
 	 * 			Return false otherwise.
 	 * 			| for each (Item item : getItems())
