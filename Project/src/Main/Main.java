@@ -1,10 +1,8 @@
 package Main;
 
 import java.util.HashSet;
-import java.util.Set;
 
 import qahramon.*;
-import qahramon.Character;
 
 public class Main {
 
@@ -27,7 +25,10 @@ public class Main {
 		boolean monsterFirst = MathHelper.getRandomIntBetweenRange(0, 2) == 0;
 		
 		if (monsterFirst) {
+			System.out.println("Odon starts the fight");
 			odon.hit(tim);
+		} else {
+			System.out.println("Tim starts the fight");
 		}
 		
 		while (!odon.isDead() && !tim.isDead()) {

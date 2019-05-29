@@ -294,18 +294,20 @@ public class Hero extends Character {
 	 * Return the protection of the hero.
 	 * 
 	 * @return	Return the protection of the hero based on default protection value and armor, when no armor is equipped
-	 * 			the result will be set to the default protection value.
-	 * 			| result == DEFAULT_PROTECTION + ((Armor)(this.getItemAt(AnchorType.BODY.getAnchorId()))).getProtection()
+	 * 			the result will be set the default protection of this hero.
+	 * 			| result == getDefaultProtection() + ((Armor)(this.getItemAt(AnchorType.BODY.getAnchorId()))).getProtection()
 	 */
 	@Override
 	public int getProtection() {
 		int anchorIdOfBody = AnchorType.BODY.getAnchorId();
-		Armor armorOfHero = (Armor)(this.getItemAt(anchorIdOfBody));
-		if (armorOfHero != null) {
-			return(getDefaultProtection() + armorOfHero.getProtection());
-		} else {
-			return getDefaultProtection();
+		int armorProtection = 0;
+		Item itemOnBody = getItemAt(anchorIdOfBody);
+		if (itemOnBody != null && itemOnBody.isArmor()) {
+			Armor armorOfHero = (Armor)(this.getItemAt(anchorIdOfBody));
+			armorProtection = armorOfHero.getProtection();
 		}
+		
+		return getDefaultProtection() + armorProtection;
 		
 		
 	}

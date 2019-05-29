@@ -25,8 +25,8 @@ public class Weapon extends Item {
 	/**
 	 * Create a weapon with given damage, weight and value.
 	 * 
-	 * @param	identification
-	 * 			the identification of this weapon
+	 * @param	damage
+	 * 			the damage of this weapon
 	 * @param	weight
 	 * 			the weight of this weapon
 	 * @param	value
@@ -48,8 +48,8 @@ public class Weapon extends Item {
 	/**
 	 * Create a weapon with given damage and value.
 	 * 
-	 * @param	identification
-	 * 			the identification of this weapon
+	 * @param	damage
+	 * 			the damage of this weapon
 	 * @param	weight
 	 * 			the weight of this weapon
 	 * @pre		The given damage must be valid.
