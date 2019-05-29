@@ -1,6 +1,5 @@
 package qahramon;
 
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -29,9 +28,6 @@ import java.util.HashSet;
  * @author 	Robin Bruneel, Jean-Louis Carron, Edward Wiels
  * @version 1.0 - 2019
  */
-
-// TODO annotations?, monster collectTreasures in testen
-//		UML, alle coding rules
 
 public abstract class Character {
 	
