@@ -254,16 +254,12 @@ public class Purse extends Item implements Container {
 	 * 			Return false otherwise.
 	 * 			| result == !isTorn() && content >= 0 && content <= getCapacity() && (this.getCharacter() == null || 
 	 *			|				this.getCharacter().getCapacity() - this.getCharacter().getTotalWeight() >= (content - getContent())*getDucateWeight())
-	 *			|   			&& (this.getParentBackpack() == null || 
-	 *			|   			this.getParentBackpack().canHaveAsBackpackWeight(getParentBackpack().getTotalWeight() + (content - getContent())*getDucateWeight()))
 	 */
 	@Raw
 	public boolean canHaveAsContent (int content) {
 		float newWeight = (content - getContent())*getDucateWeight();
 		boolean validWeight =  (this.getCharacter() == null || 
-								this.getCharacter().getCapacity() - this.getCharacter().getTotalWeight() >= newWeight)
-				   				&& (this.getParentBackpack() == null || 
-				   				this.getParentBackpack().canHaveAsBackpackWeight(getParentBackpack().getTotalWeight() + newWeight));
+								this.getCharacter().getCapacity() - this.getCharacter().getTotalWeight() >= newWeight);
 		return (!isTorn() && content >= 0 && content <= getCapacity() && validWeight);
 	}
 	
