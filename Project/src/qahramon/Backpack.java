@@ -38,8 +38,6 @@ public class Backpack extends Item implements Container {
 	 * 			the weight of this backpack
 	 * @param 	value
 	 * 			the value of this backpack
-	 * @pre		The given capacity must be valid.
-	 * 			| isValidCapacity(capacity)
 	 * @effect	The backpack is set as an item with given weight and value.
 	 * 			| super(weight, value)
 	 * @post	The capacity is set to the given capacity.
@@ -48,7 +46,12 @@ public class Backpack extends Item implements Container {
 	public Backpack (float capacity, float weight, int value) {
 		super(weight, value);
 		
-		this.capacity = capacity;
+		if (isValidCapacity(capacity)) {
+			this.capacity = capacity;
+		} else {
+			this.capacity = getDefaultCapacity();
+		}
+		
 		backpackCount ++;
 	}
 	
@@ -154,6 +157,15 @@ public class Backpack extends Item implements Container {
 		return capacity >= 0;
 	}
 	
+	/**
+	 * Return the default capacity of this backpack.
+	 * 
+	 * @return	Return the default capacity of this backpack.
+	 */
+	public static float getDefaultCapacity () {
+		return 40f;
+	}
+	
 	/**********************************
 	 * Content - defensive programming
 	 **********************************/
@@ -245,6 +257,21 @@ public class Backpack extends Item implements Container {
 	}
 	
 	/**
+	 * Check whether this backpack can have the given weight.
+	 * 
+	 * @return	Return true when this backpack can have the new weight.
+	 * 			Return false otherwise.
+	 * 			| result == weight - this.getWeight() <= getCapacity() 
+	 *			| 		&& (getParentBackpack() == null || getParentBackpack().canHaveAsNewWeight(getParentBackpack().getTotalWeight() - this.getTotalWeight() + weight))
+	 *			|		&& (getCharacter() == null || getCharacter().getTotalWeight() - this.getTotalWeight() + weight <= getCharacter().getCapacity())
+	 */
+	public boolean canHaveAsBackpackWeight(float weight) {
+		return weight - this.getWeight() <= getCapacity()
+				&& (getParentBackpack() == null || getParentBackpack().canHaveAsBackpackWeight(getParentBackpack().getTotalWeight() - this.getTotalWeight() + weight))
+				&& (getCharacter() == null || getCharacter().getTotalWeight() - this.getTotalWeight() + weight <= getCharacter().getCapacity());
+	}
+	
+	/**
 	 * Check whether this backpack can have an item.
 	 * 
 	 * @param 	item
@@ -254,17 +281,15 @@ public class Backpack extends Item implements Container {
 	 * 			Return false when the item is held by another non dead character than the holder of this backpack.
 	 * 			Return false when the item can't be picked up by the holder of this backpack.
 	 * 			Return false when the given item is a direct or indirect parent backpack of this backpack.
-	 * 			Return false when the weight of the backpack with this item is higher than the capacity 
+	 * 			Return false when the this backpack can't have the given weight.
 	 * 			of this backpack.
-	 * 			Return false when this item is in a backpack and the parent backpack can't have this item.
 	 * 			Return true otherwise.
 	 * 			| result == !(item == this || this.isTerminated() || item.isTerminated())
 	 * 			| 			&& !(item.isPurse())
 	 * 			|			&& !(item.getHolder() != null && item.getHolder() != this.getHolder() && item.getHolder().isDead() == false)
 	 * 			|       	&& !(item.getHolder() == null && this.getHolder() != null && !this.getHolder().canPickUp(item))
 	 * 			|			&& !(item.isBackpack() && this.isDirectOrIndirectSubBackpackOf((Backpack)item))
-	 * 			|     		&& !(this.getTotalWeight() + item.getWeight() - this.getWeight() > this.getCapacity())
-	 * 			|			&& !(getParentBackpack() != null && !getParentBackpack().canHaveAsItem(item))
+	 * 			|     		&& (canHaveAsBackpackWeight(this.getTotalWeight() + item.getWeight() - this.getWeight()))
 	 */
 	@Raw
 	public boolean canHaveAsItem (Item item) {
@@ -280,9 +305,7 @@ public class Backpack extends Item implements Container {
 			return false;
 		} else if (item.isBackpack() && this.isDirectOrIndirectSubBackpackOf((Backpack)item)) {
 			return false;
-		} else if (this.getTotalWeight() + item.getWeight() - this.getWeight() > this.getCapacity()) {
-			return false;
-		} else if (getParentBackpack() != null && !getParentBackpack().canHaveAsItem(item)) {
+		} else if (!canHaveAsBackpackWeight(this.getTotalWeight() + item.getWeight() - this.getWeight())) {
 			return false;
 		}
 		return true;

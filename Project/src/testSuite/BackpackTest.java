@@ -63,6 +63,11 @@ class BackpackTest {
 		//assertEquals(bp.getCapacity(), 100f, 0.01);
 		//assertEquals(bp.getWeight(), bp.getDefaultWeight(), 0.01);
 		assertEquals(bp2.getValue(), bp2.getMaxValue());
+		
+		Backpack bp3 = new Backpack(-100, 10, Integer.MAX_VALUE);
+		//assertEquals(bp.getCapacity(), 100f, 0.01);
+		//assertEquals(bp.getWeight(), bp.getDefaultWeight(), 0.01);
+		assertEquals(bp3.getCapacity(), Backpack.getDefaultCapacity());
 	}
 	
 	@Test
